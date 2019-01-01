@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# But not these files...
+!*.bib
+!*.csv
+!*.m
+!*.py
+!*.tex
+
+
+# etc...
+
+# ...even if they are in subdirectories
+!*/
