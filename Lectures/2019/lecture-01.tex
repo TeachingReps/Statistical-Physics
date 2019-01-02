@@ -1,0 +1,619 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,10pt,english]{article}
+\input{../../header}
+\title{Lecture-01: Introduction to Information Theory}
+\author{}
+
+\begin{document}
+\maketitle
+
+\section{Random Variables} 
+
+From a mathematical perspective, this class deals primarily with probability and, in particular, discrete random variables. 
+\begin{defn} 
+A \textbf{discrete random variable}, $X$, is defined by following information: 
+(i) $\sX$ : the finite set of values that it may take, 
+(ii) $p_X : \sX \to [0, 1]$: the probability it takes each value $x \in X$ . 
+Of course, the probability distribution $p_X$ must satisfy the normalization condition $\sum_{x \in X}p_X (x) = 1$. 
+If there is no ambiguity, we may use $p(x)$ to denote $p_X (x)$. 
+\end{defn}
+\begin{exmp}
+Let the random variable $X$ denote the sum of two fair 6-sided dice. 
+Then, $\sX = \set{2, 3, \dots, 12}$ and 
+\EQ{
+p_X (x) = \frac{6 - \abs{7 - x}} {36}.
+}
+\end{exmp}
+\begin{defn}
+An \textbf{event} $A \subseteq \sX$ is a subset of values. 
+The probability of an event is denoted 
+\EQ{
+P(X \in A)=P(A) = \sum_{x \in A}p_X(x) = \sum_{x \in A}P(X =x).
+}
+Also, an event is sometimes defined in words, $A = ``X \text{ is even}''$.
+\end{defn}
+\begin{exmp} 
+If X is the sum of two fair 6-sided dice and $A = ``X \text{ is even}''$. Then, 
+\EQ{
+P(X \text{ is even}) = P(A) = \sum_{x \in A}p_X (x) = \frac{1 + 3 + 5 + 5 + 3 + 1}{36} = \frac{1}{2}.
+}
+\end{exmp}
+\begin{defn} 
+For a discrete random variable, the expected value (or average) of $f : \sX \to \R$ is denoted
+\EQ{
+\E f = \E[f(X)] = \sum_{x \in \sX}p_X(x)f(x).
+}
+Mathematically, E can be seen as a linear operator from the space of real functions on X to the set of real numbers. Thus,
+\EQ{
+\E [af(X) + bg(X)] = a\E [f(X)] + b\E [g(X)].
+}
+\end{defn}
+
+\begin{exmp}
+If $X$ is the sum of two fair 6-sided dice and $f(x) = (x - 7)^2$, 
+then 
+\EQ{
+\E[(X-7)^2] =\sum_{x \in A}p_X(x)(x-7)^2 = \frac{2(1\cdot 5^2 +2\cdot 4^2 +3\cdot 3^2 +4\cdot 2^2 +5\cdot 1^2)}{36} = \frac{105}{18}.
+}
+Since the mean is $\E[X] = 7$, this actually equals the variance of $X$.
+\end{exmp}
+\begin{defn} 
+A continuous random variable, $X$, taking values on the set $\sX = \R^d$ is
+defined by its cumulative distribution function $P(X \le x)$, where $X \le x$ is used to denote
+$X_i \le x_i$ for $i = 1, \dots, d$. For such a r.v., the probability measure with respect to the
+infinitesimal element dx is denoted by dpX (x). For a measurable event A ? X , this gives ??
+x?A
+??
+P (X ? x) = x?a b?a
+?0 if x < a
+if a ? x ? b ??1 if x > b,
+2
+  P(X ? A) =
+dpX(x) = I(x ? A)dpX(x),
+x?A
+where the indicator function I(s) is 1 if the logical statement s is true and 0 otherwise. If
+pX admits a density, with respect to Lebesgue measure, then it will be denoted by pX(x). In this case, we can write
+??
+P(X ? A) =
+\end{defn}
+\begin{exmp}
+If X is a continuous random variable defined, for a, b ? R with a < b, by
+$p_X(x)dx = I(x ? A)pX(x)dx. ?
+ then it is uniform on [a, b] and its density is given by pX (x) =
+Definition 9. The expected value and variance of a function f : Rd ? R of a continuous
+random variable X ? Rd are given by ?
+1 I(x ? [a, b]). b?a
+ Ef = E[f(X)] =
+Varf =Var(f(X))=E[(f(X)?E[f(X)])]=E??f(X)2???E[f(X)]2.
+\end{exmp}
+\begin{exmp} 
+If X is a continuous random variable that is uniform on [a, b], then its mean and variance are given by
+a
+f(x)dpX(x)
+?b x b2?a2 b+a E[X]= b?adx= 2(b?a) = 2
+??? b x2 ?? ??b+a??2 b3 ?a3
+   Var (f (X )) = b ? a dx ? 2 = 3(b ? a) ? a
+??b+a??2 1 2 2 = 12 (b ? a) .
+\end{exmp}
+     
+II. ENTROPY
+In statistical mechanics, the entropy is proportional to the logarithm of the number of resolvable microstates associated with a macrostate. In classical mechanics, this quantity contains an arbitrary additive constant associated with the size a of a microstate that is considered resolvable. In quantum mechanics, there is a natural limit to resolvability and this constant is related to the Planck constant. For random variables, Shannon chose the following definition which is similar in spirit.
+Definition 11. The entropy (in bits) of a discrete random variable X with probability distribution p(x) is denoted
+??1??1??
+p(x)log2p(x)=E log2p(X) ,
+where 0 log2 0 = 0 by continuity. The notation H (p) is used to denote H (X ) when X ? p(x). When there is no ambiguity, H will be used instead of H (X). The unit of entropy is determined by the base of the logarithm with base-2 resulting in ?bits? and the natural log (i.e., base-e) resulting in ?nats?.
+Remark 12. Roughly speaking, the entropy H (X) measures the uncertainty in the random variable X.
+Example 13. If X is uniform, then p(x) = 1/|X | and ??1??
+H (X) = E log2 1/|X| = log2 |X|.
+Choosing |X | = 2, we see that a uniform random bit has exactly log2 2 = 1 bit of entropy.
+Example 14. Let X be a binary r.v. defined by p(0) = 1?q and p(1) = q. In this case, we have
+H(X)=H(q)?qlog 1+(1?q)log 1 , 2q 21?q
+where H(q) is called the binary entropy function. This function is concave and symmetric about q = 1/2. It also satisfies H(0) = H(1) = 0 and H(1/2) = 1.
+H(X)?
+3
+  x?X
+   
+                      Using Stirling?s formula, n! = ?2?n ?? n ??n ??1 + O ?? 1 ????, we see that en
+qn
+1
+4
+ 0.8
+0.6
+0.4
+0.2
+0
+0 0.2 0.4 0.6 0.8 1
+q
+Figure 1: The binary entropy function H(q).
+Example 15. The number of length-n binary sequences with exactly qn ones is given by?? n ??.
+   ??n?? n!
+qn = =
+(n ? qn)!(qn)!
+?2?n??n??n ??1+O??1???? en
+    ????????????? ???????? ??   (n?qn) n?qn 1 ??qn??qn 1
+  2?(n?qn) e 1+O n?qn 2?qn e 1+O qn 1 ??1+O??1????
+     n
+= ??2?nq(1?q)(1?q)n(1?q) (q)qn · ??1+O?? 1 ??????1+O?? 1 ????
+n?qn qn 1 ??1??qn ?? 1 ??(1?q)n ?? ?? 1 ????
+     = ??2?nq(1?q) q 1?q 1+O nq(1?q)
+1 n[qlog 1+(1?q)log 1 ]?? ?? 1 ????
+     =?? 22q 21?q1+O 2?nq(1 ? q)
+     nq(1 ? q) = ??2?nq(1?q)2 1+O nq(1?q) .
+1 nH(q)?? ?? 1 ????
+   Remark 16. This shows that the binary entropy determines the exponential growth rate of the number of binary sequences with a fixed fraction of ones. In fact, this is a fundamental property of the entropy. More generally, we will see that the entropy H (X) is the expo- nential growth rate of the number of length-n sequences (i.e., there are roughly 2nH(X)such sequences) where the fraction of x?s converges to np(x). This also implies that nH (X) is essentially equal to the minimum number of binary digits required to index all length-n sequences of this type.
+Lemma 17. Basic properties of entropy:
+1. (non-negativity of entropy) H (X) ? 0 with equality iff X is constant.
+H(q)
+
+Proof: log 1 ? 0 and, if X is not constant, there is an x with p(x ) ? (0,1). Thus,
+ 2 p(x)
+H (X) ? p(x0) log2(1/p(x0)).
+0 0
+2. (decomposition rule for entropy) For any partition A1 ? A2 ? · · · ? Am = X , we have m
+H(p) = H(pA) + ?? p(Ai)H(pi), i=1
+where we define pA(i) = p(Ai) ? ??x?Ai p(x) for i = 1,2,...,m and pi(x) = p(x)/p(Ai) for x ? Ai.
+Proof: Observe that
+m1 H(p) = ?? ?? p(x) log2 p(x)
+i=1 x?Am
+m?? p(A)??
+=?? ?p(A)logp(A)+ ?? p(x)log
+i
+2 p(x)
+p(x) 1
+i=1 m
+x?Am +??p(Ai) ??
+=??p(Ai)log2 i=1
+m
+p(Ai )
+log2
+p(x)
+i
+i
+1 m
+5
+     p(Ai )
+= H(pA) + ?? p(Ai)H(pi).
+i=1
+Example 18. Compute the entropy of the distribution p(x) = [0.125 0.375 0.25 0.25]. Using
+decomposition with A1 = {1, 2} and A2 = {3, 4}, we get
+H (p) = 1 + 0.5H(1/4) + 0.5 ? 1.9056.
+III. MUTUAL INFORMATION
+Definition 19. The joint entropy (in bits) of a pair of r.v. (X, Y ) ? pX,Y (x, y) is denoted
+??1??1??
+H(X,Y)?
+Notice that this is identical to H (Z) with Z = (X, Y ).
+pXY(x,y)log2 pX,Y(x,y) =E log2 pX,Y(X,Y) . Definition 20. For a pair of r.v. (X, Y ) ? pX,Y (x, y), the conditional entropy (in bits)
+i=1 x?Am
+  of Y given X is denoted H(Y|X)?
+(x,y)?X ×Y
+??1??1??
+pX,Y(x,y)log2 pY|X(y|x) =E log2 pY|X(Y|X) .
+Notice that this equals entropy of the conditional distribution pY |X (y|x) averaged over x.
+  (x,y)?X ×Y
+
+H(X) H(Y)
+?? pX,Y(x,y) ?? pX,Y(X,Y) ??
+6
+  H(X|Y ) I(X; Y ) H(Y |X)
+Figure 2: Venn diagram illustrating H (X), H (Y ), H (X|Y ), H (Y |X), and I (X; Y ). Definition 21. For a pair of r.v. (X, Y ) ? pX,Y (x, y), the mutual information (in bits)
+between X and Y is denoted
+I(X;Y)?
+Lemma 22. Basic properties of joint entropy and mutual information:
+1. (chain rule of entropy) H(X,Y) = H(X)+H(Y|X). If X and Y are independent,
+H(X, Y ) = H(X) + H(Y ).
+Proof: Take the expectation of log 1 = log 1 +log 1 and note that 2 pX,Y (X,Y) 2 pX(X) 2 pY|X(Y|X)
+PY |X (y|x) = pY (y) for all x, y if X and Y are independent.
+2. (mutualinformation)ThemutualinformationsatisfiesI(X;Y)=Y(Y;X)and
+  (x,y)?X ×Y
+pX,Y(x,y)log2 pX(x)pY(y) =E log2 pX(X)pY(Y) .
+   I (X; Y ) = H (X) + H (Y ) ? H (X, Y ) = H (X) ? H (X|Y ) = H (Y ) ? H (Y |X) . Proof: Take the expectation of log pX,Y (X,Y ) = log 1 + log 1 ? log 1
+    2 pX(X)pY (Y) 2 pX(X) 2 pY (Y) 2 pX,Y (X,Y) and apply the chain rule as needed. Also, symmetry follows from swapping X,Y and
+x, y in the sum because pX,Y (x, y) = pY,X (y, x).
+Example 23. Let X = Y = {0, 1} and pX,Y (x, y) = ?/2 if x?= y and pX,Y (x, y) = (1 ? ?)/2
+ifx=y. SincepX(x)=pY(y)= 1,itfollowsthatH(X)=1andH(Y)=1. Since 2
+pY|X(y|x)?{?,1??},itfollowsthatH(Y|X)=H(?). Thus,wehaveI(X;Y)=H(Y)? H (Y |X) = 1 ? H(?). The conditional distribution pY |X called the binary symmetric channel with error probability ? and denoted by BSC(?).
+ 
+7 Definition 24. The Kullback-Liebler (KL) divergence (in bits) between distributions p(x)
+x?X
+20
+ifthereisanyx?X suchthatp(x)>0andq(x)=0.
+Remark 25. The divergence is non-negative and equal to 0 iff p(x) = q(x) for all x. Thus, it behaves something like a metric on the space of distributions. It is not exactly a metric, however, because it is not symmetric.
+Example 26. For X = {0, 1}, let p(1) = r define a Bernoulli(r) distribution and q(1) = s define a Bernoulli(s) distribution. Then, the divergence between p and q is given by
+D(r||s)??rlog r +(1?r)log 1?r. 2s 21?s
+Example 27. Let X be the number of ones in a length-n vector of i.i.d. Bernoulli(s) random variables. Then, the probability the resulting vector has exactly rn ones is given by
+??n?? rn n?rn P(X=rn)= rn s (1?s) .
+Using the results from Example 15, one can see that this equals
+and q(x), defined on the same X, is denoted D(p?q)???p(x)log p(x),
+ 2 q(x) whereweassume0log(0/q)=0forq?[0,1]andplog p =?forp>0. Thus,D(p?q)=?
+   1+O(1) 1 1 1+O(1)
+nr(1?r) n[rlog +(1?r)log ] n[rlogs+(1?r)log (1?s)] nr(1?r) ?nD(r||s)
+  ?? 22r 21?r2 2 =?? 2. 2?nr(1 ? r) 2?nr(1 ? r)
+      Thus, we see that exponential decay rate is determined by the divergence between a Bernoulli(r) distribution and a Bernoulli(s) distribution. This example highlights the con- nection between information theory and the theory of large deviations.
+Definition 28. A function f : R ? R is called convex on the interval (a, b) if, for all x1,x2 ? (a,b) and ? ? [0,1],
+f(?x1 + (1 ? ?)x2) ? ?f(x1) + (1 ? ?)f(x2).
+It is called strictly convex if equality holds only if ? = 0 or ? = 1. For a (strictly) convex function f, the function ?f is called (strictly) \textbf{concave}. 
+
+%\begin{defn} 
+Let $(\Omega, \sF, P)$ be a probability space. 
+For an arbitrary index set $T$ and state space $\sX \subseteq \R$, a \textbf{random process} is a measurable map $X : (\Omega, T) \to \sX$. 
+Realization of random process at each $t \in T$, is a random variable defined on the probability space $(\Omega, \sF, P)$ as  $X_t: \Omega \to \sX$ such that  
+\EQ{
+X_t(\omega) \triangleq X(\omega, t) \in \sX, \text{ and }X_t = (X_t(\omega) \in \sX: \omega \in \Omega).
+} 
+For each outcome $\omega \in \Omega$, we have a function $X_{\omega}: T \to \sX$ called the \textbf{sample path} or the \textbf{sample function} of the process $X$ defined as 
+\EQ{
+X_{\omega} \triangleq (X(\omega, t) \in \sX: t \in T) = (X_t(\omega) \in \sX: t \in T).
+} 
+The random process $X$ can be thought of as a collection of random variables $X = (X_t \in \sX: t \in T)$ or an ensemble of sample paths $X = (X_\omega \in \sX^T: \omega \in \Omega)$. 
+Recall that $\sX^T$ is set of all functions from the index set $T$ to state space $\sX$. 
+
+%each defined on the same probability space $(\Omega, \sF, P)$ is called a \textbf{random process} 
+%\end{defn}
+\begin{shaded*}
+\begin{exmp}[Bernoulli sequence] 
+\label{exmp:BernoulliSeqDefn}
+Let index set $T = \N = \{1, 2, \dots\}$ and the sample space be the collection of infinite bi-variate sequences of successes (S) and failures (F) defined by $\Omega = \{S, F\}^\N$. 
+An outcome $\omega \in \Omega$ is an infinite sequence $\omega = (\omega_1, \omega_2, \dots)$ such that $\omega_n \in \set{S, F}$ for each $n \in \N$. 
+We define the random process $X: (\Omega, \N) \to \{0,1\}$ such that $X_{\omega} = (\indicator{\omega_1 = S}, \indicator{\omega_2 = S}, \dots)$. 
+That is, we have 
+\meq{3}{
+& X(\omega, n) = \indicator{\omega_n = S}, &&X_n =(\indicator{\omega_n = S}: \omega_n \in \set{S, F}),&&X_\omega = (\indicator{\omega_n = S}: n \in \N).
+} 
+Hence, we can write the process  as collection of random variables $X = (X_n: n \in \N)$ or the collection of sample paths $X = (X_\omega: \omega \in \Omega)$. 
+\end{exmp}
+\end{shaded*}
+
+\subsection{Classification}
+State space $\sX$ can be countable or uncountable, corresponding to discrete or continuous valued process.  
+If the index set $T$ is countable, the stochastic process is called \textbf{discrete}-time stochastic process or random sequence. 
+When the index set $T$ is uncountable, it is called \textbf{continuous}-time stochastic process. 
+The index set $T$ doesn't have to be time, if the index set is space, and then the stochastic process is spatial process. 
+When $T = \R^n \times [0, \infty)$, stochastic process $X$ is a spatio-temporal process. 
+\begin{shaded*}
+\begin{exmp}
+We list some examples of each such stochastic process. 
+\begin{enumerate}[i\_]
+\item Discrete random sequence: brand switching, discrete time queues, number of people at bank each day.
+\item Continuous random sequence: stock prices, currency exchange rates, waiting time in queue of $n$th arrival, workload at arrivals in time sharing computer systems.
+\item Discrete random process:  counting processes, population sampled at birth-death instants, number of people in queues.
+\item Continuous random process: water level in a dam, waiting time till service in a queue, location of a mobile node in a network.
+\end{enumerate}
+\end{exmp}
+\end{shaded*}
+
+\subsection{Independence}
+Recall, given the probability space $(\Omega, \sF, P)$, two events $A, B \in \sF$ are \textbf{independent events} if 
+\EQ{
+P(A\cap B) = P(A)P(B).
+}
+Random variables $X,Y$ defined on the above probability space, are \textbf{independent random variables} if for all $x,y \in \R$
+\EQ{
+P\{X(\omega) \le x, Y(\omega) \le y\} = P\{X(\omega) \le x\}P\{Y(\omega) \le y\}.
+}
+A stochastic process $X$ is said to be \textbf{independent} if for all finite subsets $S \subseteq T$, the finite collection of events $\set{\set{X_s \le x_s}: s \in S}$ are independent.  
+That is, we have
+\EQ{
+P(\{X_s \le  x_s, s \in S\}) = \prod_{s \in S}P\{X_s \le x_s\}. 
+}
+Two stochastic process $X, Y$ for the common index set $T$ are \textbf{independent random processes} if for all %$m,n \in \N$ and 
+finite subsets $I, J \subseteq T$, 
+the following events $\set{X_i \le x_i, i \in I}$ and $\set{Y_j \le y_j, j \in J}$ are independent. %such that $|I| =m, |J| = n$, 
+That is, 
+\EQ{
+P\left(\{X_i \le x_i, i \in I \}\cap\{Y_j \le y_j, j \in J\}\right) = P\left(\{X_i \le x_i, i \in I\}\right)P\left(\{Y_j \le y_j, j \in J\}\right).
+}
+\begin{shaded*}
+\begin{exmp}[Bernoulli sequence] 
+\label{exmp:BernoulliSeqIndep}
+Let the Bernoulli sequence $X$ defined in Example~\ref{exmp:BernoulliSeqDefn} be independent and identically distributed with $P\set{X_n = 1} = p \in (0,1)$. 
+For any sequence $x \in \set{0,1}^\N$, we have $P\set{X = x} = 0$. 
+Let $q \triangleq (1-p)$, then the probability of observing $m$ heads and $r$ tails is given by $p^mq^r$. 
+\end{exmp}
+\end{shaded*}
+\subsection{Specification}
+To define a measure on a random process, we can either put a measure on sample paths, or equip the collection of random variables with a joint measure. 
+%We adopt the second approach, and 
+We are interested in identifying the joint distribution $F: \R^T \to [0,1]$. 
+To this end, for any $x \in \R^T$we need to know
+\EQ{
+F(x) = P\left(\displaystyle {\bigcap_{t \in T}\{\omega \in \Omega: X_t(\omega) \le x_t\}}\right) = P(\bigcap_{t \in T}X_t^{-1}(-\infty, x_t]) = P \circ X^{-1}\bigtimes_{t \in T}(-\infty, x_t].
+}
+However, even for a simple independent process with countably infinite $T$, 
+%When the index set $T$ is infinite, 
+any function of the above form would be zero if $x_t$ is finite for all $t \in T$. 
+Therefore, we only look at the values of $F(x)$ when $x_t \in \R$ for indices $t$ in a finite set $S$ and $x_t = \infty$  for all $t \notin S$. 
+That is, for any finite set $S \subseteq T $we focus on the product sets of the form 
+\EQ{
+\bigtimes_{s \in S}(-\infty, x_s]\bigtimes_{s \notin S}\R. 
+}
+%This leads to finite-dimensional distributions as defined below. 
+%\begin{defn}  
+We can define a \textbf{finite dimensional distribution} for any finite set $S \subseteq T$ and $x_S = \{x_s \in \R : s \in S\}$, 
+\EQ{
+F_S(x_S) = P\left(\displaystyle {\bigcap_{s \in S}\{\omega \in \Omega: X_s(\omega) \le x_s\}}\right) = P(\bigcap_{s \in S}X_s^{-1}(-\infty, x_s]).
+}
+%\end{defn}
+Set of all finite dimensional distributions of the stochastic process $\{X_t: t \in T\}$ characterizes its distribution completely.
+Simpler characterizations of a stochastic process $X(t)$ are in terms of its moments. 
+That is, the first moment such as mean, and the second moment such as correlations and covariance functions. 
+\meq{3}{
+&m_X(t) \triangleq \E X_t, && R_X(t,s) \triangleq \E X_tX_s,&& C_X(t,s) \triangleq \E (X_t - m_X(t))(X_s-m_X(s)).
+}
+
+\begin{shaded*}
+\begin{exmp}[Bernoulli sequence] 
+We can easily compute the mean, the auto-correlation, and the auto-covariance functions for the independent Bernoulli process defined in Example~\ref{exmp:BernoulliSeqIndep} as 
+\meq{3}{
+&m_X(n) = \E X_n = p, &&R_X(m,n)=\E X_mX_n = \E X_m\E X_n = p^2,&&C_x(m,n) = 0.
+}
+\end{exmp}
+\end{shaded*}
+
+\begin{shaded*}
+\begin{exmp}
+Some examples of simple stochastic processes. 
+\begin{enumerate}[i\_]
+\item $X_t = A \cos 2\pi t$, where $A$ is random. 
+%The finite dimensional distribution is given by 
+%\begin{align*}
+%F_S(x) = P\left(\left\{A\cos 2\pi s \leq x_s, s \in S\right\}\right). %P\left(\left\{A \leq \min_{s \in S\setminus\{(2k+1)\frac{\pi}{2}, k \in \Z\}}\frac{x_s}{\cos 2\pi_s}\right\}\right).
+%\end{align*}
+%The moments are given by 
+%\meq{3}{
+%&m_X(t) = (\E A)\cos 2\pi t, && R_X(t,s) =  (\E A^2) \cos 2\pi t\cos 2\pi s,&& C_X(t,s) =\text{Var}(A) \cos 2\pi t\cos 2\pi s.
+%}
+\item $X_t = \cos(2\pi t+ \Theta)$, where $\Theta$ is random and uniformly distributed between $(-\pi, \pi]$. 
+%The finite dimensional distribution is given by 
+%\begin{align*}
+%F_S(x) = P\left(\left\{\cos(2\pi s + \Theta) \leq x_s, s \in S\right\}\right). %P\left(\left\{A \leq \min_{s \in S\setminus\{(2k+1)\frac{\pi}{2}, k \in \Z\}}\frac{x_s}{\cos 2\pi_s}\right\}\right).
+%\end{align*}
+%The moments are given by 
+%\meq{3}{
+%&m_X = 0, && R_X(t,s) =  \frac{1}{2}\cos2\pi (t-s),&& C_X(t,s) = R_X(t,s).
+%}
+\item $X_n = U^n$ for $n \in \N$, where $U$ is uniformly distributed in the open interval $(0,1)$.
+\item $Z_t = At +B$ where $A$ and $B$ are independent random variables. 
+\end{enumerate}
+\end{exmp}
+\end{shaded*}
+
+\end{document}
+
+\section{Examples of Tractable Stochastic Processes}
+In general, it is very difficult to characterize a stochastic process completely in terms of its finite dimensional distribution. 
+However, we have listed few analytically tractable examples below, where we can completely characterize the stochastic process. 
+\subsection{Independent and identically distributed processes}
+Let $(X_t: t \in T)$ be an independent and identically distributed (\emph{iid}) random process, with a common distribution $F(x)$. 
+Then, the finite dimensional distribution for this process for any finite $S \subseteq T$ can be written as 
+\EQ{
+F_S(x_S) = P\left(\{X_s(\omega) \le x_s, s \in S\}\right) = \prod_{s \in S}F(x_s).
+}
+It's easy to verify that the first and the second moments are independent of time indices. 
+Since $X_t = X_0$ in distribution, 
+\meq{3}{
+&m_X = \E X_0 , && R_X = \E X_0^2, && C_X = \Var(X_0).
+}
+
+%\subsubsection{Independent increments process}
+\subsection{Stationary processes}
+A stochastic process $X$ is \textbf{stationary} if all finite dimensional distributions are shift invariant. 
+That is, for any finite $n \in \N$ and $t > 0$, the random vectors $(X_{s_1}, \dots, X_{s_n})$ and $(X_{s_1+t}, \dots, X_{s_1+t})$ have the identical joint distribution for all $s_1 \le \dots \le s_n$.  
+That is, for finite $S \subseteq T$ and $t > 0$, we have 
+\EQ{
+F_S(x_S) = P(\{X_s(\omega) \le x_s, s \in S\}) = P(\{X_{s+t}(\omega) \le x_s, s \in S\}) = F_{t+S}(x_S).
+}
+For a stationary stochastic process, all the existing moments are shift invariant. 
+For Gaussian random processes, first and the second moment suffice to get any finite dimensional distribution. 
+A \textbf{second order} stochastic process $X$ has finite auto-correlation $R_X(t,t) < \infty$ for all indices $t \in T$. 
+This implies $R_X(t_1, t_2) < \infty$ by Cauchy-Schwartz inequality, 
+and hence the mean, auto-correlation, and the auto-covariance functions are well defined and finite. 
+Since $X_t = X_0$ and $(X_t,X_s) = (X_{t-s}, X_{0})$ in distribution, we have for a second order process $X$ 
+\meq{3}{
+&m_X = \E X_0 , && R_X(t, s) = R_X(t-s,0) = \E X_{t-s}X_0, && C_X(t-s, 0) = R_X(t-s, 0) - m_X^2.
+}
+
+
+A random process $X$ is \textbf{wide sense stationary} if 
+\begin{enumerate}
+\item $m_X(t) = m_X(t+s)$ for all $s,t \in T$, and 
+\item $R_X(t,s) = R_x(t+u, s+u)$ for all $s,t,u \in T$. 
+\end{enumerate} 
+It follows that a second order stationary stochastic process $X$,  is wide sense stationary. 
+A second order wide sense stationary process is not necessarily stationary. 
+We can similarly define join stationarity and joint wide sense stationarity for two stochastic processes $X$ and $Y$.
+
+\subsection{Markov processes}
+A stochastic process $X$ is \textbf{Markov} if conditioned on the present state, future is independent of the past. 
+We denote the history of the process until time $t$ as $\sF_t = \sigma(X_s, s \le t)$. 
+That is, for any ordered index set $T$ containing any two indices $u > t$, we have  %such that $t < u$, % \in T$, 
+\EQ{
+P(\{X_u \le x_u\}\given \sF_t) = P(\{X_{u} \le x_u\}\given \sigma(X_t)).
+}
+The range of the process is called the \textbf{state space}. 
+%For a stationary Markov process, we would have 
+We next re-write the Markov property more explicitly for the process $X$. 
+For all $x, y \in \sX$, finite set $S \subseteq T$ such that $\max S < t < u$, and $H_{s}  = \set{X_s \le x_s: s \in S} \in \sF_t$, we have 
+\EQ{
+P(\{X_u \le y\}\given H_S \cap \set{X_t \le x}) = P(\{X_{u} \le y\}\given \set{X_t \le x}).
+}
+When the state space $\sX$ is countable, we can write $H_S = \cap_{s \in S}\set{X_s = x_s}$ and the Markov property can be written as 
+\EQ{
+P(\{X_u = y\}\given H_S \cap \set{X_t = x}) = P(\{X_{u} = x_u\}\given \set{X_t = x}).
+}
+We will study this process in detail in coming lectures. 
+
+
+\begin{shaded*}
+\begin{exmp}[Random Walk] 
+Let $X = (X_n \in \R^d: n \in \N)$ be an be an independent (not necessarily identical) Bernoulli sequence. 
+Let $S_0 = 0$ and $S_n \triangleq \sum_{i=1}^nX_i$, then the process $S = (S_n \in \R^d: n \in \N_0)$ is called a \textbf{random walk}. 
+We can think of $S_n$ as the random location of a particle after $n$ steps, 
+where the particle starts from origin and takes steps of size $X_i$ at the $i$th step. 
+
+%From previous section, we know following properties of random walks. 
+\begin{thm} 
+For a random walk $(S_n: n \in \N)$ with independent step-size sequence $X$, the following are true. 
+\begin{enumerate}[i\_]
+\item The first two moments are $\E S_n = \sum_{i=1}^n\E X_i$ and $\Var[S_n] = \sum_{i=1}^n\Var[X_i]$. 
+\item Random walk is non-stationary with independent increments. 
+\item Random walk is a Markov sequence. 
+\end{enumerate}
+\end{thm}
+\proof{
+Results follow from the independence of the step-size sequence $X$. 
+\begin{enumerate}[i\_]
+\item Follows from the linearity of expectation and independence of step sizes. 
+\item Since the mean is time dependent, random walk is non-stationary process. 
+Independence of increments follows from the independence of step sizes. 
+\item Given the historical event $H_{n-1} \triangleq \cap_{k=1}^{n-1}\set{S_k \le s_k}$ and the current state $\set{S_n \le s_n}$, 
+we can write the conditional probability 
+\eq{
+P(\set{S_{n+1} \le s_{n+1}}\given H_{n-1}\cap\set{S_n \le s_n}) &= P(\set{X_{n+1} \le s_{n+1}-S_n}\given H_{n-1}\cap\set{S_n \le s_n})\\
+&= P(\set{S_{n+1} \le s_{n+1}}\given \set{S_n \le s_n}). % = P\set{X_{n+1} = s_{n+1}-s_n} .
+}
+The equality in the second line follows from the independence of the step-size sequence. 
+In particular, from the independence of $X_{n+1}$ from the collection $\sigma(S_0, X_1, \dots, X_n) = \sigma(S_0, S_1, \dots, S_n)$. 
+For the countable state space $\sX$, an given the historical event $H_{n-1} \triangleq \cap_{k=1}^{n-1}\set{S_k = s_k}$ and the current state $\set{S_n = s_n}$, 
+we can write the conditional probability 
+\eq{
+P(\set{S_{n+1} = s_{n+1}}\given H_{n-1}\cap\set{S_n = s_n}) &= P(\set{X_{n+1} = s_{n+1}-S_n}\given H_{n-1}\cap\set{S_n = s_n})\\
+&= P(\set{S_{n+1} = s_{n+1}}\given \set{S_n = s_n}) = P\set{X_{n+1} = s_{n+1}-s_n} .
+}
+\end{enumerate}
+}
+\end{exmp}
+\end{shaded*}
+
+\subsection{L\'evy processes}
+A right continuous with left limits stochastic process $X = (X_t \in \R: t \in T \subseteq \R_+)$ with $X_0 = 0$ almost surely, is a \textbf{L\'evy process} if the following conditions hold. 
+\begin{enumerate}[(L1)]
+%\item $X_{0}=0$ almost surely.
+\item The increments are independent. For any $ 0\leq t_{1}<t_{2}<\cdots <t_{n}<\infty$, $X_{t_{2}}-X_{t_{1}},X_{t_{3}}-X_{t_{2}},\ldots ,X_{t_{n}}-X_{t_{n-1}}$ are independent.
+\item The increments are stationary. For any $s<t$,  $X_{t}-X_{s}$, is equal in distribution to $X_{t-s}$.
+\item Continuous in probability. For any $\epsilon > 0$ and $t\geq 0$ it holds that $\lim _{h\rightarrow 0}P(|X_{t+h}-X_{t}|>\epsilon )=0$. 
+\end{enumerate}
+
+\begin{shaded*}
+\begin{exmp}
+Two examples of L\'evy processes are Poisson process and Wiener process. 
+The distribution of Poisson process at time $t$ is Poisson with rate $\lambda t$ and the distribution of Wiener process at time $t$ is zero mean Gaussian with variance $t$. 
+\end{exmp}
+\end{shaded*}
+
+\section{Conditional Expectation} 
+Let $(\Omega, \sF, P)$ be the probability space.  
+Let $X$ be a measurable random variable on this probability space denoted as $X \in \sF$, 
+if the event $X^{-1}(-\infty, x] = \{\omega \in \Omega: X(\omega) \leq x\} \in \sF$ for each $x \in \R$.  
+Let $\sE \subseteq \sF$ be a $\sigma$-algebra, then the \textbf{conditional expectation} of $X$ given $\sE$ is denoted $\E[X | \sE]$ and is a random variable $Y = \E[X | \sE]$ where
+\begin{enumerate}[i\_] 
+\item $Y \in \sE$,
+\item for each event $A \in \sE$, we have $\E [X1_A] = \E[Y1_A]$. 
+%\eq{
+%\int_A X dP = \int_A Y dP. 
+%}
+\end{enumerate}
+Intuitively, we think of the $\sigma$-algebra $\sE$ as describing the information we have. 
+For each $A \in \sE$, we know whether or not $A$ has occurred. 
+The conditional expectation $\E[X|\sE]$ is then the ``best guess'' of the value of $X$ given the information $\sE$. 
+Let $X,Y$ be two random variables defined on this probability space. 
+Then, the conditional expectation of $X$ given $Y$ is defined as 
+\eq{
+\E[X|Y] = \E[X | \sigma(Y)]. 
+}
+A random variable $X$ is \textbf{independent} of the $\sigma$-algebra $\sE$, if for all $x \in \R$ and $A \in \sE$, 
+\eq{
+\E[1_{\{X \leq x\}}1_A]= P\{X \leq x\}\cap A = P\{X \leq x\}P(A) = \E1_{\{X \leq x\}}\E1_A. 
+}
+\begin{lem}
+Let $(\Omega, \sF, P)$ be a probability space with $\sE \subseteq \sF$ a $\sigma$-algebra. 
+If $X \in \sE$ is a random variable, then $\E[X| \sE] = X$. 
+\end{lem}
+\begin{proof} 
+First condition is true by hypothesis, and the second condition holds for any $A \in \sE$. 
+\end{proof}
+\begin{lem} 
+Let $(\Omega, \sF, P)$ be a probability space with $\sE \subseteq \sF$ a $\sigma$-algebra. 
+If $X \in \sF$ be a random variable independent of $\sE$.  
+Then, $\E[X| \sE]  = \E[X]$. 
+\end{lem}
+\begin{proof}
+This follows since $\E X \in \sE$ and the random variables $X$ and $1_{A}$ are independent for any $A \in \sE$, 
+which implies 
+\eq{
+\E[X1_A] = \E X \E 1_A = \E [(\E X) 1_A]. 
+}
+\end{proof}
+One can partition the state space $\R$ into measurable sets $E_1, E_2, \dots$ for the random variable $X$ defined on the given probability space. 
+Then $\Omega_i \triangleq X^{-1}(E_i)$ is a partition of the sample space $\Omega$. 
+Let $Y$ be a random variable defined as the partition index for the random variable $X$. 
+That is, 
+\eq{
+Y = \sum_{i \in \N}i \cdot 1_{\{X \in E_i\}}. 
+} 
+Let $\sE \triangleq \sigma(\Omega_1, \Omega_2, \dots)$, then one can check that $Y \in \sE$ or $\sigma(Y) = \sE$. 
+Hence, $\E[X|Y] = \E[X|\sigma(Y)] = \E[X|\sE]$. 
+Clearly, $\E[X|Y]$ would be a function of $Y$ and since $Y$ takes countably many values, we have $Z = \E[X|Y]$ taking countably many values, with $Z_i = Z1_{\{Y = i\}}$ being a constant on the corresponding partition $\Omega_i$  of the sample space. 
+One can compute this conditional expectation using joint distribution directly as 
+\eq{
+\E[X|Y=i] = \int_{\R}xdF_{X|Y=i}(x) = \frac{1}{P(\Omega_i)}\int_{E_i}xdF(x) = \frac{\E X1_{\Omega_i}}{P(\Omega_i)}
+}
+\begin{lem}
+Suppose $\{\Omega_i: i \in \N\}$ be a countable partition of the sample space $\Omega$, and $\sE = \sigma(\Omega_1, \Omega_2, \dots)$ is the $\sigma$-field generated by this partition. 
+Then, 
+\eq{
+\E[X | \sE] = \frac{\E[X1_{\Omega_i}]}{P(\Omega_i)} \text{ on } \Omega_i.
+}
+\end{lem}
+\begin{proof}
+It is easy to see that the RHS is constant on each partition $\Omega_i$ and hence is measurable with respect to $\sE$. 
+Further, for each $\Omega_i \in \sE$, we have
+\eq{
+\int_{\Omega_i}\frac{\E[X 1_{\Omega_i}]}{P(\Omega_i)}dP = \E[X 1_{\Omega_i}] = \int_{\Omega_i}XdP. 
+}
+\end{proof}
+\begin{cor} $P(A|B)P(B) = P(A\cap B)$.
+\end{cor}
+\begin{proof}
+Taking $X = 1_A$ and $\sE = \{\emptyset, \Omega, B, B^c\}$, from the previous Lemma we get 
+\eq{
+P(A|B) = \E[1_A| 1_B]= \E[1_A|\sE] = \frac{\E[1_A1_B]}{P(B)} = \frac{P(A\cap B)}{P(B)}.
+} 
+\end{proof}
+
+\begin{thm}[Bayes' Formula] 
+For a $\sigma$-algebra $\sE \subseteq \sF$, and for any events $G \in \sE$ and $A \in \sF$, we have 
+\eq{
+P(G|A) = \frac{\E[1_GP(A| \sE)]}{\E P(A|\sE)}.
+}
+\end{thm}
+\begin{proof}
+It is easy to check that numerator is $\E 1_G\E[1_A|\sE] = \E[1_{A \cap G}|\sE]$. 
+It suffices to show that $\E\E[1_A|\sE] = \E 1_A$, which follows from definition. 
+\end{proof}
+\begin{cor} 
+For the countable partition $(\Omega_1, \Omega_2, \dots)$, if the $\sigma$-algebra $\sE = \sigma(\Omega_1, \Omega_2, \dots)$, then for any events $G \in \sE$ and $A \in \sF$, we have 
+\eq{
+P(\Omega_i|A) = \frac{P(A|\Omega_i)P(\Omega_i)}{\sum_{j \in \N}P(A|\Omega_j)P(\Omega_j)}.
+}
+\end{cor}
+\begin{proof}
+Result follows from the fact that $P(A|\sE) \in \sE$ and hence is a constant on each partition $\Omega_j$. % and $\sum_{j \in \N}1_{\Omega_j} = 1$.
+\end{proof}
+
+\subsection{Filtration}
+A net of $\sigma$-algebras $\sF_{\bullet} = \{\sF_t \subseteq \sF: t \in T\}$ is called a \textbf{filtration} when the index set $T$ is totally ordered and the net is non-decreasing, that is for all $s \leqslant t \in T$ implies $\sF_s \subseteq \sF_t$. 
+Consider a random process $X$ indexed by the ordered set $T$ on the probability space $(\Omega, \sF, P)$. 
+The process $X$ is called \textbf{adapted} to the filtration $\sF_{\bullet}$, if for each $t \in T$, we have the random variable $X_t \in \sF_t$. 
+For a random process $X$ with an ordered index set $T$, we can define a natural filtration $\sF_{\bullet} = \{\sF_t \subseteq \sF: t \in T\}$ indexed by $T$, where  $\sF_t \triangleq \sigma(X_s, s \leqslant t)$ is the information about the process till index $t$ and 
+the process $X$ is adapted to its natural filtration by definition. 
+
+If $X = (X_t: t \in T)$ is an independent process with the associated natural filtration $\sF_{\bullet}$, then for any $t > s$ and events $A \in \sF_s$, 
+$X_t$ is independent of the event $A$. 
+This is just a fancy way of saying $X_t$ is independent of $(X_u, u \le s)$. 
+Hence, for any random variable $Y \in \sF_s$, we have 
+\eq{
+\E[\E[X_tY|\sF_s]] = \E[\E[X_t] Y] = \E X_t \E Y.
+}
+
+\end{document}
