@@ -10,7 +10,8 @@
 
 \section{Random Variables} 
 
-From a mathematical perspective, this class deals primarily with probability and, in particular, discrete random variables. 
+Our main focus will be on the behavior of large sets of discrete random variables. 
+%From a mathematical perspective, this class deals primarily with probability and, in particular, discrete random variables. 
 \begin{defn} 
 A \textbf{discrete random variable}, $X$, is defined by following information: 
 (i) $\sX$ : the finite set of values that it may take, 
@@ -29,14 +30,14 @@ p_X (x) = \frac{6 - \abs{7 - x}} {36}.
 An \textbf{event} $A \subseteq \sX$ is a subset of values. 
 The probability of an event is denoted 
 \EQ{
-P(X \in A)=P(A) = \sum_{x \in A}p_X(x) = \sum_{x \in A}P(X =x).
+\P(X \in A)=\P(A) = \sum_{x \in A}p_X(x) = \sum_{x \in A}\P(X =x).
 }
 Also, an event is sometimes defined in words, $A = ``X \text{ is even}''$.
 \end{defn}
 \begin{exmp} 
 If X is the sum of two fair 6-sided dice and $A = ``X \text{ is even}''$. Then, 
 \EQ{
-P(X \text{ is even}) = P(A) = \sum_{x \in A}p_X (x) = \frac{1 + 3 + 5 + 5 + 3 + 1}{36} = \frac{1}{2}.
+\P(X \text{ is even}) = \P(A) = \sum_{x \in A}p_X (x) = \frac{1 + 3 + 5 + 5 + 3 + 1}{36} = \frac{1}{2}.
 }
 \end{exmp}
 \begin{defn} 
@@ -44,7 +45,8 @@ For a discrete random variable, the expected value (or average) of $f : \sX \to 
 \EQ{
 \E f = \E[f(X)] = \sum_{x \in \sX}p_X(x)f(x).
 }
-Mathematically, E can be seen as a linear operator from the space of real functions on X to the set of real numbers. Thus,
+Mathematically, $\E{}$ can be seen as a linear operator from the space of real functions on $\sX$ to the set of real numbers. 
+Thus,
 \EQ{
 \E [af(X) + bg(X)] = a\E [f(X)] + b\E [g(X)].
 }
@@ -59,77 +61,94 @@ then
 Since the mean is $\E[X] = 7$, this actually equals the variance of $X$.
 \end{exmp}
 \begin{defn} 
-A continuous random variable, $X$, taking values on the set $\sX = \R^d$ is
-defined by its cumulative distribution function $P(X \le x)$, where $X \le x$ is used to denote
+A continuous random variable, $X$, taking values on the set $\sX = \R^d$ or in some smooth finite-dimensional manifold is defined by its cumulative distribution function $\P(X \le x)$, where $X \le x$ is used to denote
 $X_i \le x_i$ for $i = 1, \dots, d$. For such a r.v., the probability measure with respect to the
-infinitesimal element dx is denoted by dpX (x). For a measurable event A ? X , this gives ??
-x?A
-??
-P (X ? x) = x?a b?a
-?0 if x < a
-if a ? x ? b ??1 if x > b,
-2
-  P(X ? A) =
-dpX(x) = I(x ? A)dpX(x),
-x?A
-where the indicator function I(s) is 1 if the logical statement s is true and 0 otherwise. If
-pX admits a density, with respect to Lebesgue measure, then it will be denoted by pX(x). In this case, we can write
-??
-P(X ? A) =
+infinitesimal element $dx$ is denoted by $dp_X (x)$. 
+For a measurable event $\sA \subseteq X$ , this gives 
+\EQ{
+\P(X \in \sA) = \int_{\sA}dp_X(x) = \int\indicator{x \in \sA}dp_X(x),
+}
+where the indicator function $\indicator{s}$ is $1$ if the logical statement $s$ is true and $0$ otherwise. 
+If $p_X$ admits a density, with respect to Lebesgue measure, then it will be denoted by $p_X(x)$. 
+In this case, we can write
+\EQ{
+\P(X \in \sA) = \int_{\sA}p_X(x)dx = \int\indicator{x \in \sA}p_X(x)dx.
+}
 \end{defn}
 \begin{exmp}
-If X is a continuous random variable defined, for a, b ? R with a < b, by
-$p_X(x)dx = I(x ? A)pX(x)dx. ?
- then it is uniform on [a, b] and its density is given by pX (x) =
-Definition 9. The expected value and variance of a function f : Rd ? R of a continuous
-random variable X ? Rd are given by ?
-1 I(x ? [a, b]). b?a
- Ef = E[f(X)] =
-Varf =Var(f(X))=E[(f(X)?E[f(X)])]=E??f(X)2???E[f(X)]2.
+If $X$ is a continuous random variable defined, for $a, b \in \R$ with $a < b$, by
+\EQ{
+\P(X \le x) = 
+\begin{cases}
+0 &  x < a\\
+\frac{x-a}{b-a} & a \le x \le b\\
+1 & x > b,
+\end{cases}
+}
+then it is uniform on $[a, b]$ and its density is given by $p_X (x) = \frac{1}{b-a}\indicator{x \in [a,b]}$.
 \end{exmp}
+
+\begin{defn} 
+The expected value and variance of a function $f : \R^d \to \R$ of a continuous
+random variable $X \in \R^d$ are given by
+\eq{
+&\E f = \E[f(X)] = \int f(x)dp_X(x),\\
+&\Var{f} =\Var{f(X)}=\E[(f(X)- \E[f(X)])^2]=\E[f(X)^2]-\E[f(X)]^2.
+}
+\end{defn}
 \begin{exmp} 
-If X is a continuous random variable that is uniform on [a, b], then its mean and variance are given by
-a
-f(x)dpX(x)
-?b x b2?a2 b+a E[X]= b?adx= 2(b?a) = 2
-??? b x2 ?? ??b+a??2 b3 ?a3
-   Var (f (X )) = b ? a dx ? 2 = 3(b ? a) ? a
-??b+a??2 1 2 2 = 12 (b ? a) .
+If $X$ is a continuous random variable that is uniform on $[a, b]$, 
+then its mean and variance are given by
+\eq{
+&\E{X} = \int_a^b \frac{x}{b-a}dx = \frac{b^2-a^2}{2(b-a)} = \frac{b+a}{2},\\
+&\Var{X} =  \int_a^b \frac{x^2}{b-a}dx -\left(\frac{b+a}{2}\right)^2= \frac{b^3-a^3}{3(b-a)} -\left(\frac{b+a}{2}\right)^2= \frac{(b-a)^2}{12}.
+}
 \end{exmp}
      
-II. ENTROPY
-In statistical mechanics, the entropy is proportional to the logarithm of the number of resolvable microstates associated with a macrostate. In classical mechanics, this quantity contains an arbitrary additive constant associated with the size a of a microstate that is considered resolvable. In quantum mechanics, there is a natural limit to resolvability and this constant is related to the Planck constant. For random variables, Shannon chose the following definition which is similar in spirit.
-Definition 11. The entropy (in bits) of a discrete random variable X with probability distribution p(x) is denoted
-??1??1??
-p(x)log2p(x)=E log2p(X) ,
-where 0 log2 0 = 0 by continuity. The notation H (p) is used to denote H (X ) when X ? p(x). When there is no ambiguity, H will be used instead of H (X). The unit of entropy is determined by the base of the logarithm with base-2 resulting in ?bits? and the natural log (i.e., base-e) resulting in ?nats?.
-Remark 12. Roughly speaking, the entropy H (X) measures the uncertainty in the random variable X.
-Example 13. If X is uniform, then p(x) = 1/|X | and ??1??
-H (X) = E log2 1/|X| = log2 |X|.
-Choosing |X | = 2, we see that a uniform random bit has exactly log2 2 = 1 bit of entropy.
-Example 14. Let X be a binary r.v. defined by p(0) = 1?q and p(1) = q. In this case, we have
-H(X)=H(q)?qlog 1+(1?q)log 1 , 2q 21?q
-where H(q) is called the binary entropy function. This function is concave and symmetric about q = 1/2. It also satisfies H(0) = H(1) = 0 and H(1/2) = 1.
-H(X)?
-3
-  x?X
+\section{Entropy}
+In statistical mechanics, the entropy is proportional to the logarithm of the number of resolvable microstates associated with a macrostate. 
+In classical mechanics, this quantity contains an arbitrary additive constant associated with the size of a microstate that is considered resolvable. 
+In quantum mechanics, there is a natural limit to resolvability and this constant is related to the Planck constant. 
+For random variables, Shannon chose the following definition which is similar in spirit. 
+\begin{defn} 
+The \textbf{entropy} (in bits) of a discrete random variable $X$ with probability distribution $p(x)$ is denoted
+\EQ{
+H(X) \triangleq -\sum_{x \in \sX}p(x)\log_2p(x)=\E{\frac{1}{\log_2p(X)}},
+}
+where $0 \log_2 0 = 0$ by continuity. 
+The notation $H (p)$ is used to denote $H (X )$ when $X \sim p(x)$. 
+When there is no ambiguity, $H$ will be used instead of $H (X)$. 
+The unit of entropy is determined by the base of the logarithm with base-2 resulting in ``bits'' and the natural log (i.e., base-e) resulting in ``nats''. 
+\begin{rem}
+Roughly speaking, the entropy $H (X)$ measures the uncertainty in the random variable $X$.
+\end{rem}
+\begin{exmp} 
+If $X$ is uniform, then $p(x) = \frac{1}{\abs{\sX}}$ and 
+\EQ{
+H (X) = \E{\log_2 \frac{1}{\abs{\sX}}} = \log_2 \abs{\sX}.
+}
+Choosing $\abs{\sX} = 2$, we see that a uniform random bit has exactly $\log_2 2 = 1$ bit of entropy.
+\end{exmp}
+\begin{exmp}
+Let $X$ be a binary r.v. defined by $p(0) = 1-q$ and $p(1) = q$. 
+In this case, we have
+\EQ{
+H(X)= \cH(q) = q\log_2 \frac{1}{q}+(1-q)\log_2\frac{1}{1-q}, 
+}
+where $\cH(q)$ is called the binary entropy function. 
+This function is concave and symmetric about $q = \frac{1}{2}$. 
+It also satisfies $\cH(0) = \cH(1) = 0$ and $\cH(1/2) = 1$.
+\end{exmp}
+
    
-                      Using Stirling?s formula, n! = ?2?n ?? n ??n ??1 + O ?? 1 ????, we see that en
-qn
-1
-4
- 0.8
-0.6
-0.4
-0.2
-0
-0 0.2 0.4 0.6 0.8 1
-q
-Figure 1: The binary entropy function H(q).
-Example 15. The number of length-n binary sequences with exactly qn ones is given by?? n ??.
-   ??n?? n!
-qn = =
-(n ? qn)!(qn)!
+                     
+
+\begin{exmp}
+The number of length-$n$ binary sequences with exactly $qn$ ones is given by $\binom{n}{qn}$. 
+Using Stirling's formula, $n! = \sqrt{2\pi n}(\frac{n}{e})^n(1 + O(\frac{1}{n})$, we see that 
+\eq{
+\binom{n}{qn} &= \frac{n!}{(n-qn)!(qn)!}\\
+&=
 ?2?n??n??n ??1+O??1???? en
     ????????????? ???????? ??   (n?qn) n?qn 1 ??qn??qn 1
   2?(n?qn) e 1+O n?qn 2?qn e 1+O qn 1 ??1+O??1????
@@ -141,15 +160,26 @@ n?qn qn 1 ??1??qn ?? 1 ??(1?q)n ?? ?? 1 ????
      =?? 22q 21?q1+O 2?nq(1 ? q)
      nq(1 ? q) = ??2?nq(1?q)2 1+O nq(1?q) .
 1 nH(q)?? ?? 1 ????
-   Remark 16. This shows that the binary entropy determines the exponential growth rate of the number of binary sequences with a fixed fraction of ones. In fact, this is a fundamental property of the entropy. More generally, we will see that the entropy H (X) is the expo- nential growth rate of the number of length-n sequences (i.e., there are roughly 2nH(X)such sequences) where the fraction of x?s converges to np(x). This also implies that nH (X) is essentially equal to the minimum number of binary digits required to index all length-n sequences of this type.
-Lemma 17. Basic properties of entropy:
-1. (non-negativity of entropy) H (X) ? 0 with equality iff X is constant.
+}
+\end{exmp}
+\begin{rem} 
+This shows that the binary entropy determines the exponential growth rate of the number of binary sequences with a fixed fraction of ones. 
+In fact, this is a fundamental property of the entropy. 
+More generally, we will see that the entropy $H (X)$ is the exponential growth rate of the number of length-$n$ sequences (i.e., there are roughly $2^{nH(X)}$ such sequences) where the fraction of $x's$ converges to $np(x)$. 
+This also implies that $nH (X)$ is essentially equal to the minimum number of binary digits required to index all length-$n$ sequences of this type. 
+\end{rem}
+\begin{lem} 
+Basic properties of entropy:
+\begin{enumerate}
+\item (non-negativity of entropy) H (X) ? 0 with equality iff X is constant.
 H(q)
 
-Proof: log 1 ? 0 and, if X is not constant, there is an x with p(x ) ? (0,1). Thus,
+\begin{proof} 
+log 1 ? 0 and, if X is not constant, there is an x with p(x ) ? (0,1). Thus,
  2 p(x)
 H (X) ? p(x0) log2(1/p(x0)).
 0 0
+\end{proof}
 2. (decomposition rule for entropy) For any partition A1 ? A2 ? · · · ? Am = X , we have m
 H(p) = H(pA) + ?? p(Ai)H(pi), i=1
 where we define pA(i) = p(Ai) ? ??x?Ai p(x) for i = 1,2,...,m and pi(x) = p(x)/p(Ai) for x ? Ai.
@@ -175,6 +205,8 @@ i
      p(Ai )
 = H(pA) + ?? p(Ai)H(pi).
 i=1
+\end{enumerate}
+\end{lem}
 Example 18. Compute the entropy of the distribution p(x) = [0.125 0.375 0.25 0.25]. Using
 decomposition with A1 = {1, 2} and A2 = {3, 4}, we get
 H (p) = 1 + 0.5H(1/4) + 0.5 ? 1.9056.

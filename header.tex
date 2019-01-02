@@ -81,14 +81,14 @@
 \newtheorem{assum}[thm]{Assumptions}
 
 \theoremstyle{remark}
-\newtheorem{rem}{Remark}
-\newtheorem{note}{Note}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{note}[thm]{Note}
 
 \newcommand{\Cov}{\operatorname{Cov}}
 %\newcommand{\det}{\operatorname{det}}
 \newcommand{\Real}{\mathbb{R}}
 \newcommand{\tr}{\operatorname{tr}}
-\newcommand{\Var}{\operatorname{Var}}
+%\newcommand{\Var}{\operatorname{Var}}
 
 %\renewcommand{\proof}[1]{\begin{proof}#1\end{proof}}
 \newcommand{\EQ}[1]{\begin{equation*}#1\end{equation*}}
@@ -101,11 +101,13 @@
 \newcommand{\prob}[1]{\mathbb{P}\left[{#1}\right]}
 \newcommand{\given}{\; \big\vert \;} 
 \newcommand{\set}[1]{\left\{#1\right\}} 
-\newcommand{\indicator}[1]{1_{\set{#1}}} 
+\newcommand{\indicator}[1]{\mathbb{1}_{\set{#1}}} 
 \newcommand{\red}[1]{\textcolor{red}{#1}} 
+\newcommand{\E}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\Var}[1]{\operatorname{Var}\left[#1\right]}
 
 \newcommand{\D}{\mathbb{D}}
-\newcommand{\E}{\mathbb{E}}
+%\newcommand{\E}{\mathbb{E}}
 \newcommand{\N}{\mathbb{N}}
 \renewcommand{\P}{\mathbb{P}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -119,9 +121,11 @@
 \newcommand{\cC}{\mathcal{C}}
 \newcommand{\cF}{\mathcal{F}}
 \newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
 \newcommand{\cT}{\mathcal{T}}
 \newcommand{\cX}{\mathcal{X}}
 
+\newcommand{\sA}{\mathscr{A}}
 \newcommand{\sB}{\mathscr{B}}
 \newcommand{\sC}{\mathscr{C}}
 \newcommand{\sE}{\mathscr{E}}
