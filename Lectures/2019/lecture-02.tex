@@ -1,0 +1,363 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,10pt,english]{article}
+\input{../../header}
+\title{Lecture-01: Introduction to Information Theory}
+\author{}
+
+\begin{document}
+\maketitle
+
+\section{Mutual Information}
+\begin{defn} 
+The \textbf{joint entropy} (in bits) of a pair of r.v. $(X, Y) \sim p_{X,Y}(x, y)$ is denoted
+\EQ{
+H(X,Y) \triangleq \sum_{(x,y) \in \sX \times \sY}p_{X,Y}(x, y)\log_2\frac{1}{p_{X,Y}(x,y)} = \E{\log_2\frac{1}{p_{X,Y}(X,Y)}}.
+}
+Notice that this is identical to $H(Z)$ with $Z = (X, Y)$.
+\end{defn} 
+\begin{defn}
+For a pair of r.v. $(X, Y) \sim p_{X,Y}(x, y)$, the \textbf{conditional entropy} (in bits) of $Y$ given $X$ is denoted 
+\EQ{
+H(Y|X) \triangleq \sum_{(x,y) \in \sX \times \sY} p_{X,Y}(x,y)\frac{1}{\log_2 p_{Y|X}(y|x)} = \E{\frac{1}{\log_2 p_{Y|X}(Y|X)}}.
+}
+Notice that this equals entropy of the conditional distribution $p_{Y|X} (y|x)$ averaged over $x$.
+\end{defn}
+
+\begin{defn}
+For a pair of r.v. $(X, Y ) \sim p_{X,Y}(x, y)$, the \textbf{mutual information} (in bits)
+between $X$ and $Y$ is denoted
+\EQ{
+I(X;Y) \triangleq \sum_{(x,y) \in \sX \times \sY}p_{X,Y}(x,y)\log_2\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)} = \E{\log_2\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}}.
+}
+\end{defn}
+\begin{lem}
+Basic properties of joint entropy and mutual information:
+\begin{enumerate}
+\item (chain rule of entropy) $H(X,Y) = H(X)+H(Y|X)$. If $X$ and $Y$ are independent,
+$H(X, Y ) = H(X) + H(Y )$.
+\begin{proof}
+Take the expectation of $\log_2\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)} =\log_2\frac{1}{p_X(x)} + \log_2\frac{1}{p_{Y|X}(y|x)}$ and note that $p_{Y |X}(y|x) = p_Y (y)$ for all $x, y$ if $X$ and $Y$ are independent.
+\end{proof}
+\item (mutual information) The mutual information satisfies 
+\EQ{
+I(X; Y) = H (X) + H (Y) - H (X, Y) = H (X) - H (X|Y) = H (Y) -H (Y|X).
+}
+\begin{proof}
+Take the expectation of $\log_2\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)} =\log_2\frac{1}{p_X(x)} + \log_2\frac{1}{p_Y(y)}  - \log_2\frac{1}{p_{X,Y}(x,y)}$ and apply the chain rule as needed. 
+Also, symmetry follows from swapping $X,Y$ and $x, y$ in the sum because $p_{X,Y} (x, y) = p_{Y,X} (y, x)$. 
+\end{proof}
+\end{enumerate}
+\end{lem} 
+\begin{exmp}
+Let $\sX = \sY = \set{0, 1}$ and $p_{X,Y}(x, y) = \frac{\rho}{2} \indicator{x \neq y} + \frac{(1 - \rho)}{2}\indicator{x=y}$. 
+It follows that $p_X(x)=p_Y(y)= \frac{1}{2}$, and hence $H(X)= H(Y) = 1$. 
+Since $p_{Y|X}(y|x) \in \set{\rho,1-\rho}$, it follows that $H(Y|X)= \cH(\rho)$. 
+Thus, we have $I(X;Y)=H(Y) - H (Y |X) = 1 - \cH(\rho)$. 
+The conditional distribution $p_{Y |X}$ called the \textbf{binary symmetric channel} with error probability $\rho$ and denoted by BSC($\rho$).
+\end{exmp} 
+ 
+
+\begin{defn}
+The \textbf{Kullback-Liebler (KL) divergence} (in bits) between distributions $p(x)$ and $q(x)$, 
+defined on the same support $\sX$, is denoted 
+\EQ{
+D(p\Vert q) \triangleq \sum_{x \in \sX}p(x)\log_2\frac{p(x)}{q(x)},
+}
+where we assume $0\log_2\frac{0}{q} = 0$ for $q \in [0,1]$ and $p\log_2\frac{p}{0} = \infty$ for $p > 0$. 
+Thus, $D(p \Vert q) = \infty$ if there is any $x \in \sX$ such that $p(x)>0$ and $q(x)=0$.
+\end{defn}  
+\begin{rem}
+The divergence is non-negative and equal to $0$ iff $p(x) = q(x)$ for all $x \in \sX$. 
+Thus, it behaves something like a metric on the space of distributions. 
+It is not exactly a metric, however, because it is not symmetric.
+\end{rem}
+\begin{exmp}
+For $\sX = \set{0,1}$, let $p(1) = r$ define a Bernoulli($r$) distribution and $q(1) = s$ define a Bernoulli($s$) distribution. 
+Then, the divergence between $p$ and $q$ is given by 
+\EQ{
+\cD(r \Vert s) \triangleq r\log_2\frac{r}{s} + (1-r)\log_2\frac{1-r}{1-s}. 
+}
+\end{exmp}
+\begin{exmp} 
+Let $X$ be the number of ones in a length-$n$ vector of \emph{i.i.d.} Bernoulli($s$) random variables. 
+Then, the probability the resulting vector has exactly $rn$ ones is given by
+\EQ{
+\P(X=rn)= \binom{n}{rn} s^{rn}(1-s)^{n(1-r)}.
+}
+Using the results from the previous example, one can see that this equals
+\EQ{
+\frac{1 + O(\frac{1}{nr(1-r)})}{\sqrt{2\pi nr(1-r)}}2^{n\cH(r)}2^{n[r \log_2s+ (1-r)\log_2(1-s)]} = \frac{1 + O(\frac{1}{nr(1-r)})}{\sqrt{2\pi nr(1-r)}}2^{-n\cD(r\Vert s)}.
+}
+Thus, we see that exponential decay rate is determined by the divergence between a Bernoulli($r$) distribution and a Bernoulli($s$) distribution. 
+This example highlights the connection between information theory and the theory of large deviations.
+\end{exmp}
+
+\begin{defn}
+A function $f: \R \to \R$ is called \textbf{convex} on the interval $(a, b)$ if, for all $x_1, x_2 \in (a,b)$ and $\lambda \in [0,1]$,
+\EQ{
+f(\lambda x_1 + (1 -\lambda)x_2) \le \lambda f(x_1) + (1 -\lambda)f(x_2).
+}
+It is called \textbf{strictly convex} if equality holds only if $\lambda = 0$ or $\lambda = 1$. 
+For a (strictly) convex function $f$, the function $-f$ is called (strictly) \textbf{concave}. 
+\end{defn} 
+
+\begin{lem}[Jensen's Inequality] 
+If $f$ is convex and $X$ is a real random variable, then
+\EQ{
+\E{f(X)} \ge f(\E{X}).
+}
+If $f$ is strictly convex, the equality occurs iff $X = \E X$ with probability $1$. 
+The inequality is simply reversed if $f$ is (strictly) concave.
+\end{lem} 
+\begin{proof} 
+Since $f$ is convex, any tangent line to its graph must lower bound the function. 
+Thus, for any $x_0 \in \R$, there is a constant $a \in \R$ such that the linear function $a(x - x_0) + f(x_0)$ lower bounds $f(x)$. 
+If we choose $x_0 = \E X$, then it follows that
+\EQ{
+\E{f (X )} \ge \E{a(X - x_0 ) + f (x_0 )} = a\E X  - a\E X  + f(\E X ) = f (\E X).
+}
+If $f$ is strictly convex, then equality in the tangent lower bound occurs only at $x = x_0$. 
+Thus, Jensen's inequality is strict unless $X = \E X$ with probability 1.
+\end{proof}
+
+\begin{thm}[Non-Negativity of Divergence]
+For $x \in \sX$, let $p(x)$ and $q(x)$ be two discrete distributions. 
+Then, $D(p\Vert q) \ge 0$, with equality iff $p(x) = q(x)$ holds for all $x \in \sX$. 
+This result holds even if $\sum_x q(x) < 1$.
+\end{thm}
+\begin{proof}
+Let $A = \supp(p) \triangleq \set{x \in \sX : p(x) > 0}$ be the support of $p(x)$. 
+Then, 
+\EQ{
+-D(p\Vert q) = -\sum_{x \in A}p(x)\log_2\frac{p(x)}{q(x)}= \sum_{x \in A}p(x)\log_2\frac{q(x)}{p(x)} \le \log_2\sum_{x \in A}p(x)\frac{q(x)}{p(x)} \le \log_2\sum_{x \in \sX}p(x)\frac{q(x)}{p(x)}= 0.
+}
+The first inequality holds with equality iff $p(x) = cq(x)$ for all $x \in A$. 
+The second inequality holds iff $??\sum_{x \in A} q(x)=1$. 
+From these, we see that 
+$c=1$ and $q(x)=p(x)=0$ for $x \in \sX\setminus A$.
+\end{proof}
+\begin{thm}[Convexity of Divergence] 
+The divergence $D (p\Vert q)$ is convex in the pair $(p, q)$.
+Thus, for two pairs, $(p_1, q_1)$ and $(p_2, q_2)$, we have
+\EQ{
+D(\lambda p_1 +(1-\lambda)p_2 \Vert \lambda q_1 +(1-\lambda)q_2) \le \lambda D(p_1 \Vert q_1)+(1-\lambda)D(p_2\Vert q_2)
+}
+for all $\lambda \in [0, 1]$.
+\end{thm} 31 Sketch of 
+\begin{proof}For non-negative numbers a1, a2, . . . , an and b1, b2, . . . , bn, the log-sum in-
+equality is given by
+where equality holds iff ai/bi is constant for i = 1, 2, . . . , n. One can apply this to the LHS of (1) to derive (1).
+\end{proof}
+\begin{lem}\end{lem} 32. More properties of entropy and mutual information:
+1. I (X; Y ) ? 0 with equality iff X and Y are independent.
+\begin{proof}\end{proof} First,weobservethatI(X;Y)=D(pX,Y?pXpY). By\begin{thm}\end{thm}30,thisdiver- gence is zero iff pX,Y (x, y) = pX (x)pY (y) for all x, y, but this is precisely the definition of independence.
+2. H (Y |X) ? H (Y ) with equality iff X and Y are independent.
+\begin{proof}\end{proof} Since H(Y)?H(Y|X) = I(X;Y) = D(pX,Y?pXpY) ? 0 iff X and Y are independent, this follow directly from the previous statement.
+3. The entropy H(p) is concave in p and the uniform distribution is the unique maximum. \begin{proof}\end{proof} Given p(x) defined on X, let q(x) = 1/|X| for all x ? X. Then, we see that
+D(p?q)=??p(x) p(x) =?H(p)+log2|X|. x?X 1/ |X |
+Solving for H(p), we see that H(p) is concave in p because D (p?q) is convex in p. The uniform distribution gives the unique maximum because D (p?q) ? 0 with equality iff p(x) is uniform.
+\begin{rem}\end{rem} 33. From I (X ; Y ) = D (pX,Y ?pX pY ), we see that the mutual information measures the difference between a joint distribution pX,Y and the product of its marginals pX pY .
+a ??n ?? ??n a ?? i ?? i=1i
+ai log b ? ai log2 ??n b , i i=1 i=1 i
+    
+\section{Data Processing}
+The definitions of entropy, mutual information, and divergence all extend naturally to any finite number of random variables by treating multiple random variables as a single random vector. However, there are a few new concepts that can only be defined in terms of 3 random variables. Let X, Y, and Z be random variables with joint distribution pX,Y,Z(x,y,z).
+\begin{defn}\end{defn} 34. For three r.v. (X,Y,Z) ? pX,Y,Z(x,y,z) defined on X ×Y ×Z, the condi- tional mutual information (in bits) between X and Y given Z is denoted
+tioning is simply inherited by each entropy in the standard decomposition.
+\begin{defn}\end{defn} 35. Three r.v. (X, Y, Z) ? pX,Y,Z (x, y, z) form a Markov chain X ? Y ? Z if
+pX,Y,Z (x, y, z) = PX (x)pY |X (y|x)pZ|Y (z|y).
+This is clearly the same as pZ|X,Y (z|x, y) = pZ|Y (x, y) for all x, y, z, which is equivalent to
+the condition that X and Z are conditionally independent given Y . \begin{lem}\end{lem} 36. Properties of mutual information for three random variables:
+1. (chain rule of mutual information) I(X;Y,Z)=I(X;Y)+I(X;Z|Y). \begin{proof}\end{proof} This follows from the expectation of the decomposition
+log pX,Y,Z(X,Y,Z) =log pX,Y(X,Y)pZ|X,Y(Z|X,Y) 2 pX(X)pY,Z(Y,Z) 2 pX(X)pY (Y)pZ|Y (Z|Y)
+=log pX,Y(X,Y) +log pX,Z|Y(X,Z|Y) . 2 pX (X)pY (Y ) 2 pZ|Y (Z|Y )pX|Y (X|Y )
+2. (non-negativity of conditional mutual information) I (X ; Y |Z ) ? 0 with equality iff X and Y are conditionally independent given Z.
+\begin{proof}\end{proof} First, we observe that
+I (X; Y |Z) = ?? pZ(z)D ??pX,Y |Z=z????pX|Z=zpY |Z=z?? . z
+Each term in this sum is non-negative and equal to zero iff pX,Y|Z=z(x,y) = pX|Z=z(x)pY|Z=z(y) for all x,y. Thus, the overall sum is zero iff the condition holds for all x, y, z (i.e., X and Y are conditionally independent given Z).
+?? pX,Y|Z(x,y|z) ?? pX,Y|Z(X,Y|Z) ??
+I(X;Y|Z)?
+From this, we see that I(X;Y|Z) = H(X|Z)+H(Y|Z)?H(X,Y|Z). Thus, the condi-
+  (x,y,z)?X×Y×Z
+pX,Y,Z(x,y,z)log2 pX|Z(x|z)pY|Z(y|z) =E log2 pX|Z(X|Z)pY|Z(Y|Z) .
+10
+    
+\begin{thm}\end{thm} 37 (Data Processing Inequality). If three r.v. (X, Y, Z) ? pX,Y,Z (x, y, z) form a MarkovchainX?Y?Z,thenI(X;Z)?I(X;Y). Forexample,ifZ=f(Y)isafunction of Y, then X ?Y ?Z form a Markov chain.
+\begin{proof}\end{proof}. Applying the chain rule of mutual information in the two possible orders gives I (X; Y, Z) = I (X; Z) + I (X; Y |Z) = I (X; Y ) + I (X; Z|Y ) .
+Since X ? Y ? Z form a Markov chain, X and Z are conditionally independent and I(X;Z|Y)=0. Thus,wehave
+I (X; Y ) = I (X; Z) + I (X; Y |Z) ? I (X; Z) .
+If Z = f(Y), then pZ|X,Y (z|x,y) = ?z,f(y) = pZ|Y (x,y) and X ? Y ? Z form a Markov
+chain.
+\begin{exmp}\end{exmp} 38. A system has a random state X and an experiment with outcome Y is performed to measure that state. Is it possible additional processing can produce a new output Z = f(Y ) such that H (X|Z) < H (X|Y )?
+ \begin{thm}\end{thm} 39 (Fano?s Inequality). Let the r.v. Y be an observation of the r.v. X and ? ?????
+X = f(Y ) be an estimate of X. Then, the error probability Pe = P X?= X satisfies H (Pe) + Pe log2 (|X | ? 1) ? H (X|Y ) .
+?? ???
+\begin{proof}\end{proof}. Let E = I X?= X be an indicator r.v. for the error event. Expanding the condi-
+tional entropy H ??E , X |X? ?? in two ways gives
+H ??E,X|X??? = H ??X|X???+H ??E|X,X???
+?? ???? ?? ??   ????   ??
+?H(X|Y ) =0
+= H ?? E | X? ?? + H ?? X | E , X? ?? .
+?? ???? ?? ??   ????   ??
+?H(Pe) ?Pe log2(|X|?1) Rearranging these terms gives the stated result.
+\section{Sequences of random variables}
+Let {Xt}t?N be a random process where each random variable lies in X. The joint probability distribution of the first N random variables is denoted PN (x1, . . . , xN ). Let
+11
+     
+12 [N] ? {1,2,...,N}, A ? [N], and A = [N]\A be sets of indices. We will denote subvectors
+with indices in A and A by
+xA ={xt,t?A} xA =??xt,t?A??.
+The marginal distribution of variables in A is given by summing over all variables in A: PA(xA) = ??PN(x1,...,xN).
+xA
+\begin{defn}\end{defn} 40. The entropy rate of a random process is defined to be
+hX ? lim 1H(X1,X2,...,XN), N?? N
+if the limit exists.
+\begin{exmp}\end{exmp} 41. If the random variables are drawn i.i.d. according to p(x), then N
+PN(x1,...,xN) = ??p(xt). t=1
+In this case, H (X1,...,XN) = NH (p) and the entropy rate is hX = H (p).
+\begin{exmp}\end{exmp} 42. If the random variables form a homogenous Markov chain, then N?1
+PN(x1,...,xN) = p1(x1) ?? w(xt ? xt+1), t=1
+where p1(x) is the distribution of the initial state and w(x ? x?) = pXt+1|Xt (x?|x) defines the transition probabilities of the chain. In this case, the entropy rate is given by
+           hX = lim 1H(X1,...,XN) N?? N
+1??N?1 ?? = lim H(X1)+??H(Xt+1|Xt)
+t=1
+= lim ????pt(x)??w(x?x?)log2
+  N?? N
+1 N?1
+N??N t=1 x?X x??X
+1 w(x?x)
+  ?? 1N?1 ?? = ?? lim ?? pt(x)
+1 w(x?x)
+2 w(x ? x?)
+where the last step assumes that w(x ? x?) was chosen so that the limiting occupancy
+distribution p?(x) = limN?? 1 ??N?1 pt(x) exists and is independent of the initial state N t=1
+distribution.
+x?X N??N t=1
+= ??p?(x) ?? w(x ? x?)log 1 ,
+?? w(x ? x?) log2 x??X
+?
+?
+   x?X x? ?X
+ 
+\section{ Data Compression}
+Consider a source that generates a sequence of symbols taking values in a finite alphabet X . Such a source is typically modeled by a random process {Xt}t?N . For the purpose of communication and storage, it is desirable to encode this sequence using as few bits as possible. If exact reconstruction is required, then this is known as lossless source coding.
+The most natural approach to this problem is to encode length-N source blocks (X1, . . . , XN ) into variable-length blocks of bits. Let {0, 1}? = ??n=0 {0, 1}n denote the set of finite-length binary strings. Then, the source encoder is a function
+w:XN ?{0,1}? x ??? w(x).
+If the source sequence consists of the length-N blocks x(1),x(2),...,x(r), then the encoded sequence is the concatenation w(x(1))w(x(2)) . . . w(x(r)). Since the output sequence does not add markers between blocks, one must choose the w carefully to guarantee decodability. The standard approach is use to prefix-free (or instantaneous) codes where no codeword is a prefix of another codeword. This allows the decoder to uniquely reconstruct the codeword boundaries.
+An important property of a code is its average length. If lw(x) is the length of w(x) in bits, then the average length of an encoded block is
+L(w) = ?? PN (x)lw(x) bits. x?X N
+Any prefix-free code can be represented by a binary tree whose leaf nodes are labeled by codewords. To construct a prefix-free code, one can draw a binary tree and sequentially assign x values to nodes. After each assignment, all children of the assigned node are removed.
+Exercise 43. Is there a prefix-free code with codeword lengths 1, 2, 3, 3? How about 2, 2, 3, 3, 3, 4, 4, 4? Try constructing a code for each case.
+\begin{lem}\end{lem} 44 (Kraft Inequality). A prefix-free source code with length function lw(x) exists iff
+?? 2?lw(x) ? 1. x?X N
+13
+                 
+\begin{proof}\end{proof}. Let lmax = maxx?XN lw(x) and recall that a binary tree has exactly 2l nodes at depth- l. To construct a code, one starts with the complete binary tree of depth lmax. Then, for each x ? supp(PN) (in order of increasing length), one assigns x to a codeword w(x) of length lw(x). For an x with length lw(x), one finds an available node at depth lw(x), assigns the binary label of that node to w(x), and then removes all children of that node. Assigning a codeword of length lw(x) removes exactly 2l?lw(x) nodes at depth-l for l ? lw(x). Thus, this process succeeds up to depth-l if and only if
+??
+2l?lw(x) ? 2l. x:lw (x)?l
+Dividing by 2l, one see that this condition is most restrictive for l = lmax. Choosing l = lmax and dividing by 2lmax gives the desired result.
+\begin{thm}\end{thm} 45 (Source Coding \begin{thm}\end{thm}). For the distribution PN(x), let L?N be average length of an encoded block for the prefix-free code with the minimum average length. Then,
+H(X)?L?N ?H(X)+1.
+\begin{proof}\end{proof}. Let lw(x) be the length function for a valid prefix-free code and define QN(x) = 2?lw(x). Since lw(x) must satisfy the Kraft inequality, it follows that ??x QN(x) ? 1. Using \begin{thm}\end{thm} 30 (which holds even if ??x q(x) ? 1), we see that the average code length, L, satisfies
+14
+                          L?H(PN)= =
+????1??
+PN(x) lw(x)?log2 PN(x) ?? ?? PN(x)??
+   x?X
+  PN(x) log2 QN(x)
+= D(PN?QN) (2)
+   x?X
+  ? 0.
+If we choose lw(x) to be the length function for a code that achieves the optimal L = L?N, then this implies that L?N ? H (PN ). To achieve the upper bound, we design a code with
+ 
+lw (x) = ?? log2 PN (x)? and compute
+15
+  L?N ? ??PN(x)??log2 PN(x)? x?X
+   ????1??
+?
+Together, these complete the proof.
+\begin{rem}\end{rem} 46. This shows that one operational definition of the entropy is ?the minimum
+average length of any variable length code that can be used to reconstruct X?.
+\begin{rem}\end{rem} 47. In theory, one can use \begin{thm}\end{thm} 45 to achieve optimal compression rate for i.i.d. sequences. To see this, we observe that H(PN) = NH(X1). Thus, by increasing N, the constructive upper bound in the theorem gives a compression rate (i.e., bits per source symbol) of
+L ?N ? H ( X 1 ) + 1 . NN
+\begin{exmp}\end{exmp} 48. Let us consider what happens if a code is designed for a different distribution, QN , and then used with the distribution PN . From (2), we see that the average code length, L, must satisfy L ? H (PN ) + D (PN ?QN ). On the other hand, if the lengths are chosen to be lw (x) = ?? log2 QN (x)?, then the average length satisfies
+L = ??PN(x)log2 ??log2 QN(x)? x?X
+????1??
+\begin{rem}\end{rem} 49. This shows that one operational definition of the divergence D (PN ?QN ) is ?the increaseinaveragelengthassociatedwithdesigningacodeforQN whenthetruedistribution is PN ?.
+PN(x) log2 PN(x)+1 = H (X) + 1.
+  x?X
+            PN(x) log2 QN(x)+1
+?? ?? PN(x)??
+PN(x) log2 QN(x) = H (X) + 1 + D (PN ?QN ) .
+= =H(X)+1+
+  x?X
+      x?X
+   
+\section{Communication Channels}
+In engineering, one often wants to communicate information across an unreliable medium. For example, think of a system that modulates the current in a wire (by adjusting the voltage at one end) and measures the current at the other end. Due to thermal fluctuations, the difference between the modulated current at the measured current will always contain some randomness. One can analyze this situation by first discretizing time and then defining a simple mathematical model.
+\begin{defn}\end{defn} 50. A discrete memoryless channel (DMC) is defined by a finite input alphabet X, a finite output alphabet Y, and a conditional probability distribution Q(y|x). For N ? N channel uses, let the channel input vector be a random vector X = (X1,...XN) ? XN. Then, the channel output vector is a random vector Y = (Y1,...,YN) ? YN where
+N
+QN(y|x) ?? P??Y = y????X = x?? = ??Q(yi|xi).
+t=1
+\begin{exmp}\end{exmp} 51. For example, the binary symmetric channel (BSC) with error probability
+? has X = Y = {0, 1} and is defined by
+Q(y|x) = (1 ? ?)I(x = y) + ?I(x?= y).
+\begin{exmp}\end{exmp} 52. For example, the binary erasure channel (BEC) with erasure probability ? has X = {0,1}, Y = {0,1,?}, and is defined by
+Q(y|x) = ?I(y = ?) + (1 ? ?)I(y = x).
+Channel coding is the process of improving performance by adding redundancy (e.g.,
+by encoding an K bit message into N > K bits).
+\begin{defn}\end{defn} 53. For binary-input channel, a length-N code carrying an K-bit message is defined by an encoder that maps m ? {0,1}K to a codeword x(m) ? {0,1}N. The ratio R = K/N is called the rate (in information bits per channel use) of the code . A message decoder xd : YN ? {0,1}K is a mapping from the channel output to one of the possible input messages.
+\begin{exmp}\end{exmp} 54. For a BSC, the simplest approach is to simply repeat each bit N times and decode via majority vote (i.e., x(0) = 00...00, x(1) = 11...11, and xd(y) =
+16
+              
+????N ??
+I i=1 yi > N/2 ). In this case, the original bit will be recovered correctly as long as there
+are no more than ?N/2? errors. Thus, one can achieve arbitrary reliability by increasing N. But, increasing N also reduces the rate of communication.
+\begin{defn}\end{defn} 55. For a code/decoder pair, the block error probability of message m is the probability,
+PB(m) = ?? QN ??y|x(m)?? I ??xd(y)?= m?? , y?YN
+that decoder does not return m when message m is transmitted. The maximum and average block error probabilities are denoted
+PBmax ? max PB(m) m?{0,1}K
+17
+     PBav ? 1 ?? PB(m).
+ ??
+C ?maxI(X;Y)=max
+p(x) p(x) (x,y)?X×Y
+p(x)Q(y|x)log2 ??
+Q(y|x)
+? ? .
+2M
+m?{0,1}K
+\begin{defn}\end{defn} 56. A code rate R is achievable if there exists a sequence of encoder/decoder pairs with rate RN ? R and block error rate PB,N ? 0. The channel capacity is the supremum of all achievable code rates.
+\begin{rem}\end{rem} 57. One can get a qualitative feel for achievable rates via the following argument. The key is that, for i.i.d. sequences (X1 , . . . , XN ) with large N , the probability distribution essentially becomes uniform over a set of 2NH(X) ?typical? sequences. Thus, for (X,Y) ? p(x)Q(y|x), the i.i.d. sequence ((X1, Y1), . . . , (XN , YN )) takes one of 2NH(X,Y ) different typical values with essentially uniform probability. If we ignore the X values, then the number of (Y1,...,YN) typical sequences is roughly 2NH(Y). If we fix the (X1,...,XN) sequence to a typical value (x1,...,xN), then the number of ((x1,Y1),...,(xN,YN)) typical sequences is roughly 2NH(Y |X). This last set of sequences can be seen as the likely set of output sequences if x is transmitted. Thus, if the likely output sets of each codeword fill the space but do not overlap,thenweget2NR2NH(Y|X) =2NH(Y) orR=H(Y)?H(Y|X)=I(X;Y).
+\begin{thm}\end{thm} 58 (Channel Coding \begin{thm}\end{thm}). For a DMC, the channel capacity is given by
+  Thus, for any R ? C, there exists a sequence of encoder/decoder pairs such that RN ? R and PB,N ? 0. Conversely, if a sequence of encoder/decoder pairs satisfies RN ? R and PB,N ?0,thenR?C.
+x? p(x)Q(y|x)
+
+\begin{proof}\end{proof}. Achievability will be shown in the lecture devoted to Chapter 6. The following converse demonstrates the power and simplicity of information theory.
+For any length-N encoder/decoder pair, let M be a uniform random message, X = x(M) be its encoded codeword, Y be the channel output, and M? = xd(Y ) be the decoded message. Since M ?X ?Y ?M? form a Markov chain, we have
+NR=H(M) (H(M)=K =NR) ???????????? ?????
+18
+       =H M????M +I M;M
+?H(PB)+PBlog2??2NR ?1??+I??M;M???
+? 1 + P B N R + I ?? M ; M? ??
+? 1 + PBNR + I (X; Y ) ? 1 + PB N R + N C
+Solving for an upper bound on R, we find that 1??1??
+(Def.ofI M;M ) (Fano?sInequality)
+(Data Processing Inequality) (See \begin{lem}\end{lem} 60).
+  R?1?P C+N . B
+  Thus,RN ?R?CforanysequencewhereN??andPB,N ?0.
+Exercise 59. Verify that the capacity of the BEC(?) channel is C = 1 ? ? and the capacity
+oftheBSC(?)channelisC=1?H(?). Hint: UseI(X;Y)=H(Y)?H(Y|X). \begin{lem}\end{lem} 60. For N channel uses on a DMC,
+ I (X; Y ) ? NC.
+  \begin{proof}\end{proof}. This follows from
+I (X; Y ) = H (Y ) ? H (Y |X) NN
+= ?? H (Yi|Y1, . . . , Yi?1) ? ?? H (Yi|Y1, . . . , Yi?1, X) i=1 i=1
+NN =??H(Yi|Y1,...,Yi?1)???H(Yi|Xi)
+i=1 i=1 NN
+? ?? H (Yi) ? ?? H (Yi|Xi) i=1 i=1
+N ???I(Xi;Yi)?NC
+i=1
+(Chain Rule of Entropy) (Yi cond. ind. givenXi) (conditioning reduces entropy) (C maximizesI(X;Y)).
+       
+\end{document}
