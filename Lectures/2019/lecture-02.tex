@@ -127,13 +127,14 @@ Then, $D(p\Vert q) \ge 0$, with equality iff $p(x) = q(x)$ holds for all $x \in 
 This result holds even if $\sum_x q(x) < 1$.
 \end{thm}
 \begin{proof}
-Let $A = \supp(p) \triangleq \set{x \in \sX : p(x) > 0}$ be the support of $p(x)$. 
+Let $A = \text{supp}(p) \triangleq \set{x \in \sX : p(x) > 0}$ be the support of $p(x)$. 
 Then, 
 \EQ{
--D(p\Vert q) = -\sum_{x \in A}p(x)\log_2\frac{p(x)}{q(x)}= \sum_{x \in A}p(x)\log_2\frac{q(x)}{p(x)} \le \log_2\sum_{x \in A}p(x)\frac{q(x)}{p(x)} \le \log_2\sum_{x \in \sX}p(x)\frac{q(x)}{p(x)}= 0.
+-D(p\Vert q) %= -\sum_{x \in A}p(x)\log_2\frac{p(x)}{q(x)}
+= \sum_{x \in A}p(x)\log_2\frac{q(x)}{p(x)} \le \log_2\sum_{x \in A}p(x)\frac{q(x)}{p(x)} \le \log_2\sum_{x \in \sX}q(x)= 0.
 }
 The first inequality holds with equality iff $p(x) = cq(x)$ for all $x \in A$. 
-The second inequality holds iff $??\sum_{x \in A} q(x)=1$. 
+The second inequality holds iff $\sum_{x \in A} q(x)=1$. 
 From these, we see that 
 $c=1$ and $q(x)=p(x)=0$ for $x \in \sX\setminus A$.
 \end{proof}
@@ -144,10 +145,14 @@ Thus, for two pairs, $(p_1, q_1)$ and $(p_2, q_2)$, we have
 D(\lambda p_1 +(1-\lambda)p_2 \Vert \lambda q_1 +(1-\lambda)q_2) \le \lambda D(p_1 \Vert q_1)+(1-\lambda)D(p_2\Vert q_2)
 }
 for all $\lambda \in [0, 1]$.
-\end{thm} 31 Sketch of 
-\begin{proof}For non-negative numbers a1, a2, . . . , an and b1, b2, . . . , bn, the log-sum in-
-equality is given by
-where equality holds iff ai/bi is constant for i = 1, 2, . . . , n. One can apply this to the LHS of (1) to derive (1).
+\end{thm} 
+\begin{proof} 
+For non-negative numbers $a_1, a_2, \dots, a_n$ and $b_1, b_2, \dots, b_n$, the log-sum inequality is given by 
+\EQ{
+\sum_{i=1}^na_i\log_2\frac{a_i}{b_i} \ge (\sum_{i=1}^na_i)\log_2\frac{\sum_{i=1}^na_i}{\sum_{i=1}^nb_i},
+}
+where equality holds iff $\frac{a_i}{b_i}$ is constant for $i \in [n]$. 
+One can apply this to the LHS of (1) to derive (1).
 \end{proof}
 \begin{lem}\end{lem} 32. More properties of entropy and mutual information:
 1. I (X; Y ) ? 0 with equality iff X and Y are independent.
