@@ -49,13 +49,13 @@ Also, symmetry follows from swapping $X,Y$ and $x, y$ in the sum because $p_{X,Y
 \end{proof}
 \end{enumerate}
 \end{lem} 
-\begin{exmp}
+\begin{shaded*}\begin{exmp}
 Let $\sX = \sY = \set{0, 1}$ and $p_{X,Y}(x, y) = \frac{\rho}{2} \indicator{x \neq y} + \frac{(1 - \rho)}{2}\indicator{x=y}$. 
 It follows that $p_X(x)=p_Y(y)= \frac{1}{2}$, and hence $H(X)= H(Y) = 1$. 
 Since $p_{Y|X}(y|x) \in \set{\rho,1-\rho}$, it follows that $H(Y|X)= \cH(\rho)$. 
 Thus, we have $I(X;Y)=H(Y) - H (Y |X) = 1 - \cH(\rho)$. 
 The conditional distribution $p_{Y |X}$ called the \textbf{binary symmetric channel} with error probability $\rho$ and denoted by BSC($\rho$).
-\end{exmp} 
+\end{exmp}\end{shaded*} 
  
 
 \begin{defn}
@@ -72,14 +72,14 @@ The divergence is non-negative and equal to $0$ iff $p(x) = q(x)$ for all $x \in
 Thus, it behaves something like a metric on the space of distributions. 
 It is not exactly a metric, however, because it is not symmetric.
 \end{rem}
-\begin{exmp}
+\begin{shaded*}\begin{exmp}
 For $\sX = \set{0,1}$, let $p(1) = r$ define a Bernoulli($r$) distribution and $q(1) = s$ define a Bernoulli($s$) distribution. 
 Then, the divergence between $p$ and $q$ is given by 
 \EQ{
 \cD(r \Vert s) \triangleq r\log_2\frac{r}{s} + (1-r)\log_2\frac{1-r}{1-s}. 
 }
-\end{exmp}
-\begin{exmp} 
+\end{exmp}\end{shaded*}
+\begin{shaded*}\begin{exmp} 
 Let $X$ be the number of ones in a length-$n$ vector of \emph{i.i.d.} Bernoulli($s$) random variables. 
 Then, the probability the resulting vector has exactly $rn$ ones is given by
 \EQ{
@@ -91,7 +91,7 @@ Using the results from the previous example, one can see that this equals
 }
 Thus, we see that exponential decay rate is determined by the divergence between a Bernoulli($r$) distribution and a Bernoulli($s$) distribution. 
 This example highlights the connection between information theory and the theory of large deviations.
-\end{exmp}
+\end{exmp}\end{shaded*}
 
 \begin{defn}
 A function $f: \R \to \R$ is called \textbf{convex} on the interval $(a, b)$ if, for all $x_1, x_2 \in (a,b)$ and $\lambda \in [0,1]$,
@@ -191,136 +191,4 @@ $p(x)$ is uniform.
 From $I(X ; Y) = D (p_{X,Y} \Vert p_X p_Y )$, we see that the mutual information measures the difference between a joint distribution $p_{X,Y}$ and the product of its marginals $p_X p_Y$. 
 \end{rem}
     
-\section{Data Processing}
-The definitions of entropy, mutual information, and divergence all extend naturally to any finite number of random variables by treating multiple random variables as a single random vector. However, there are a few new concepts that can only be defined in terms of three random variables. Let $X, Y$, and $Z$ be random variables with joint distribution $p_{X,Y,Z}(x,y,z)$. 
-\begin{defn} 
-For three r.v. $(X,Y,Z) \sim p_{X,Y,Z}(x,y,z)$ defined on $\sX \times \sY \times \sZ$, 
-the conditional mutual information (in bits) between $X$ and $Y$ given $Z$ is denoted 
-\EQ{
-I(X;Y\given Z)  \triangleq \sum_{(x,y,z) \in \sX \times \sY \times \sZ}p_{X,Y,Z}(x,y,z)\log_2\frac{p_{X,Y|Z}(x,y,z)}{p_{X|Z}(x,z)p_{Y|Z}(y,z)} = \E{\log_2\frac{p_{X,Y|Z}(X,Y,Z)}{p_{X|Z}(X,Z)p_{Y|Z}(Y,Z)}}.
-}
-From this, we see that $I(X;Y\given Z) = H(X | Z) + H(Y|Z) - H(X,Y |Z)$. 
-Thus the conditioning is simply inherited by each entropy in the standard decomposition. 
-\end{defn} 
-\begin{defn} 
-Three r.v. $(X, Y, Z) \sim p_{X,Y, Z} (x, y, z)$ form a Markov chain $X -Y - Z$ if 
-\EQ{
-p_{X,Y,Z} (x, y, z) = p_X (x)p_{Y |X} (y|x)p_{Z|Y}(z|y).
-}
-This is clearly the same as $p_{Z|X,Y} (z|x, y) = p_{Z|Y} (z | y)$ for all $x, y, z$, 
-which is equivalent to the condition that $X$ and $Z$ are conditionally independent given $Y$. 
-\end{defn} 
-
-\begin{lem}
-Properties of mutual information for three random variables:
-\begin{enumerate}
-\item (chain rule of mutual information) $I(X;Y,Z)=I(X;Y)+I(X;Z|Y)$. 
-\begin{proof}
-This follows from the expectation of the decomposition
-\EQ{
-\log_2\frac{p_{X,Y,Z}(X,Y,Z)}{p_X(x)p_{Y,Z}(Y,Z)}= \log_2\frac{p_{X,Y}(X,Y)p_{Z|X,Y}(Z|X,Y)}{p_X(x)p_Y(Y)p_{Z|Y}(Z|Y)}
-= \log_2\frac{p_{X,Y}(X,Y)}{p_X(x)p_Y(Y)} + \log_2\frac{p_{X,Z |Y}(X,Z|Y)}{p_{Z|Y}(Z|Y)p_{X|Y}(X|Y)}.
-}
-\end{proof} 
-\item (non-negativity of conditional mutual information) $I (X ; Y |Z ) \ge 0$ with equality iff $X$ and $Y$ are conditionally independent given $Z$.
-\begin{proof}
-First, we observe that
-\EQ{
-I (X; Y |Z) = \sum_z p_Z(z)D(p_{X,Y |Z=z}\Vert p_{X|Z=z}p_{Y |Z=z}).
-} 
-Each term in this sum is non-negative and equal to zero iff $p_{X,Y|Z=z}(x,y) = p_{X|Z=z}(x)p_{Y|Z=z}(y)$ for all $x,y$. 
-Thus, the overall sum is zero iff the condition holds for all $x, y, z$ (i.e., $X$ and $Y$ are conditionally independent given $Z$). 
-\end{proof} 
-\end{enumerate}
-\end{lem} 
-    
-\begin{thm}[Data Processing Inequality] 
-If three r.v. $(X, Y, Z) \sim p_{X,Y,Z} (x, y, z)$ form a Markov chain $X - Y- Z$, then 
-$I(X;Z) \le I(X;Y)$. 
-For example, if $Z=f(Y)$ is a function of $Y$, 
-then $X -Y - Z$ form a Markov chain. 
-\end{thm} 
-\begin{proof}
-Applying the chain rule of mutual information in the two possible orders gives 
-\EQ{
-I (X; Y, Z) = I (X; Z) + I (X; Y |Z) = I (X; Y) + I (X; Z|Y).
-}
-Since $X - Y - Z$ form a Markov chain, $X$ and $Z$ are conditionally independent and 
-$I(X;Z|Y) = 0$. 
-Thus, we have 
-\EQ{
-I (X; Y ) = I (X; Z) + I (X; Y |Z) \ge I (X; Z).
-}
-If $Z = f(Y)$, then $p_{Z|X,Y}(z|x,y) = \indicator{z =f(y)} = p_{Z|Y}(z,y)$ and $X - Y - Z$ form a Markov chain.
-\end{proof}. 
-\begin{exmp}
-A system has a random state $X$ and an experiment with outcome $Y$ is performed to measure that state. 
-Is it possible that additional processing can produce a new output $Z = f(Y)$ such that 
-$H (X|Z) < H (X|Y )$?
-\end{exmp}
-\begin{thm} [Fano's Inequality] 
-Let the r.v. $Y$ be an observation of the r.v. $X$ and $\hat{X} = f(Y)$ be an estimate of $X$. 
-Then, the error probability $P_e = P(\hat{X} \neq X)$ satisfies 
-\EQ{
-\cH(P_e) + P_e \log_2 (|\sX| - 1) \ge H (X|Y).
-}
-\end{thm} 
-\begin{proof}
-Let $E = \indicator{\hat{X}= X}$ be an indicator r.v. for the error event. 
-Expanding the conditional entropy $H(E, X |\hat{X})$ in two ways gives 
-\EQ{
-H(E, X |\hat{X}) = H(X| \hat{X}) + H(E|X, \hat{X}) = H(E| \hat{X}) + H(X|E, \hat{X}).
-}
-Now $H(X|\hat{X}) \ge H(X|Y)$ by data processing inequality, since $X - Y - \hat{X}$ form a Markov chain, 
-and $H(E| X, \hat{X}) = 0$ since $E = \indicator{X \neq \hat{X}}$. 
-Further, $H(E|\hat{X}) \le H(E) = \cH(P_e)$ since the conditioning reduces entropy. 
-In addition, $H(X|E=0, \hat{X}) = 0$, and we can write 
-\EQ{
-H(X|E=1, \hat{X}) \le H(X \neq \hat{X}) \le \log_2(\abs{\sX}-1). 
-}
-This implies that $H(X|E, \hat{X}) \le P_e\log_2(\abs{\sX}-1)$. 
-Rearranging these terms gives the stated result.
-\end{proof}
-\section{Sequences of random variables}
-Let $(X_t: t \in \N)$ be a random process where each random variable lies in $\sX$. 
-The joint probability distribution of the first $N$ random variables is denoted 
-$P_N (x_1, \dots , x_N)$. 
-Let $[N] \triangleq \set{1,2, \dots,N}, A \subseteq [N]$, and $\bar{A} = [N]\setminus A$ be sets of indices. 
-We will denote subvectors with indices in $A$ and $\bar{A}$ by
-\meq{2}{
-&x_A =(x_t: t\in A),&&x_{\bar{A}} =(x_t: t \in \bar{A}).
-}
-The marginal distribution of variables in $A$ is given by summing over all variables in $\bar{A}$: \EQ{
-P_A(x_A) = \sum_{x_{\bar{A}}}P_N(x_1, \dots,x_N).
-}
-\begin{defn}
-The entropy rate of a random process is defined to be
-\EQ{
-h_X \triangleq \lim_{N \to \infty} \frac{1}{N}H(X_1,X_2, \dots,X_N),
-}
-if the limit exists.
-\end{defn} 
-\begin{exmp}
-If the random variables are drawn i.i.d. according to $p(x)$, then 
-\EQ{
-P_N(x_1, \dots, x_N) = \prod_{t=1}^Np(x_t). 
-}
-In this case, $H (X_1, \dots,X_N) = NH (p)$ and the entropy rate is $h_X = H (p)$.
-\end{exmp} 
-\begin{exmp}
-If the random variables form a homogenous Markov chain, then 
-\EQ{
-P_N(x_1, \dots ,x_N) = p_1(x_1)\prod_{t=1}^N w(x_t \to  x_{t+1}),
-}
-where $p_1(x)$ is the distribution of the initial state and $w(x \to x') = p_{X_{t+1}|X_t} (x'|x)$ defines the transition probabilities of the chain. 
-In this case, the entropy rate is given by
-\eq{
-h_X &= \lim_{N \to \infty} \frac{1}{N}H(X_1,X_2, \dots,X_N) = \lim_{N \to \infty} \frac{1}{N}\left(H(X_1) + \sum_{t=1}^{N-1}H(X_{t+1}|X_t)\right)\\
-&= \lim_{N \to \infty} \frac{1}{N}\sum_{t=1}^{N-1}\sum_{x \in \sX}p_t(x)\sum_{x' \in \sX}w(x \to x')\log_2\frac{1}{w(x \to x')}\\
-&=\sum_{x \in \sX}\left(\lim_{N \to \infty} \frac{1}{N} \sum_{t=1}^{N-1}p_t(x)\right)\sum_{x' \in \sX}w(x \to x')\log_2\frac{1}{w(x \to x')}\\
-&=\sum_{x \in \sX}p^{\ast}(x)\sum_{x' \in \sX}w(x \to x')\log_2\frac{1}{w(x \to x')},
-}
-where the last step assumes that $w(x \to x')$ was chosen so that the limiting occupancy
-distribution $p^{\ast}(x) = \lim_{N \to \infty} \sum_{t=1}^{N-1}p_t(x)$ exists and is independent of the initial state distribution. 
-\end{exmp}
 \end{document}
