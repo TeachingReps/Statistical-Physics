@@ -138,7 +138,7 @@ h_X &= \lim_{N \to \infty} \frac{1}{N}H(X_1,X_2, \dots,X_N) = \lim_{N \to \infty
 &=\sum_{x \in \sX}p^{\ast}(x)\sum_{x' \in \sX}w(x \to x')\log_2\frac{1}{w(x \to x')},
 }
 where the last step assumes that $w(x \to x')$ was chosen so that the limiting occupancy
-distribution $p^{\ast}(x) = \lim_{N \to \infty} \sum_{t=1}^{N-1}p_t(x)$ exists and is independent of the initial state distribution. 
+distribution $p^{\ast}(x) = \lim_{N \to \infty}\frac{1}{N} \sum_{t=1}^{N-1}p_t(x)$ exists and is independent of the initial state distribution. 
 \end{exmp}\end{shaded*}
 
 \end{document}
