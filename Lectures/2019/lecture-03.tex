@@ -2,7 +2,7 @@
 % !TEX spellcheck = LaTeX
 \documentclass[letterpaper,10pt,english]{article}
 \input{../../header}
-\title{Lecture-03: Data Processing, Compression, Transmission}
+\title{Lecture-03: Data Processing}
 \author{}
 
 \begin{document}
@@ -14,9 +14,9 @@ The definitions of entropy, mutual information, and divergence all extend natura
 For three r.v. $(X,Y,Z) \sim p_{X,Y,Z}(x,y,z)$ defined on $\sX \times \sY \times \sZ$, 
 the conditional mutual information (in bits) between $X$ and $Y$ given $Z$ is denoted 
 \EQ{
-I(X;Y\given Z)  \triangleq \sum_{(x,y,z) \in \sX \times \sY \times \sZ}p_{X,Y,Z}(x,y,z)\log_2\frac{p_{X,Y|Z}(x,y,z)}{p_{X|Z}(x,z)p_{Y|Z}(y,z)} = \E{\log_2\frac{p_{X,Y|Z}(X,Y,Z)}{p_{X|Z}(X,Z)p_{Y|Z}(Y,Z)}}.
+I(X;Y | Z)  \triangleq \sum_{(x,y,z) \in \sX \times \sY \times \sZ}p_{X,Y,Z}(x,y,z)\log_2\frac{p_{X,Y|Z}(x,y,z)}{p_{X|Z}(x,z)p_{Y|Z}(y,z)} = \E{\log_2\frac{p_{X,Y|Z}(X,Y,Z)}{p_{X|Z}(X,Z)p_{Y|Z}(Y,Z)}}.
 }
-From this, we see that $I(X;Y\given Z) = H(X | Z) + H(Y|Z) - H(X,Y |Z)$. 
+From this, we see that $I(X;Y | Z) = H(X | Z) + H(Y|Z) - H(X,Y |Z)$. 
 Thus the conditioning is simply inherited by each entropy in the standard decomposition. 
 \end{defn} 
 \begin{defn} 
@@ -141,201 +141,4 @@ where the last step assumes that $w(x \to x')$ was chosen so that the limiting o
 distribution $p^{\ast}(x) = \lim_{N \to \infty} \sum_{t=1}^{N-1}p_t(x)$ exists and is independent of the initial state distribution. 
 \end{exmp}\end{shaded*}
 
-\section{ Data Compression}
-Consider a source that generates a sequence of symbols taking values in a finite alphabet $\sX$.  
-Such a source is typically modeled by a random process $(X_t: t \in \N)$. 
-For the purpose of communication and storage, 
-it is desirable to encode this sequence using as few bits as possible. 
-If exact reconstruction is required, then this is known as \textbf{lossless source coding}.  
-
-The most natural approach to this problem is to encode length-$N$ source blocks 
-$(X_1, \dots , X_N)$ into variable-length blocks of bits. 
-Let $\set{0, 1}^{\ast} = \cup_{n=0}^{\infty}\set{0, 1}^n$ denote the set of finite-length binary strings. Then, the source encoder is a function 
-\eq{
-w:\sX^N &\to \set{0,1}^{\ast}\\
- x &\mapsto w(x). 
-}
-If the source sequence consists of the length-$N$ blocks $x^{(1)},x^{(2)}, \dots,x^{(r)}$, 
-then the encoded sequence is the concatenation $w(x^{(1)}), w(x^{(2)}), \dots, w(x^{(r)})$. 
-Since the output sequence does not add markers between blocks, one must choose the $w$ carefully to guarantee decodability. The standard approach is use to \textbf{prefix-free} (or \textbf{instantaneous}) codes where no codeword is a prefix of another codeword. 
-This allows the decoder to uniquely reconstruct the codeword boundaries. 
-
-An important property of a code is its average length. 
-If $l_w(x)$ is the length of $w(x)$ in bits, then the average length of an encoded block 
-\EQ{
-L(w) = \sum_{x \in \sX^N} P_N (x)l_w(x) \text{ bits}. 
-}
-Any prefix-free code can be represented by a binary tree whose leaf nodes are labeled by codewords. 
-To construct a prefix-free code, one can draw a binary tree and sequentially assign $x$ values to nodes. 
-After each assignment, all children of the assigned node are removed.
-\begin{exerc} 
-Is there a prefix-free code with codeword lengths 1, 2, 3, 3? How about 2, 2, 3, 3, 3, 4, 4, 4? 
-Try constructing a code for each case.
-\end{exerc}
-\begin{lem} [Kraft Inequality] 
-A prefix-free source code with length function $l_w(x)$ exists iff $\sum_{x \in \sX^N}2^{-l_w(x)} \le 1$. 
-\end{lem} 
-\begin{proof}
-Let $l_{\max} = \max_{x \in \sX^N} l_w(x)$ and recall that a binary tree has exactly $2^l$ nodes at depth $l$. 
-To construct a code, one starts with the complete binary tree of depth $l_{\max}$. 
-Then, for each $x \in \text{supp}(P_N)$ (in order of increasing length), one assigns $x$ to a codeword $w(x)$ of length $l_w(x)$. 
-For an $x$ with length $l_w(x)$, one finds an available node at depth $l_w(x)$, assigns the binary label of that node to $w(x)$, 
-and then removes all children of that node. 
-Assigning a codeword of length $l_w(x)$ removes exactly $2^{l-l_w(x)}$ nodes at depth $l$ for $l \ge l_w(x)$. 
-Thus, this process succeeds up to depth $l$ if and only if 
-\EQ{
-\sum_{x: l_w(x) \le l}2^{l-l_w(x)}  \le 2^l. 
-}
-Dividing by $2^l$, one see that this condition is most restrictive for $l = l_{\max}$. 
-Choosing $l = l_{\max}$ and dividing by $2^{l_{\max}}$ gives the desired result.
-\end{proof}
-\begin{thm}[Source Coding Theorem] 
-For the distribution $P_N(x)$, let $L_N^{\ast}$ be average length of an encoded block for the prefix-free code with the minimum average length. 
-Then,
-\EQ{
-H(X)\le L_N^{\ast} \le H(X)+1.
-}
-\end{thm} 
-\begin{proof} 
-Let $l_w(x)$ be the length function for a valid prefix-free code and define $Q_N(x) = 2^{l_w(x)}$. 
-Since $l_w(x)$ must satisfy the Kraft inequality, it follows that $\sum_x Q_N(x) \le 1$. 
-Using non-negativity of KL-divergence (which holds even if $\sum_x q(x) \le 1$), 
-we see that the average code length, $L$, satisfies
-\EQ{
-L- H(P_N)= \sum_{x \in \sX}P_N(x)\left(l_w(x) - \log_2\frac{1}{P_N(x)}\right) = \sum_{x \in \sX}P_N(x)\log_2\frac{P_N(x)}{Q_N(x)} = D(P_N\Vert Q_N) \ge 0.
-}
-If we choose $l_w(x)$ to be the length function for a code that achieves the optimal $L = L^{\ast}_N$, then this implies that $L^{\ast}_N \ge H (P_N)$. 
-To achieve the upper bound, we design a code with $l_w (x) = \lceil \log_2 P_N (x)\rceil$ and compute
-\EQ{
-L^{\ast}_N \le \sum_{x \in \sX}P_N(x) \lceil -\log_2 P_N (x)\rceil \le \sum_{x \in \sX}P_N(x) \left(1 + \log_2 \frac{1}{P_N (x)}\right) = H(X) + 1.
-}
-Together, these complete the proof.
-\end{proof} 
-\begin{rem}
-This shows that one operational definition of the entropy is ``the minimum average length of any variable length code that can be used to reconstruct $X$''. 
-\end{rem} 
-\begin{rem}
-In theory, one can use source coding theorem to achieve optimal compression rate for i.i.d. sequences. 
-To see this, we observe that $H(P_N) = NH(X_1)$. 
-Thus, by increasing $N$, the constructive upper bound in the theorem gives a compression rate (i.e., bits per source symbol) of
-\EQ{
-\frac{L^{\ast}_N}{N} \le H (X_1) + \frac{1}{N}. 
-}
-\end{rem} 
-
-\begin{shaded*}\begin{exmp} 
-Let us consider what happens if a code is designed for a different distribution, $Q_N$, and then used with the distribution $P_N$. From source coding theorem, we see that the average code length, $L$, must satisfy $L \ge H(P_N ) + D (P_N \Vert Q_N)$. 
-On the other hand, if the lengths are chosen to be $l_w (x) = \lceil -\log_2 Q_N (x)\rceil$, 
-then the average length satisfies 
-\EQ{
-L = \sum_{x \in \sX}P_N(x) \lceil -\log_2 Q_N (x)\rceil \le  \sum_{x \in \sX}P_N(x)\left(\log_2 \frac{1}{Q_N(x)}+1\right)
-%\\&= H(X) + 1+  \sum_{x \in \sX}P_N(x)\log_2 \frac{P_N(x)}{Q_N(x)} 
-= H(X) + 1 + D(P_N\Vert Q_N). 
-}
-\end{exmp}\end{shaded*} 
-\begin{rem}
-This shows that one operational definition of the divergence $D (P_N \Vert Q_N )$ is ``the increase in average length associated with designing a code for $Q_N$ when the true distribution is $P_N$''.
-\end{rem}  
-  
-\section{Data Transmission}
-
-In engineering, one often wants to communicate information across an unreliable medium. 
-For example, think of a system that modulates the current in a wire (by adjusting the voltage at one end) and measures the current at the other end. 
-Due to thermal fluctuations, the difference between the modulated current at the measured current will always contain some randomness. 
-One can analyze this situation by first discretizing time and then defining a simple mathematical model. 
-
-\begin{defn}
-A \textbf{discrete memoryless channel} (DMC) is defined by a finite input alphabet $\sX$, 
-a finite output alphabet $\sY$, and a conditional probability distribution $Q(y|x)$. 
-For $N \in \N$ channel uses, let the channel input vector be a random vector $X = (X_1, \dots, X_N) \in \sX^N$. 
-Then, the channel output vector is a random vector $Y = (Y_1, \dots,Y_N) \in \sY^N$ where 
-\EQ{
-Q_N(y|x) \triangleq P(Y = y | X = x)= \prod_{t=1}^NQ(y_i|x_i).
-}
-\end{defn} 
-\begin{shaded*}\begin{exmp}
-For example, the \textbf{binary symmetric channel} (BSC) with error probability $\rho$ has $\sX = \sY = \set{0, 1}$ and is defined by
-\EQ{
-Q(y|x) = (1 -\rho)\indicator{x = y} + \rho\indicator{x \neq y}.
-}
-\end{exmp}\end{shaded*} 
-\begin{shaded*}\begin{exmp}
- For example, the \textbf{binary erasure channel} (BEC) with erasure probability $\epsilon$ has $\sX = \set{0,1}, \sY =  \set{0,1,\ast}$, and is defined by 
- \EQ{
-Q(y|x) = \epsilon \indicator{y = \ast} + (1 - \epsilon)\indicator{y = x}.
-}
-
-\textbf{Channel coding} is the process of improving performance by adding redundancy (e.g., by encoding an $K$ bit message into $N > K$ bits).
-\end{exmp}\end{shaded*} 
-\begin{defn} 
-For binary-input channel, a length-$N$ \textbf{code} carrying an $K$-bit message is defined by an encoder that maps $m \in \set{0,1}^K$ to a codeword $x^{(m)} \in \set{0,1}^N$. 
-The ratio $R = K/N$ is called the rate (in information bits per channel use) of the code. 
-A message decoder $x^d : \sY^N \to \set{0,1}^K$ is a mapping from the channel output to one of the possible input messages.
-\end{defn} 
-\begin{shaded*}\begin{exmp}
-For a BSC, the simplest approach is to simply repeat each bit $N$ times and decode via majority vote (i.e., $x^{(0)} = 00 \dots 00, x^{(1)} = 11 \dots 11$, and $x^{d(y)} =\indicator{\sum_{i=1}^Ny_i > N/2}$. 
-In this case, the original bit will be recovered correctly as long as there are no more than $\lfloor N/2\rfloor$ errors. 
-Thus, one can achieve arbitrary reliability by increasing $N$. 
-But, increasing $N$ also reduces the rate of communication.
-\end{exmp}\end{shaded*} 
-\begin{defn}
-For a code/decoder pair, the block error probability of message $m$ is the probability, 
-\EQ{
-P_B(m) = \sum_{y \in \sY^N} Q_N(y|x(m))\indicator{x^{d(y)} \neq m} , 
-}
-that decoder does not return $m$ when message $m$ is transmitted. 
-The maximum and average block error probabilities are denoted by $P_B^{\max} \triangleq \max_{m \in \set{0,1}^K} P_B(m)$ and $P_B^{\text{av}} \triangleq \frac{1}{2^M}\sum_{m \in \set{0,1}^K}P_B(m)$ respectively. 
-\end{defn} 
-\begin{defn}
-A code rate $R$ is \textbf{achievable} if there exists a sequence of encoder/decoder pairs with rate $R_N \to R$ and block error rate $P_{B,N} \to 0$. 
-The \textbf{channel capacity} is the supremum of all achievable code rates.
-\end{defn}
-\begin{rem} 
-One can get a qualitative feel for achievable rates via the following argument. 
-The key is that, for i.i.d. sequences $(X_1,  \dots , X_N)$ with large $N$, 
-the probability distribution essentially becomes uniform over a set of $2^{NH(X)}$ ``typical'' sequences. 
-Thus, for $(X,Y) \sim p(x)Q(y|x)$, the i.i.d. sequence $((X_1, Y_1), . . . , (X_N , Y_N))$ takes one of 
-$2^{NH(X,Y)}$ different typical values with essentially uniform probability. 
-If we ignore the $X$ values, then the number of $(Y_1, \dots, Y_N)$ typical sequences is roughly $2^{NH(Y)}$. 
-If we fix the $(X_1, \dots, X_N)$ sequence to a typical value $(x_1, \dots, x_N)$, 
-then the number of $((x_1,Y_1), \dots, (x_N,Y_N))$ typical sequences is roughly $2^{NH(Y|X)}$. 
-This last set of sequences can be seen as the likely set of output sequences if $x$ is transmitted. 
-Thus, if the likely output sets of each codeword fill the space but do not overlap, then we get $2^{NR}2^{NH(Y|X)} = 2^{NH(Y)}$ or $R=H(Y) -H(Y|X)=I(X;Y)$. 
-\end{rem}
-\begin{thm} [Channel Coding Theorem] 
-For a DMC, the channel capacity is given by
-\EQ{
-C \triangleq \max_{p(x)} I(X; Y) = \max_{p(x)}\sum_{(x,y) \in \sX \times \sY}p(x)Q(y|x)\log_2\frac{Q(y|x)}{\sum_{x'}p(x')Q(y|x')}.
-}
-Thus, for any $R \le C$, there exists a sequence of encoder/decoder pairs such that $R_N \to R$ and $P_{B,N} \to 0$. 
-Conversely, if a sequence of encoder/decoder pairs satisfies $R_N \to R$ and $P_{B,N}  \to 0$, then $R \le C$. 
-\end{thm}
-\begin{proof}
-Achievability will be shown in a later lecture. 
-The following converse demonstrates the power and simplicity of information theory.
-For any length-$N$ encoder/decoder pair, let $M$ be a uniform random message, $X = x^{(M)}$ be its encoded codeword, $Y$ be the channel output, and $\hat{M} = x^{d(Y)}$ be the decoded message. 
-Since $M - X - Y - \hat{M}$ form a Markov chain, 
-we have from the successive applications of $H(M) = K = NR$, definition of $I(M; \hat{M})$, Fano's inequality, $\cH(P_B) \le 1$,  data processing inequality, and lemma on successive channel use, 
-\eq{
-NR &=H(M)  = H(M|\hat{M}) +I(M;\hat{M}) \le \cH(P_B) + P_B\log_2(2^{NR}-1) + I(M; \hat{M}) \le 1 + P_BNR + I(M; \hat{M})\\
-&\le 1 + P_BNR + I(X;Y) \le 1 + P_BNR + NC.
-}
-Solving for an upper bound on $R$, we find that $R \le \frac{1}{1-P_B}\left(C + \frac{1}{N}\right)$. 
-Thus, $R_N \to R \le C$ for any sequence where $N \to \infty$ and $P_{B,N} \to 0$. 
-\end{proof}
-\begin{exerc} 
-Verify that the capacity of the BEC($\epsilon$) channel is $C = 1 -\epsilon$ and the capacity
-of the BSC($\rho$) channel is $C=1 -\cH(\rho)$. 
-Hint: Use $I(X;Y)=H(Y)- H(Y|X)$. 
-\end{exerc}
-\begin{lem}
-For $N$ channel uses on a DMC, $I (X;Y ) \le NC$.
-\end{lem}   
-\begin{proof}
- This follows from successive applications of chain rule of entropy, memorylessness of channel, reduction of entropy due to conditioning, and mutual information upper-bounded by capacity, 
- \eq{
-I (X; Y) &= H (Y ) - H (Y |X) = \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}) - \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}, X) \\
-&= \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}) - \sum_{i=1}^NH(Y_i|X) \le \sum_{i=1}^NH(Y_i) - \sum_{i=1}^NH(Y_i|X) \le \sum_{i=1}^NI(X_i ; Y_i) \le NC.
-}
-\end{proof}
 \end{document}
