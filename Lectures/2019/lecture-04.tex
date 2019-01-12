@@ -64,7 +64,7 @@ H(X)\le L_N^{\ast} \le H(X)+1.
 }
 \end{thm} 
 \begin{proof} 
-Let $l_w(x)$ be the length function for a valid prefix-free code and define $Q_N(x) = 2^{l_w(x)}$. 
+Let $l_w(x)$ be the length function for a valid prefix-free code and define $Q_N(x) = 2^{-l_w(x)}$. 
 Since $l_w(x)$ must satisfy the Kraft inequality, it follows that $\sum_x Q_N(x) \le 1$. 
 Using non-negativity of KL-divergence (which holds even if $\sum_x q(x) \le 1$), 
 we see that the average code length, $L$, satisfies
@@ -140,7 +140,7 @@ The ratio $R = K/N$ is called the rate (in information bits per channel use) of 
 A message decoder $x^d : \sY^N \to \set{0,1}^K$ is a mapping from the channel output to one of the possible input messages.
 \end{defn} 
 \begin{shaded*}\begin{exmp}
-For a BSC, the simplest approach is to simply repeat each bit $N$ times and decode via majority vote (i.e., $x^{(0)} = 00 \dots 00, x^{(1)} = 11 \dots 11$, and $x^{d(y)} =\indicator{\sum_{i=1}^Ny_i > N/2}$. 
+For a BSC, the simplest approach is to simply repeat each bit $N$ times and decode via majority vote (i.e., $x^{(0)} = 00 \dots 00, x^{(1)} = 11 \dots 11$, and $x^{d}(y) =\indicator{\sum_{i=1}^Ny_i > N/2}$. 
 In this case, the original bit will be recovered correctly as long as there are no more than $\lfloor N/2\rfloor$ errors. 
 Thus, one can achieve arbitrary reliability by increasing $N$. 
 But, increasing $N$ also reduces the rate of communication.
@@ -148,7 +148,7 @@ But, increasing $N$ also reduces the rate of communication.
 \begin{defn}
 For a code/decoder pair, the block error probability of message $m$ is the probability, 
 \EQ{
-P_B(m) = \sum_{y \in \sY^N} Q_N(y|x(m))\indicator{x^{d(y)} \neq m} , 
+P_B(m) = \sum_{y \in \sY^N} Q_N(y|x^{(m)})\indicator{x^{d}(y) \neq m} , 
 }
 that decoder does not return $m$ when message $m$ is transmitted. 
 The maximum and average block error probabilities are denoted by $P_B^{\max} \triangleq \max_{m \in \set{0,1}^K} P_B(m)$ and $P_B^{\text{av}} \triangleq \frac{1}{2^M}\sum_{m \in \set{0,1}^K}P_B(m)$ respectively. 
@@ -165,7 +165,7 @@ Thus, for $(X,Y) \sim p(x)Q(y|x)$, the i.i.d. sequence $((X_1, Y_1), . . . , (X_
 $2^{NH(X,Y)}$ different typical values with essentially uniform probability. 
 If we ignore the $X$ values, then the number of $(Y_1, \dots, Y_N)$ typical sequences is roughly $2^{NH(Y)}$. 
 If we fix the $(X_1, \dots, X_N)$ sequence to a typical value $(x_1, \dots, x_N)$, 
-then the number of $((x_1,Y_1), \dots, (x_N,Y_N))$ typical sequences is roughly $2^{NH(Y|X)}$. 
+then the number of $((x_1,Y_1), \dots, (x_N,Y_N))$ typical sequences is roughly $2^{NH(Y|X=x)} = 2^{NH(Y|X)}$. 
 This last set of sequences can be seen as the likely set of output sequences if $x$ is transmitted. 
 Thus, if the likely output sets of each codeword fill the space but do not overlap, then we get $2^{NR}2^{NH(Y|X)} = 2^{NH(Y)}$ or $R=H(Y) -H(Y|X)=I(X;Y)$. 
 \end{rem}
@@ -180,7 +180,7 @@ Conversely, if a sequence of encoder/decoder pairs satisfies $R_N \to R$ and $P_
 \begin{proof}
 Achievability will be shown in a later lecture. 
 The following converse demonstrates the power and simplicity of information theory.
-For any length-$N$ encoder/decoder pair, let $M$ be a uniform random message, $X = x^{(M)}$ be its encoded codeword, $Y$ be the channel output, and $\hat{M} = x^{d(Y)}$ be the decoded message. 
+For any length-$N$ encoder/decoder pair, let $M$ be a uniform random message, $X = x^{(M)}$ be its encoded codeword, $Y$ be the channel output, and $\hat{M} = x^{d}(Y)$ be the decoded message. 
 Since $M - X - Y - \hat{M}$ form a Markov chain, 
 we have from the successive applications of $H(M) = K = NR$, definition of $I(M; \hat{M})$, Fano's inequality, $\cH(P_B) \le 1$,  data processing inequality, and lemma on successive channel use, 
 \eq{
@@ -202,7 +202,7 @@ For $N$ channel uses on a DMC, $I (X;Y ) \le NC$.
  This follows from successive applications of chain rule of entropy, memorylessness of channel, reduction of entropy due to conditioning, and mutual information upper-bounded by capacity, 
  \eq{
 I (X; Y) &= H (Y ) - H (Y |X) = \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}) - \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}, X) \\
-&= \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}) - \sum_{i=1}^NH(Y_i|X) \le \sum_{i=1}^NH(Y_i) - \sum_{i=1}^NH(Y_i|X) \le \sum_{i=1}^NI(X_i ; Y_i) \le NC.
+&= \sum_{i=1}^NH(Y_i|Y_1, \dots, Y_{i-1}) - \sum_{i=1}^NH(Y_i|X_i) \le \sum_{i=1}^NH(Y_i) - \sum_{i=1}^NH(Y_i|X_i) \le \sum_{i=1}^NI(X_i ; Y_i) \le NC.
 }
 \end{proof}
 \end{document}
