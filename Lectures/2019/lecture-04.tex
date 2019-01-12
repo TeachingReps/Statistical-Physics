@@ -43,18 +43,27 @@ Try constructing a code for each case.
 A prefix-free source code with length function $l_w(x)$ exists iff $\sum_{x \in \sX^N}2^{-l_w(x)} \le 1$. 
 \end{lem} 
 \begin{proof}
+We will show that if $w: \sX^N \to \set{0,1}^{\ast}$ is a prefix-free encoding map, then it satisfies the Kraft inequality. 
 Let $l_{\max} = \max_{x \in \sX^N} l_w(x)$ and recall that a binary tree has exactly $2^l$ nodes at depth $l$. 
+Since $w$ is a prefix-free code, $w(x)$ is one of the nodes in the binary tree at depth $l_w(x)$, 
+and none of its children belong to the code. 
+This node has $2^{l_{\max}}-2^{l_w(x)}$ leaf nodes at the depth $l_{\max}$. 
+
+%Dividing by $2^l$, one see that this condition is most restrictive for $l = l_{\max}$. 
+%Choosing $l = l_{\max}$ and dividing by $2^{l_{\max}}$ gives the desired result. 
+
+Conversely,  we can show that if there is a sequence of lengths $l_w(x)$ for messages $x \in \sX^N$, satisfying the Kraft inequality, then there exists a prefix-free encoding map $w: \sX^N \to \set{0,1}^{\ast}$ such that $l_w(x)$ is the length of the code $w(x)$. 
 To construct a code, one starts with the complete binary tree of depth $l_{\max}$. 
 Then, for each $x \in \text{supp}(P_N)$ (in order of increasing length), one assigns $x$ to a codeword $w(x)$ of length $l_w(x)$. 
 For an $x$ with length $l_w(x)$, one finds an available node at depth $l_w(x)$, assigns the binary label of that node to $w(x)$, 
 and then removes all children of that node. 
+
+
 Assigning a codeword of length $l_w(x)$ removes exactly $2^{l-l_w(x)}$ nodes at depth $l$ for $l \ge l_w(x)$. 
 Thus, this process succeeds up to depth $l$ if and only if 
 \EQ{
 \sum_{x: l_w(x) \le l}2^{l-l_w(x)}  \le 2^l. 
 }
-Dividing by $2^l$, one see that this condition is most restrictive for $l = l_{\max}$. 
-Choosing $l = l_{\max}$ and dividing by $2^{l_{\max}}$ gives the desired result.
 \end{proof}
 \begin{thm}[Source Coding Theorem] 
 For the distribution $P_N(x)$, let $L_N^{\ast}$ be average length of an encoded block for the prefix-free code with the minimum average length. 
