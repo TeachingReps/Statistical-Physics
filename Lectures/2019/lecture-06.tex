@@ -1,0 +1,363 @@
+\documentclass[letterpaper,english,12pt]{article}
+\input{header}
+
+%opening
+\title{Lecture 6: Thermodynamic potentials and fluctuation-dissipation}
+\author{A R Shaarad}
+
+\begin{document}
+\maketitle
+\section{Thermodynamic potentials}
+In the study of the Boltzmann distribution, it is often useful to study a few functions depending on the system which summarize the system and provide useful information. Such functions are called thermodynamic potentials and are written as functions of the inverse temperature $\beta$. The following are the commonly used thermodynamic potentials.
+\begin{defn}[Free energy]
+The free energy $F(\beta)$ of the system is defined as
+$$F(\beta) = \frac{-1}{\beta} \log Z(\beta),$$
+where $Z(\beta)$ is the partition function.
+\end{defn}
+\begin{defn}[Free entropy]
+The free entropy $\Phi(\beta)$ of the system is defined as
+$$\Phi(\beta) = \log Z(\beta) = -\beta F(\beta)$$
+\end{defn}
+\begin{defn}[Internal energy]
+The internal energy $U(\beta)$ of the system is defined as
+$$U(\beta) = \frac{\partial}{\partial \beta} (\beta F(\beta))$$
+\end{defn}
+\begin{defn}[Canonical entropy]
+The canonical entropy $S(\beta)$ of the system is defined as
+$$S(\beta) = \beta^2 \frac{\partial F(\beta)}{\partial \beta}$$
+\end{defn}
+
+\subsection{Properties of thermodynamic potentials}
+The following are some useful properties of the above defined thermodynamic potentials.
+\begin{lem}
+\begin{itemize}
+\item $F(\beta) = U(\beta) - \frac{1}{\beta} S(\beta) = \frac{-1}{\beta} \Phi(\beta)$
+\begin{proof}
+That $F(\beta) = \frac{-1}{\beta} \Phi(\beta)$ is clear from the definition of $\Phi(\beta)$. Now,
+\begin{align*}
+U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
+	&= \beta \frac{\partial F}{\partial \beta} + F(\beta) \\
+	&= \beta \frac{S(\beta)}{\beta^2} + F(\beta) && \text{ from the definition of $S(\beta)$} \\
+\implies F(\beta) &= U(\beta) - \frac{1}{\beta} S(\beta),
+\end{align*}
+which was what was wanted.
+\end{proof}
+\item $U(\beta) = \langle E \rangle$
+\begin{proof}
+\begin{align*}
+U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
+	&= \frac{\partial}{\partial \beta} ( -\log Z(\beta)) \\
+	&= \frac{-1}{Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)} \\
+	&= \sum_{x \in \sX} E(x) \frac{e^{-\beta E(x)}}{Z(\beta)} \\
+	&= \langle E \rangle
+\end{align*}
+\end{proof}
+\item The canonical entropy is equal to the Shannon entropy of the Boltzmann distribution upto a multiplicative constant and hence is non negative.
+\begin{proof}
+\begin{align*}
+S(\beta) &= \beta^2 \frac{\partial}{\partial \beta} \left( \frac{-1}{\beta} \log Z(\beta) \right) \\
+	&= \beta^2 \left[ \frac{\log Z(\beta)}{\beta^2} - \frac{1}{\beta Z(\beta)} \frac{\partial Z(\beta)}{\partial \beta} \right] \\
+	&= \log Z(\beta) - \frac{\beta^2}{\beta Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)}\\
+	&= \log Z(\beta) + \beta \sum_{x \in \sX} E(x) \mu_\beta (x)
+\end{align*}
+Now,
+\begin{align*}
+\mu_\beta(x) &= \frac{e^{-\beta E(x)}}{Z(\beta)} \\
+\implies \log \mu_\beta(x) &= - \beta E(x) - \log Z(\beta) \\
+\implies \beta E(x) &= -\log \mu_\beta(x) - \log Z(\beta)
+\end{align*}
+Substituting this in the expression for $S(\beta)$, we obtain
+\begin{align*}
+S(\beta) &= \log Z(\beta) + \sum_{x \in \sX} (-\log \mu_\beta(x) - \log Z(\beta)) \mu_\beta(x) \\
+	&= - \sum_{x \in \sX} \mu_\beta(x) \log \mu_\beta(x) \\
+	&= \frac{H(\mu_\beta)}{\log 2},
+\end{align*}
+where $H(\mu_\beta)$ is the Shannon entropy of the Boltzmann distibution.
+\end{proof}
+\item $ - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) = \langle E^2 \rangle - \langle E \rangle^2$, i.e, the variance of $E(x)$.
+\begin{proof}
+\begin{align*}
+- \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) &= - \frac{\partial}{\partial \beta} \left( \frac{\partial}{\partial \beta} (\beta F(\beta)) \right) \\
+	&= - \frac{\partial}{\partial \beta} U(\beta) \\
+	&= - \frac{\partial}{\partial \beta} \langle E \rangle \\
+	&= - \frac{\partial}{\partial \beta} \sum_{x \in \sX} \frac{E(x) e^{- \beta E(x)}}{Z(\beta)} \\
+	&= -\frac{1}{Z(\beta)} \sum_{x \in \sX} E(x) \frac{\partial}{\partial \beta} e^{- \beta E(x)} - \sum_{x \in \sX} E(x) e^{- \beta E(x)} \frac{\partial}{\partial \beta} \frac{1}{Z(\beta)} \\
+	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} + \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)^2} \sum_{y \in \sX} e^{- \beta E(y)} \\
+	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} - \left( \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)} \right) \left( \sum_{y \in \sX} E(y) \frac{e^{- \beta E(y)}}{Z(\beta)} \right) \\
+	&= \langle E^2 \rangle - \langle E \rangle^2
+\end{align*}
+\end{proof}
+\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
+\begin{proof}
+\begin{align*}
+- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
+	&= \langle E^2 \rangle - \langle E \rangle^2 \\
+	&= Var_{\mu_\beta}(E) \geq 0
+\end{align*}
+and hence $\Phi$ is convex.
+\end{proof}
+\end{itemize}
+\end{lem}
+
+\section{Temperature limits of thermodynamic potentials}
+We wish to study the behaviour of the thermodynamic potentials in the limiting cases of high temperature ($\beta \rightarrow 0$) and low temperature ($\beta \rightarrow \infty$).
+\subsection{High temperature limit}
+In the high temperature limit, we take $\beta \rightarrow 0$, and the Boltzmann distibution is approximately the uniform distribution over the set of all states in the state space $\sX$. So,
+\begin{equation}
+S(\beta) = H(\mu_\beta) = \log |\sX| + \Theta(\beta)\\
+\end{equation}
+where $|\sX|$ denotes the cardinality of the state space $\sX$. $U(\beta)$ is given by
+\begin{align}
+U(\beta) &= \left\langle E \right\rangle_0 + \Theta(\beta),\\
+\text{where } \left\langle E \right\rangle_0 &= \frac{1}{|\sX|} \sum_{x \in \sX} E(x)
+\end{align}
+From the above equations, it can be seen that
+\begin{equation}
+F(\beta) = \left\langle E \right\rangle_0 - \log |\sX| + \Theta(\beta)
+\end{equation}
+\subsection{Low temperature limit}
+In the low temperature limit, we take $\beta \rightarrow \infty$ and the Boltzmann distribution is approximately the uniform distribution over the set of all states with the lowest energy. Let $E_0$ be the lowest energy possible, i.e, the ground state energy and $\sX_0$ be the ground state.
+\begin{align}
+E_0 &= \min_{x \in \sX} E(x) \\
+\sX_0 &= \{ x \in \sX : E(x) = E_0 \}
+\end{align}
+\begin{defn}
+The \textbf{energy gap} $\Delta E$ is defined to be the difference between the ground state energy and the next lowest energy possible.
+\begin{equation}
+\Delta E = \min \{ E(y) - E_0 : y \in \sX \setminus \sX_0 \}
+\end{equation}
+\end{defn}
+Let $\sX_1 = \{ x \in \sX : E(x) - E_0 = \Delta E \}$ be the energy state above the ground state. Then, the internal energy is given by
+\begin{align}
+U(\beta) &= \sum_{x \in \sX} E(x) \mu_\beta (x) \nonumber \\
+	&= \sum_{x \in \sX} (E_0 + E(x) - E_0) \mu_\beta (x) \nonumber \\
+	&= \sum_{x \in \sX} E_0 \mu_\beta (x) + \sum_{x \in \sX} (E(x) - E_0) \mu_\beta (x) \nonumber \\
+	&= E_0 + \sum_{x \in \sX \setminus \sX_0} (E(x) - E_0) \mu_\beta (x)
+\end{align}
+The density of the Boltzmann distribution can be written as:
+\begin{align}
+\mu_\beta(x) &= \frac{e^{-\beta E(x)}}{Z(\beta)} \nonumber \\
+\text{where } Z(\beta) &= \sum_{x \in \sX} e^{-\beta E(x)} \nonumber \\
+\implies \mu_\beta (x) &= \frac{e^{-\beta E(x)}}{e^{-\beta E_0}\sum_{x \in \sX} e^{-\beta (E(x)-E_0)}} \nonumber \\
+	&= \frac{e^{-\beta \Delta E(x)}}{|\sX_0| + \sum_{x \in \sX \setminus \sX_0} e^{-\beta (E(x)-E_0)}} \nonumber
+\end{align}
+From the above, it can be seen that for $x \notin \sX_0$, $\mu_\beta(x)$ is of the order of $e^{-\beta(E(x) - E_0)}$. Therefore, letting $\Delta E(x) = E(x) - E_0$, we have
+\begin{align}
+U(\beta) &= E_0 + \sum_{x \in \sX \setminus \sX_0} (E(x) - E_0) \mu_\beta (x) \nonumber \\
+	&= E_0 + \sum_{x \in \sX_1} \Delta E \mu_\beta (x) + \sum_{x \in \sX \setminus (\sX_0 \cup \sX_1)} \Delta E(x) \mu_\beta (x) \nonumber \\
+\implies U(\beta) &= E_0 + \Theta(e^{-\beta \Delta E})
+\end{align}
+Similarly,
+\begin{equation}
+S(\beta) = \log |\sX_0| + \Theta(e^{-\beta \Delta E})
+\end{equation}
+where $\log |\sX_0|$ is the entropy of the uniform distribution over the ground state. From the above, we obtain
+\begin{equation}
+F(\beta) = E_0 - \frac{1}{\beta} \log |\sX_0| + \Theta(e^{-\beta \Delta E})
+\end{equation}
+\subsection{Examples}
+In many settings, the high temperature case is not very interesting since the system is almost uniformly random. So, we now consider a few example systems and study the thermodynamic potentials in the general case and in the low temperature limit where $\beta \rightarrow \infty$.
+\begin{exmp}[2 level system]
+Consider a system consisting of only two states, $\sX = \{ 1, 2 \}$ with the energy function given by
+$$ E(1) = \epsilon_1,\; E(2) = \epsilon_2, \qquad \epsilon_1 < \epsilon_2,\; \Delta = \epsilon_2 - \epsilon_1.$$
+The partition function is given by
+\begin{align}
+Z(\beta) &= \sum_{x \in \sX} e^{-\beta E(x)} \nonumber \\
+	&= e^{-\beta \epsilon_1} + e^{-\beta \epsilon_2} \nonumber \\
+	&= e^{-\beta \epsilon_1}(1 + e^{-\beta \Delta})
+\end{align}
+and the Boltzmann distribution is given by
+$$\mu_\beta : \Big( \frac{1}{1 + e^{-\beta \Delta}}, \frac{e^{-\beta \Delta}}{1 + e^{-\beta \Delta}} \Big)$$
+So, the canonical entropy is given by
+\begin{align}
+S(\beta) &= H(\mu_\beta) \nonumber \\
+	&= \frac{1}{1 + e^{-\beta \Delta}} \Bigg[ \log(1 + e^{-\beta \Delta}) + e^{-\beta \Delta} \log\bigg(\frac{1 + e^{-\beta \Delta}}{e^{-\beta \Delta}}\bigg)\Bigg] \nonumber \\
+	&= \frac{1}{1 + e^{-\beta \Delta}} \Bigg[ \log(1 + e^{-\beta \Delta}) + e^{-\beta \Delta} \log(1 + e^{-\beta \Delta}) - \log (e^{-\beta \Delta})\Bigg] \nonumber \\
+	&= \log(1 + e^{-\beta \Delta}) + \frac{e^{-\beta \Delta}}{1 + e^{-\beta \Delta}} \beta \Delta
+\end{align}
+The free energy is given by
+\begin{align}
+F(\beta) &= \frac{-1}{\beta} \log Z(\beta) \nonumber \\
+	&= \frac{-1}{\beta} \log \bigg( e^{-\beta \epsilon_1}(1 + e^{-\beta \Delta})\bigg) \nonumber \\
+	&= \epsilon_1 - \frac{1}{\beta} \log(1 + e^{-\beta \Delta})
+\end{align}
+The internal energy is given by
+\begin{align}
+U(\beta) &= \left\langle E \right\rangle \nonumber \\
+	&= \frac{\epsilon_1 e^{-\beta \epsilon_1} + \epsilon_2 e^{-\beta \epsilon_2}}{e^{-\beta \epsilon_1} + e^{-\beta \epsilon_2}} \nonumber \\
+	&= \frac{\epsilon_1 e^{-\beta \epsilon_1} + \epsilon_1 e^{-\beta \epsilon_2}}{e^{-\beta \epsilon_1} + e^{-\beta \epsilon_2}} + \frac{-\epsilon_1 e^{-\beta \epsilon_2} + \epsilon_2 e^{-\beta \epsilon_2}}{e^{-\beta \epsilon_1}(1 + e^{-\beta \Delta})} \nonumber \\
+	&= \epsilon_1 + \frac{\Delta e^{-\beta \Delta}}{1 + e^{-\beta \Delta}}
+\end{align}
+From the above equations, we see that, at low temperatures (for high values of $\beta$),
+\begin{align}
+U(\beta) &= \epsilon_1 + O(e^{-\beta \Delta}) \\
+S(\beta) &= \log (1) + O(e^{-\beta \Delta})
+\end{align}
+which is intuitive, since $\epsilon_1$ is the energy of the ground state and $\log(1) = 0$ is the entropy of the uniform distribution over the ground state since it consists of only one state, and the extra terms are in the order of $e^{-\beta \Delta}$, which was what was expected.
+\end{exmp}
+\begin{exmp}[Cylinder]
+Consider a cylinder $\sX = B \times [0,d]$, where $B$, the base of the cylinder is of arbitrary shape with area $|B|$.\\
+Let the energy function be the potential energy, $E(x) = wh(x)$, where $h(x)$ is the height of $x$ from the base of the cylinder and $w$ is a scalar. We then have,
+\begin{align}
+Z(\beta) &= \int_{x \in \sX} e^{-\beta E(x)} dx \nonumber \\
+	&= |B| \int_0^d e^{-\beta w u} du \nonumber \\
+	&= |B| \left. \frac{e^{-\beta w u}}{- \beta w} \right|_0^d \nonumber \\
+\implies Z(\beta) &= \frac{|B|}{\beta w} \left( 1 - e^{-\beta w d} \right)
+\end{align}
+The free energy is given by
+\begin{align}
+F(\beta) &= \frac{-1}{\beta} \log Z(\beta) \nonumber \\
+	&= \frac{-1}{\beta} \log |B| - \frac{1}{\beta} \log \left( \frac{1 - e^{-\beta wd}}{\beta w} \right)
+\end{align}
+The internal energy is given by
+\begin{align}
+U(\beta) = \left\langle E \right\rangle \nonumber \\
+	&= \int_{x \in \sX} \frac{E(x) e^{- \beta E(x)}}{(|B|(1 - e^{-\beta wd}))/\beta w} du \nonumber \\
+	&= \frac{\beta w}{|B|(1 - e^{-\beta wd})} |B| \int_0^d wu e^{-\beta wu} du \nonumber \\
+	&= \frac{\beta w}{1 - e^{-\beta wd}} \left. \left( \frac{-\beta wu e^{-\beta wu} - e^{-\beta wu}}{\beta^2 w} \right) \right|_0^d \nonumber \\
+	&= \frac{1}{e^{-\beta wd} - 1} \left( \frac{e^{-\beta wd} - 1 + \beta wd e^{-\beta wd}}{\beta} \right) \nonumber \\
+	&= \frac{1}{\beta} - \frac{wd}{e^{\beta wd} - 1}
+\end{align}
+From the above, we can determine the canonical entropy.
+\begin{align}
+S(\beta) &= \beta (U(\beta) - F(\beta)) \nonumber \\
+	&= 1 - \frac{\beta wd}{e^{\beta wd} - 1} + \log |B| + \log \left( \frac{1 - e^{- \beta wd}}{\beta w} \right) \nonumber \\
+	&= \log \left( \frac{|B|}{\beta w} \right) + \log e - \frac{\beta wd}{e^{\beta wd} - 1} \nonumber \\
+	&= \log \left( \frac{|B|e}{\beta w} \right) + \Theta(e^{- \beta wd})
+\end{align}
+In the low temperature limit, we see that the second term vanishes. Comparing it with the intuition that at low temperatures, the entropy is the logarithm of the size of the ground state, we see that in the low temperature limit, the particle in the cylinder occupies a volume of order $\frac{|B|}{\beta w}$. Since the area of the base is $|B|$, the cylinder is occupied up to a height of order $\frac{1}{\beta w}$ from the base.
+\end{exmp}
+\begin{exmp}[Sphere]
+Consider the system in which a particle is confined to a sphere $\sX$ of radius $R$ centered at $(R,0,0)$.
+$$\sX = \{ x = (x_1, x_2, x_3) : (x_1 - R)^2 + x_2^2 + x_3^2 = R^2 \}$$
+Let the energy function be the potential energy, proportional to the height from the $(x_2, x_3)$ plane, i.e,
+$$ E(x) = w x_1$$
+The partition function will be given by
+\begin{align}
+Z(\beta) &= \int_\sX e^{-\beta w x_1} dx_1 dx_2 dx_3 \nonumber \\
+	&= \int_0^{2R} e^{-\beta w x_1} \int_{S_{x_1}} dx_2 dx_3 dx_1\nonumber
+\end{align}
+where $S_{x_1}$ is the subset of $\sX$ at height $x_1$ from the $(x_2, x_3)$ plane. Clearly, $S_{x_1}$ is a circle of radius $\sqrt{R^2 - (x_1-R)^2}$ and hence its area is $ \pi (R^2 - (x_1-R)^2) = \pi(2Rx_1 - x_1^2)$.
+\begin{align}
+\implies Z(\beta) &= \int_0^{2R} \pi (2Rx_1 - x_1^2) e^{-\beta w x_1} dx_1 \nonumber \\
+	&= 2 \pi R \int_0^{2R} u e^{-\beta wu} du - \pi \int_0^{2R} u^2 e^{-\beta wu} du \nonumber \\
+	&= \frac{\pi}{\beta w} \bigg[ -4R^2 e^{-2 \beta wR} - \frac{2R e^{-2 \beta wR}}{\beta w} + \frac{2R}{\beta w} 
+	+ 4R^2 e^{-2 \beta wR} \nonumber \\ 
+	& \qquad \qquad + \frac{4R e^{-2 \beta wR}}{\beta w} + \frac{2e^{-2 \beta wR}}{(\beta w)^2} - \frac{2}{(\beta w)^2} 
+	\bigg] \nonumber \\
+\implies Z(\beta) &= \frac{2\pi R}{(\beta w)^2} \left[ e^{-2 \beta wR} \left( 1 + \frac{1}{\beta w R} \right) + 1 - \frac{1}{\beta wR} \right] \label{eq:6}
+\end{align}
+Now, we can calculate the free energy and internal energy.
+\begin{align}
+F(\beta) &= \frac{-1}{\beta} \log Z(\beta) \nonumber \\
+	&= \frac{-1}{\beta} \log \left( \frac{2 \pi R}{(\beta w)^2} \right) - \frac{1}{\beta} \log \left( \frac{e^{-2 \beta wR}(\beta wR + 1) + \beta wR - 1}{\beta wR} \right) \nonumber \\
+\end{align}
+and
+\begin{align}
+U(\beta) &= \left\langle E \right\rangle \nonumber \\
+	&= \frac{1}{Z(\beta)} \int_{x \in \sX} wx e^{- \beta wx} dx \nonumber \\
+	&= \frac{w \pi}{Z(\beta)} \int_0^{2R} u(2Ru - u^2) e^{-\beta wu} du \nonumber \\
+	&= \frac{w \pi}{Z(\beta)} \left[ \frac{4R^2}{(\beta w)^2}e^{-2 \beta wR} + \frac{8R}{(\beta w)^3}e^{-2 \beta wR} + \frac{6}{(\beta w)^4}e^{-2 \beta wR} + \frac{4R\beta w - 6}{(\beta w)^4} \right] 
+\end{align}
+In the low temperature limit, since $\beta$ is large, we obtain
+\begin{align}
+U(\beta) &= \left( \frac{4 \pi R \beta w^2}{(\beta w)^4} - \frac{6w \pi}{(\beta w)^4} \right) \frac{1}{Z(\beta)} \nonumber \\
+	&= \left( \frac{4 \pi R \beta w^2}{(\beta w)^4} - \frac{6w \pi}{(\beta w)^4} \right) \frac{\beta w^2}{2 \pi R} \frac{1}{1 - \frac{1}{R \beta w}} \nonumber && \text{from eq (\ref{eq:6})}
+\end{align}
+Using the expansion $\frac{1}{1-x} = 1 + x + x^2 + ...$, we obtain
+\begin{align}
+U(\beta) &= w \left( \frac{2}{\beta w} + \frac{3}{(\beta w)^2 R} \right) \left( 1 + \frac{1}{\beta w R} + \Theta\left(\frac{1}{\beta ^ 2}\right) \right) \nonumber \\
+	&= \frac{2}{\beta} + \Theta\left(\frac{1}{\beta^2}\right)
+\end{align}
+Therefore, the canonical entropy in the low temperatue limit is given by
+\begin{align}
+S(\beta) &= \beta ( U(\beta) - F(\beta) ) \nonumber \\
+	&= \beta \frac{2}{\beta} + \beta \Theta\left(\frac{1}{\beta^2}\right) + \log \left( \frac{2 \pi R}{(\beta w)^2} \right) \nonumber \\
+	&= \log e^2 + \log \left( \frac{2 \pi R}{(\beta w)^2} \right) + \Theta\left(\frac{1}{\beta}\right) \nonumber \\
+	&= \log \left( \frac{2 \pi e^2 R}{\beta^2 w^2} \right) + \Theta\left(\frac{1}{\beta}\right)
+\end{align}
+In a low temperature state, since the distribution is uniform over the ground state and the entropy is the logarithm of the size of the ground state, we see intuitively that the particle occupies a volume of the order of $\left( \frac{2 \pi R}{\beta^2 w^2} \right)$ at the bottom of the sphere.
+\end{exmp}
+\section{Fluctuation-dissipation relations}
+Till now, we have considered systems in which the energy function is purely a function of the state. Now, we consider systems in which the energy function is paramaterised by a real scalar $\lambda$ and hence is of the form $E_\lambda(x)$, where $x \in \sX$, the state space.\\
+We further assume that the parameterization is smooth and the energy function can be expanded into a Taylor series about a value $\lambda_0$. Thus, we have
+\begin{equation}
+E_\lambda(x) = E_{\lambda_0}(x) + (\lambda - \lambda_0)\left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) + \Theta((\lambda - \lambda_0)^2) \label{eq:1}
+\end{equation}
+Consider the ratio $Z_\lambda(\beta) / Z_{\lambda_0}(\beta)$.
+\begin{align}
+\frac{Z_\lambda(\beta)}{Z_{\lambda_0}(\beta)} &= \frac{1}{Z_{\lambda_0}(\beta)} \sum_{x \in \sX} e^{-\beta E_{\lambda}(x)} \nonumber \\
+	&= \frac{1}{Z_{\lambda_0}(\beta)} \sum_{x \in \sX} e^{-\beta E_{\lambda_0}(x)} e^{-\beta (\lambda - \lambda_0)\left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x)} e^{\Theta((\lambda - \lambda_0)^2)} && \text{from eq (\ref{eq:1})} \nonumber
+\end{align}
+Now, using the Taylor's expansion
+\begin{equation}
+e^{-\beta (\lambda - \lambda_0)\left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x)} = 1 - \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) + \Theta((\lambda - \lambda_0)^2), \label{eq:5}
+\end{equation}
+we obtain
+\begin{align}
+\frac{Z_\lambda(\beta)}{Z_{\lambda_0}(\beta)} &= \frac{1}{Z_{\lambda_0}(\beta)} \sum_{x \in \sX} e^{-\beta E_{\lambda_0}(x)} \left( 1 - \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) + \Theta((\lambda - \lambda_0)^2) \right) \nonumber \\
+	&= \frac{1}{Z_{\lambda_0}(\beta)} \sum_{x \in \sX} e^{-\beta E_{\lambda_0}(x)}(1 + \Theta((\lambda - \lambda_0)^2)) - \sum_{x \in \sX} \frac{e^{- \beta E_{\lambda_0}(x)}}{Z_{\lambda_0}(\beta)} \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \label{eq:2}
+\end{align}
+Now
+$$\sum_{x \in \sX} e^{-\beta E_{\lambda_0}(x)} = Z_{\lambda_0}(\beta)$$
+and the second term is clearly the expected value of $\beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x)$ under the Boltzmann distribution with energy function parameterized by $\lambda = \lambda_0$, which we denote by
+$$ \left\langle \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} = \beta (\lambda - \lambda_0) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0}$$
+Substituting the above in eq (\ref{eq:2}), we obtain
+\begin{equation}
+Z_\lambda(\beta) = Z_{\lambda_0}(\beta) \left[ 1 - \beta (\lambda - \lambda_0) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} + \Theta((\lambda - \lambda_0)^2) \right] \label{eq:3}
+\end{equation}
+Using such relations, we can infer the behaviour of the system at parameter value $\lambda$ by studying it at $\lambda_0$. Now, consider the free entropy of the system.
+\begin{align}
+\Phi_\lambda(\beta) &= \log Z_\lambda (\beta) \nonumber \\
+\implies \left. \frac{\partial \Phi_\lambda(\beta)}{\partial \lambda} \right|_{\lambda_0} &= \left. \frac{1}{Z_\lambda (\beta)} \frac{\partial}{\partial \lambda} Z_\lambda (\beta) \right|_{\lambda_0} \nonumber \\
+&= \frac{1}{Z_{\lambda_0} (\beta)} \left. \frac{\partial}{\partial \lambda} Z_\lambda (\beta) \right|_{\lambda_0} \label{eq:4}
+\end{align}
+From eq (\ref{eq:3}), we have
+$$\left. \frac{\partial}{\partial \lambda} Z_\lambda (\beta) \right|_{\lambda_0} = -\beta Z_{\lambda_0}(\beta) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0}$$
+Substituting the above in eq (\ref{eq:4}), we obtain
+\begin{equation}
+\left. \frac{\partial \Phi_\lambda(\beta)}{\partial \lambda} \right|_{\lambda_0} = -\beta \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0}
+\end{equation}
+\begin{thm}[Fluctuation dissipation theorem]
+For any observable $\mathcal{O}$,
+\begin{equation}
+\left\langle \mathcal{O} \right\rangle_{\lambda} = \left\langle \mathcal{O} \right\rangle_{\lambda_0} - \beta (\lambda - \lambda_0) \left\langle \mathcal{O}, \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0} \right\rangle_{\lambda_0} + \Theta((\lambda - \lambda_0)^2),
+\end{equation}
+where $\left\langle X, Y \right\rangle$ denotes the covariance of $X$ and $Y$.
+\end{thm}
+\begin{proof}
+\begin{align}
+\left\langle \mathcal{O} \right\rangle_{\lambda} &= \sum_{x \in \sX} \frac{\mathcal{O}(x) e^{-\beta E_\lambda(x)}}{Z_\lambda(x)} \nonumber \\
+	&= \sum_{x \in \sX} \frac{\mathcal{O}(x) e^{-\beta E_{\lambda_0}(x)}\left( 1 - \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) + \Theta((\lambda - \lambda_0)^2) \right)}{Z_{\lambda_0}(\beta) \left[ 1 - \beta (\lambda - \lambda_0) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} + \Theta((\lambda - \lambda_0)^2) \right]} \nonumber &&\text{from eq (\ref{eq:1}), (\ref{eq:5}) and (\ref{eq:3})}
+\end{align}
+Now, using the expansion $\frac{1}{1-y} = 1 + y + y^2 + ...$, the denominator can be brought to the numerator, to obtain
+\begin{equation}
+\begin{aligned}
+\left\langle \mathcal{O} \right\rangle_{\lambda} = \sum_{x \in \sX} \mu_{\beta,\lambda_0}(x)\mathcal{O}(x)
+	&\left[ 1 - \beta (\lambda - \lambda_0) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) + \Theta((\lambda - \lambda_0)^2) \right]\\
+	\times &\left[ 1 + \beta (\lambda - \lambda_0) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} + \Theta((\lambda - \lambda_0)^2) \right]
+\end{aligned} \nonumber
+\end{equation}
+\begin{equation}
+\begin{aligned}
+\implies \left\langle \mathcal{O} \right\rangle_{\lambda} = \sum_{x \in \sX} \mu_{\beta,\lambda_0}(x)
+	\Bigg[
+	\mathcal{O}(x) - & \beta(\lambda - \lambda_0) \bigg( \mathcal{O}(x) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) - \mathcal{O}(x) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} \\
+	& + \Theta((\lambda - \lambda_0)^2) \bigg)
+	\Bigg]
+\end{aligned}
+\end{equation}
+\begin{align}
+\implies \left\langle \mathcal{O} \right\rangle_{\lambda} = \sum_{x \in \sX} \mu_{\beta,\lambda_0}(x) \mathcal{O}(x) & -
+\beta (\lambda - \lambda_0)\sum_{x \in \sX} \mu_{\beta,\lambda_0}(x) \mathcal{O}(x) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \nonumber \\
+ &+ \beta (\lambda - \lambda_0) \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} \sum_{x \in \sX} \mu_{\beta,\lambda_0}(x) \mathcal{O}(x) \nonumber \\
+ &+ \Theta((\lambda - \lambda_0)^2)
+\end{align}
+\begin{align}
+\implies \left\langle \mathcal{O} \right\rangle_{\lambda} &= \left\langle \mathcal{O} \right\rangle_{\lambda_0} - \beta (\lambda - \lambda_0) \left[ \left\langle \mathcal{O}(x) \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} - \left\langle \mathcal{O} \right\rangle_{\lambda_0} \left\langle \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0}(x) \right\rangle_{\lambda_0} \right] \nonumber \\
+	& \qquad \qquad \qquad + \Theta((\lambda - \lambda_0)^2) \nonumber \\
+	&= \left\langle \mathcal{O} \right\rangle_{\lambda_0} - \beta (\lambda - \lambda_0) \left\langle \mathcal{O}, \left. \frac{\partial E}{\partial \lambda} \right|_{\lambda_0} \right\rangle_{\lambda_0} + \Theta((\lambda - \lambda_0)^2),
+\end{align}
+which was what was wanted.
+\end{proof}
+\end{document}
