@@ -4,8 +4,8 @@
 \input{../../header}
 
 %opening
-\title{Lecture-05: Boltzmann Distribution and Thermodynamic Potentials}
-\author{Shashank Dattathri}
+\title{Lecture-05: The Boltzmann Distribution}% and Thermodynamic Potentials}
+%\author{Shashank Dattathri}
 
 \begin{document}
 \maketitle
@@ -16,8 +16,8 @@ Instead, we use probability and statistics to model the behaviour of a large gro
 
 A physical system can be described probabilistically as: 
 \begin{itemize}
-\item A \textbf{space of configurations $\sX$}: The state/configuration of the $i^{th}$ particle is represented by the random variable $x_i \in \sX$. If there are $N$ particles, then the configuration of the system is represented by $x=\left(x_1, x_2,\ldots ,x_N \right)$, where each $x_i \in \sX$. The configuration space for a $N$ particle system is the product space: 
-\EQ{x \in \underbrace{\sX \times \sX \times \ldots \times \sX }_{N}={\sX}^N}
+\item A \textbf{space of configurations $\sX$}: The state/configuration of the $i^{th}$ particle is represented by the random variable $x_i \in \sX$. If there are $N$ particles, then the configuration of the system is represented by $x=\left(x_1, x_2, \dots, x_N \right)$, where each $x_i \in \sX$. The configuration space for a $N$ particle system is the product space 
+$\underbrace{\sX \times \sX \times \ldots \times \sX }_{N}={\sX}^N$. 
 We will limit ourselves to configuration spaces which are 
 \begin{enumerate}[$(i)$]
 \item finite sets, or 
@@ -30,6 +30,8 @@ we have the observable $\cO(x)$.
 A key point to note is that observables can, at least in principle, be measured through an experiment. In contrast, the configuration of a system usually cannot be measured. 
 \item One special observable is the \textbf{energy function} $E(x)$. 
 The form of the energy function depends on the level of interaction of the particles. 
+\end{itemize}
+\begin{shaded*}
 \begin{exmp}[Interacting Particle System Energy]
 \begin{enumerate} 
 We consider three different examples of energy function for an $N$-particle system. 
@@ -52,7 +54,8 @@ the system has a \textbf{k-body interaction}.
 However, in real physical systems, interactions above the two or three body level are rarely considered. 
 \end{enumerate}
 \end{exmp}
-\end{itemize}
+\end{shaded*}
+
 \begin{defn} 
 Given a finite configuration space $\sX$ and energy function $E: \sX \to \R$, 
 the \textbf{Boltzmann distribution} is the probability distribution for the system to be in state $x \in \sX$, 
@@ -99,7 +102,7 @@ The extremes of $q=0$ or $q=1$, corresponding to no heads or all heads, have the
 \end{shaded*}
 
 \begin{defn}
-The \textbf{Boltzmann average} of an obervable $\cO$ is defined as the expactation value of that obervable under the Boltzmann distribution. It is denoted by $\left\langle\cO\right\rangle$.
+The \textbf{Boltzmann average} of an obervable $\cO$ is defined as the expactation value of that obervable under the Boltzmann distribution. It is denoted by $\inner{\cO}$.
 \EQ{
 \inner{\cO}=\sum_{x \in \sX}\cO(x) \mu_{\beta}(x)=\frac{1}{Z(\beta)}\sum_{x \in \sX}e^{-\beta E(x)} \cO(x).
 }
@@ -135,16 +138,28 @@ That is, we have $\inner{\sigma} \approx \sign(B)$.
 Another spin variable is the \textbf{Potts spin} with $q$ states, 
 which takes values in $\sX=\{1,2,\ldots,q\}$. 
 In this case, the energy of a particle with Potts spin $\sigma$, 
-when it is placed in a magnetic field of intensity $B$ pointing in direction $r$, is given by 
+when it is placed in a magnetic field of intensity $B$ pointing in direction $r$, 
+is given by 
 \EQ{
 E(\sigma)=-B\indicator{\sigma=r}.
 }
-Now that we have the configuration space and the distribution function, we can calculate the relavent quantities: 
-\EQ{Z(\beta)=e^{\beta B}+\underbrace{e^0+e^0+...+e^0}_\text{q-1 times}=e^{\beta B}+(q-1)}
-\EQ{\mu_{\beta}(\sigma)=\frac{e^{-\beta E(\sigma)}}{Z(\beta)}=\frac{e^{\beta B \mathbb{1}_{\{\sigma=r\}}}}{e^{\beta B}+(q-1)}}
-\EQ{\left\langle E \right\rangle=-B \frac{e^{\beta B}}{e^{\beta B}+(q-1)}+(\text{all other terms are 0}) =\frac{-B e^{\beta B}}{e^{\beta B}+(q-1)}}
-\end{exmp} \end{shaded*}
-\begin{shaded*} \begin{exmp}
+Now that we have the configuration space and the distribution function, we can calculate the relevant quantities. 
+The partition function is given by 
+\EQ{
+Z(\beta)=e^{\beta B}+\underbrace{e^0+e^0+...+e^0}_{q-1\text{ times}}=e^{\beta B}+(q-1).
+}
+The Boltzmann distribution is computed to be 
+\EQ{
+\mu_{\beta}(\sigma)=\frac{e^{-\beta E(\sigma)}}{Z(\beta)}=\frac{e^{\beta B \mathbb{1}_{\{\sigma=r\}}}}{e^{\beta B}+(q-1)}.
+}
+The Boltzmann average of energy is given by 
+\EQ{
+\inner{ E }=-B \frac{e^{\beta B}}{e^{\beta B}+(q-1)}+(\text{all other terms are 0}) =\frac{-B e^{\beta B}}{e^{\beta B}+(q-1)}.
+}
+\end{exmp}
+\end{shaded*}
+\begin{shaded*} 
+\begin{exmp}
 Let us consider the case of a particle in a closed container (bottle), which is placed in a gravitational field. The space of configurations is the 3-D volume of the bottle, which can be represented as $\sX=\text{BOTTLE}\subset \R^3$. \\
 The (potential) energy of a particle in a gravitational field is $E(x)=mg h(x)=w h(x)$, where $h(x)$ corresponds to the height of the configuration x. (Here, $x$ is not to be confused with the x-coordinate; it is simply a representation of the state of the particle.) \\
 In this case, the partition function is difficult to calculate, becuase $\sX$ is an infinite set. However, we can still find some things out. Letting the partition function be $Z(\beta)$, we see that
@@ -153,7 +168,9 @@ In this case, the partition function is difficult to calculate, becuase $\sX$ is
 Let us fix $y=0$. We get 
 \EQ{\frac{\mu_{\beta}(x)}{\mu_{\beta}(0)}=e^{-\beta w h(x)}}
 The above equation tells us the greater the height of the particle, the lesser probability of the particle being in that state. This makes physical sense, because we expect most of the particles to be at low heights due to gravity. Note that this result was obtained without any explicit knowledge of the partition function. 
-\end{exmp} \end{shaded*}
+\end{exmp}
+\end{shaded*}
+
 \section{Temperature Limits}
 Let us now see that happens to the Boltzman distribution at high and low temperatures. \\
 At high temperatures, $\beta \to 0$. Therefore, we have $e^{-\beta E(x)} \to 1$ for all values of energy. The partition function is simply $Z(\beta)=\sum_{x \in \sX} e^{-\beta E(x)}=| \sX |$. The probability of the particle being in any state $x$ is:
@@ -174,20 +191,25 @@ Note that since $E(x)>E_0$ if $x \in \sX \backslash \sX_o$, the second term in t
 \EQ{\mu_{\beta}(x)=\frac{1}{|\sX_o|}\mathbb{1}_{x \in \sX_o}}
 So, at low temperatures, all the particles will settle to the ground state, and all the other energy levels are left unpopulated.\\
 We will be primarily interested in the low temperature limit of systems, as it provides insight into the "low energy structure" of the system. At high temperatures, the states are just random, which does not give us much information.  
+
 \section{Thermodynamic Potentials}
 Several properties of the Boltzmann distribution can be conveniently expressed in terms of additional quantites, called \textbf{thermodynamic potentials}. These also greatly simplify some of our calculations. 
+
 \begin{defn}
 The \textbf{free energy} of a system is defined as 
 \EQ{F(\beta)=-\frac{1}{\beta} \ln Z(\beta)}
 \end{defn}
+
 \begin{defn}
 The \textbf{free entropy} of a system is defined as 
 \EQ{\Phi(\beta)=-\beta F(\beta)=\ln Z(\beta)}
 \end{defn}
+
 \begin{defn}
 The \textbf{internal energy} of a system is defined as 
 \EQ{U(\beta)=\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right)}
 \end{defn}
+
 \begin{defn}
 The \textbf{cannonical entropy} of a system is defined as 
 \EQ{ S(\beta)=\beta^2 \frac{\partial F(\beta)}{\partial \beta} }
@@ -200,7 +222,7 @@ Using these definitions, we derive some relations between the potentials which w
 \EQ{U(\beta)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right)=F(\beta)+\beta \frac{\partial F(\beta)}{\partial \beta}=F(\beta)+\frac{1}{\beta}S(\beta)}
 Rearranging, we get the required relation.
 \end{proof}
-\item $U(\beta)=\left\langle E \right\rangle$ 
+\item $U(\beta)=\inner{ E }$ 
 \begin{proof}
 (Here onewards, for brevity, we simply use $\sum$ to represent $\sum_{x \in \sX}$.)
 \begin{align*}
@@ -209,7 +231,7 @@ U(\beta)=&\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\parti
 =&-\frac{1}{Z(\beta)} \frac{\partial}{\partial \beta} \sum e^{-\beta E(x)}\\
 =&-\frac{1}{Z(\beta)} \sum e^{-\beta E(x)} (-E(x))\\
 =&\sum \mu_{\beta}(x) E(x)\\
-=&\left\langle E \right\rangle
+=&\inner{ E }
 \end{align*}
 \end{proof}
 \item $S(\beta)=H(\mu_\beta)$
@@ -228,14 +250,14 @@ S(\beta)=& \ln Z(\beta)+\sum \mu_{\beta} \left(-\ln \mu_\beta(x)-\ln Z(\beta) \r
 \end{align*}
 \end{proof}
 \textbf{Thus, the canonical entropy is the Shannon entropy of the Boltzmann distribution (up to a multiplicative constant).} 
-\item $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\left\langle E(x)^2 \right\rangle-\left\langle E(x) \right\rangle^2$
+\item $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\inner{ E(x)^2 }-\inner{ E(x) }^2$
 \begin{proof}
 \begin{align*}
 -\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=&-\frac{\partial}{\partial \beta} \left( U(\beta)\right) \\
 =&-\frac{\partial}{\partial \beta} \left( \frac{\sum e^{-\beta E(x)} E(x)} {Z(\beta)}\right) \\
 =&\frac{-1}{Z(\beta)} \left(\sum e^{-\beta E(x)} E(x) (-E(x)) \right)+\sum e^{-\beta E(x)} E(x) \frac{\partial Z(x)}{\partial \beta} \\
 =& \sum \frac{e^{-\beta E(x)}}{Z(\beta)} E(x)^2+\left(\sum e^{-\beta E(x)} E(x)\right) \left( \sum e^{-\beta E(x)} (-E(x))\right) \\
-=&\left\langle E(x)^2 \right\rangle-\left\langle E(x) \right\rangle^2
+=&\inner{ E(x)^2 }-\inner{ E(x) }^2
 \end{align*}
 \end{proof}
 \end{enumerate}
