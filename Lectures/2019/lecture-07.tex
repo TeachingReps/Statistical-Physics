@@ -1,0 +1,85 @@
+\documentclass[letterpaper,english,12pt]{article}
+\input{../../header}
+%opening
+\title{Lecture 7: The Thermodynamic Limit}
+\author{Ajay Kumar Badita}
+
+\begin{document}
+\maketitle
+\section{The Thermodynamic Limit}
+The main purpose of statistical physics is to understand the macroscopic behaviour of a large number, $N\gg1$, of simple components (atoms, molecules, etc.) when they are brought together.
+For example, in the case of water in a bottle, the number of $H_2 O$ molecules $N$ is typically of order $10^{23}$ (18g of water contains approximately $6x10^{23}$ molecules), and this huge number leads physicists to focus on the $N \rightarrow \infty$ limit, also called \textbf{the thermodynamic limit}.
+
+\subsection{The intensive thermodynamic potentials}
+For large N, the thermodynamic potentials are proportionl to $N$. The \textbf{intensive thermodynamic potentials} $f (\beta)$, $u (\beta)$, $s (\beta)$ are defined as follows.
+
+\begin{defn}
+The \textbf{free energy density} is defined by 
+\eq{
+f(\beta) = \lim_{N \rightarrow \infty} \frac{F_N (\beta)}{N}
+}
+\end{defn}
+
+\begin{defn}
+The \textbf{energy density} is defined by 
+\eq{
+u(\beta) = \lim_{N \rightarrow \infty} \frac{U_N (\beta)}{N}
+}
+\end{defn}
+
+\begin{defn}
+The \textbf{entropy density} is defined by 
+\eq{
+s(\beta) = \lim_{N \rightarrow \infty} \frac{S_N (\beta)}{N}
+}
+\end{defn}
+
+where $F_N (\beta)$, $U_N (\beta)$, $S_N (\beta)$ the free energy, internal energy, and canonical entropy, respectively for a system with $N$  particle system.
+
+\begin{defn}
+$Z (\beta)$ is a function involving sum of exponentials, is smooth and analytic, there by the free energy $F_N (\beta)$ is also analytic.
+Whenever the free energy density $f (\beta)$ is non-analytic, we say that a \textbf{phase transition} occurs.
+Since the free entropy density $\phi (\beta) = -\beta f(\beta)$ is convex, the free energy density is necessarily continuous whenever it exits.
+The phase transitions correspond to qualitative changes in the underlying physical system.
+\end{defn}.  
+
+\paragraph{Types of singularities:}
+The non-analyticities occur at isolated points (say $\beta_c$).
+\begin{itemize}
+\item
+	The free energy density is continuous, but its derivative with respect to $\beta$ is discontinuous at $\beta_c$. This singularity is called a \textbf{first-order phase transition}.
+\item
+	The free energy and its first derivative are continuous, but the second derivative is discontinuous at $\beta_c$. This is called a \textbf{second-order phase transition}.
+\end{itemize}
+
+\subsection{Energy spectrum and Micro canonincal entropy density}
+When N grows, the volume of the configuration space increases exponentially:$|X_N| = |X|^N$ and most of the states are in lowest-energy configuration with high probability. Hence the important factor of interst is the number of configurations at a given energy. This information is given by the \textbf{energy spectrum} of the system,
+\eq{
+N_\triangle (E) = |\Omega_\triangle (E)|
+}
+\eq{
+\Omega_\triangle (E) = \{ x \in \mathcal{X}_N : E \le E(x) < E+\triangle\}
+}
+
+where $\Omega_\triangle (E)$ represents the set of particles for which the energy lies in $E$ and $E+\triangle$ and $N_\triangle (E)$ gives the total number of such particles.
+The energy spectrum diverges exponentially in many systems as $N \rightarrow \infty$, if the energy is scaled linealry with $N$. More precisely, there exists a function $s(e)$ such that, given two numbers $e$ and $\delta > 0$,
+
+\eq{
+s(e) = \lim_{N \rightarrow \infty} \frac{1}{N} \log N_{N\delta}(Ne) = \sup_{e'\in [e,e+\delta]} s(e')
+}
+In compact we can write this as,
+\eq{
+N_\triangle(E) \red{=} exp[N s\Big{(}\frac{E}{N}\Big{)}]
+}
+
+Where the notation \red{=} denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $lim_{N \rightarrow \infty} \frac{1}{N} \log (A_N/B_N)=0$.
+
+The microcanonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic
+potentials through a fundamental relation.
+
+\begin{prop}
+
+\end{prop}
+
+
+\end{document} 
