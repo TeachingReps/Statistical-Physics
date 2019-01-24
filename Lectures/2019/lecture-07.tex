@@ -1,7 +1,7 @@
 \documentclass[letterpaper,english,12pt]{article}
 \input{../../header}
 %opening
-\title{Lecture 7: The Thermodynamic Limit}
+\title{Lecture 7: The Thermodynamic Limit, Ferromagnets and Ising models}
 \author{Ajay Kumar Badita}
 
 \begin{document}
@@ -15,7 +15,8 @@ For large N, the thermodynamic potentials are proportionl to $N$. The \textbf{in
 
 \begin{defn}
 The \textbf{free energy density} is defined by 
-\eq{
+\EQN{
+\label{eqn:freeEnergyDensity}
 f(\beta) = \lim_{N \rightarrow \infty} \frac{F_N (\beta)}{N}
 }
 \end{defn}
@@ -64,22 +65,105 @@ N_\triangle (E) = |\Omega_\triangle (E)|
 where $\Omega_\triangle (E)$ represents the set of particles for which the energy lies in $E$ and $E+\triangle$ and $N_\triangle (E)$ gives the total number of such particles.
 The energy spectrum diverges exponentially in many systems as $N \rightarrow \infty$, if the energy is scaled linealry with $N$. More precisely, there exists a function $s(e)$ such that, given two numbers $e$ and $\delta > 0$,
 
-\eq{
+\EQN{
+\label{eqn:limitMicrocanonicalEntropy}
 s(e) = \lim_{N \rightarrow \infty} \frac{1}{N} \log N_{N\delta}(Ne) = \sup_{e'\in [e,e+\delta]} s(e')
 }
 In compact we can write this as,
 \eq{
-N_\triangle(E) \red{=} exp[N s\Big{(}\frac{E}{N}\Big{)}]
+N_\triangle(E) \stackrel{.}{=}_N exp[N s\Big{(}\frac{E}{N}\Big{)}]
 }
 
-Where the notation \red{=} denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $lim_{N \rightarrow \infty} \frac{1}{N} \log (A_N/B_N)=0$.
+Where the notation $\stackrel{.}{=}_N$ denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $lim_{N \rightarrow \infty} \frac{1}{N} \log (A_N/B_N)=0$.
 
 The microcanonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic
 potentials through a fundamental relation.
 
-\begin{prop}
+\begin{rem}
+\label{rem:partitionFunctionWithEnergySpectrum}
+Given the whole energy band divided into $\triangle$ intervals, the partition function can be now written as 
 
+\eq{
+Z_N (\beta) &= \sum_{x \in \mathcal{X_N}} \exp(-\beta E(x)) = \sum_{x \in \mathcal{X_N}} \sum_{k=-\infty}^{\infty} \indicator{k\triangle \le \frac{E(x)}{N} < (k+1)\triangle} \exp(-\beta N k\triangle)\\
+& = \sum_{k=-\infty}^{\infty} \exp(-\beta N k\triangle) \sum_{x \in \mathcal{X_N}} \indicator{k\triangle \le \frac{E(x)}{N} < (k+1)\triangle} 
+\stackrel{.}{=}_N \sum_{k=-\infty}^{\infty} \exp(-\beta N k\triangle) \exp(N s(k\triangle)\\
+&= \sum_{k=-\infty}^{\infty} \exp[N (s(k\triangle)  -\beta k\triangle)]\\
+&= \int \exp[N (s(e)-\beta e)] de
+}
+\end{rem}
+
+
+\begin{prop}
+If the microcanonical entropy density ~\eqref{eqn:limitMicrocanonicalEntropy} exists for any $e$ and if the limit in eqn ~
+\eqref{eqn:limitMicrocanonicalEntropy}) is uniform in $e$, then the free entropy density ~\eqref{eqn:freeEnergyDensity} exists and is given by
+\EQN{
+\phi(\beta) = \max_e [s(e) -\beta e]
+}
+If the maximum of $s(e)-\beta e$ is unique, then the internal-energy density equals $arg\max[s(e)-\beta e]$.
 \end{prop}
 
+\begin{proof}
+From the definition, the free entropy density $\phi(\beta)$ can be written as
+\eq{
+\phi(\beta) =  \lim_{N \rightarrow \infty} \frac{1}{N} \log(Z_N(\beta))
+}
+By using the remark ~\ref{rem:partitionFunctionWithEnergySpectrum},
+\eq{
+\phi(\beta) &=  \lim_{N \rightarrow \infty} \frac{1}{N} \sum_{k=-\infty}^{\infty} \exp[N (s(k\triangle)  -\beta k\triangle)]\\
+&= \sup_k [s(k\triangle)  -\beta k\triangle]\\
+&= \max_e [s(e)  -\beta e]
+}
+\end{proof}
 
+\begin{shaded*} 
+\begin{exmp}[$N$ identical two-level systems]
+Let us $N$ identical two-level systems, i.e. $\mathcal{X} _N = \mathcal{X} \times \mathcal{X}  \times \ldots \times \mathcal{X}$, with $\mathcal{X} = \{1,2\}$. We take the energy to be the sum of the single-system energies: $E(x) = E_{single}(x_1) + E_{single}(x_2) + \ldots + E_{single}(x_N) $ with $x_i \in \mathcal{X}$. We set $E_{single}(1) = \epsilon_1, E_{single}(2) = \epsilon_2 > \epsilon_1$ and, $\triangle = \epsilon_2 - \epsilon_1$.
+
+The energy spectrum of this model is quite simple. For any energy $E = N \epsilon + n\triangle$,there are $\binom{N}{n}$ configurations $x$ with $E(x) = E$. 
+Where $n$ is the number of particles in level-2.
+
+w.k.t 
+\eq{
+N_\triangle(E) = \binom{N}{n} \approx 2^{N \mathcal{H}(\frac{n}{N})} \approx 2^{N \mathcal{H} \big(\frac{E-N\epsilon_1}{N\triangle} \big)}
+}
+Therefore, using the definition ~\eqref{eqn:limitMicrocanonicalEntropy}, we get
+\eq{
+s(e) = \mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big)\\
+}
+The free energy can be now computed as,
+\eq{
+f(\beta) &= -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e [s(e)  -\beta e] = -\frac{1}{\beta} \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big)  -\beta e]\\
+&= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \triangle))
+}
+
+The above equation can be obtained by first solving $ \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \triangle)}{1+\exp(-\beta \triangle)}$. Substittuting this back and considering the fact that as $N \rightarrow \infty$ the expression $\exp(-\beta \triangle) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \triangle))$.
+\end{exmp}
+\end{shaded*}
+
+
+\section{Ferromagnets and Ising models}
+Magnetic materials contain molecules with a magnetic moments, that tend to align the external magnetic field felt by the molecule and these magnetic moments of two different molecules interact with each other.In many materials, the energy is lower when the moments align. 
+
+A simple mathematical model for considering a bunch of interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a d-dimensional cubic lattice. Consider a region $\mathbb{L}$, a cube of side $L:\mathbb{L}=\{1,2, \dots, L\}^d$. At each coordinate $i \in \mathbb{L}$, the state of a particle is an Ising spin $\sigma_i \in \{-1,1\}$.
+
+%\red{Insert figure here}
+
+The system configuration $\underline{\sigma} = (\sigma_1, \sigma_2, \dots, \sigma_N)$ is given by assigning the values of all spins. The space of configuration is $\mathcal{X}_N = \{+1,-1\}^L$, with $\mathcal{X}= \{+1,-1\}$ and $N=L^d$.
+The energy $E(\underline{\sigma})$ of a given configuration $\underline{\sigma}$ is given by,
+\eq{
+E(\underline{\sigma}) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in \mathbb{L}} \sigma_i
+}
+where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in \mathbb{L}$ which are nearest neighbours and B is the applied external magnetic field.
+Determining the free energy density $f(\beta)$ in the thermodynamic limit for this model is a non-trivial task. In 1924, Ernst Ising solved the $d=1$ case and showed the absence of phase transitions. In 1948, Lars Onsager solved the $d=2$ case, exhibiting the first soluble ‘finite-dimensional’ model with a second-order phase transition. In higher dimensions,the problem is unsolved, although many important features of the solution are well understood.
+
+The two limiting cases that can be considered are, at high temperature, $\beta=0$, the energy no longer matters and the Boltzmann distribution is uniform over all configurations $\sigma$ as
+\eq{
+\mu_\beta (\sigma) = \frac{1}{2^N}
+}
+At low temperature, $\beta \rightarrow \infty$, the Boltzmann distribution concentrates onto the ground state(s). In the absence of external magnetic fiels, i.e $B=0$, the two degenerate ground states are given by,
+\eq{
+\underline{\sigma}^+ = (\sigma_i = +1, i \in [N])\\
+\underline{\sigma}^- = (\sigma_i = -1, i \in [N])\\
+}
+If the magnetic field is set to some non-zero value, one of the two configuration dominates: $\underline{\sigma}^+$ if $B>0$ and $\underline{\sigma}^-$ if $B<0$.
 \end{document} 
