@@ -1,104 +1,104 @@
-\documentclass[letterpaper,english,12pt]{article}
-\input{header}
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
 
 %opening
-\title{Lecture 6: Thermodynamic potentials and fluctuation-dissipation}
-\author{A R Shaarad}
+\title{Lecture 6: The fluctuation-dissipation theorem}
+%\author{A R Shaarad}
 
 \begin{document}
 \maketitle
-\section{Thermodynamic potentials}
-In the study of the Boltzmann distribution, it is often useful to study a few functions depending on the system which summarize the system and provide useful information. Such functions are called thermodynamic potentials and are written as functions of the inverse temperature $\beta$. The following are the commonly used thermodynamic potentials.
-\begin{defn}[Free energy]
-The free energy $F(\beta)$ of the system is defined as
-$$F(\beta) = \frac{-1}{\beta} \log Z(\beta),$$
-where $Z(\beta)$ is the partition function.
-\end{defn}
-\begin{defn}[Free entropy]
-The free entropy $\Phi(\beta)$ of the system is defined as
-$$\Phi(\beta) = \log Z(\beta) = -\beta F(\beta)$$
-\end{defn}
-\begin{defn}[Internal energy]
-The internal energy $U(\beta)$ of the system is defined as
-$$U(\beta) = \frac{\partial}{\partial \beta} (\beta F(\beta))$$
-\end{defn}
-\begin{defn}[Canonical entropy]
-The canonical entropy $S(\beta)$ of the system is defined as
-$$S(\beta) = \beta^2 \frac{\partial F(\beta)}{\partial \beta}$$
-\end{defn}
-
-\subsection{Properties of thermodynamic potentials}
-The following are some useful properties of the above defined thermodynamic potentials.
-\begin{lem}
-\begin{itemize}
-\item $F(\beta) = U(\beta) - \frac{1}{\beta} S(\beta) = \frac{-1}{\beta} \Phi(\beta)$
-\begin{proof}
-That $F(\beta) = \frac{-1}{\beta} \Phi(\beta)$ is clear from the definition of $\Phi(\beta)$. Now,
-\begin{align*}
-U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
-	&= \beta \frac{\partial F}{\partial \beta} + F(\beta) \\
-	&= \beta \frac{S(\beta)}{\beta^2} + F(\beta) && \text{ from the definition of $S(\beta)$} \\
-\implies F(\beta) &= U(\beta) - \frac{1}{\beta} S(\beta),
-\end{align*}
-which was what was wanted.
-\end{proof}
-\item $U(\beta) = \langle E \rangle$
-\begin{proof}
-\begin{align*}
-U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
-	&= \frac{\partial}{\partial \beta} ( -\log Z(\beta)) \\
-	&= \frac{-1}{Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)} \\
-	&= \sum_{x \in \sX} E(x) \frac{e^{-\beta E(x)}}{Z(\beta)} \\
-	&= \langle E \rangle
-\end{align*}
-\end{proof}
-\item The canonical entropy is equal to the Shannon entropy of the Boltzmann distribution upto a multiplicative constant and hence is non negative.
-\begin{proof}
-\begin{align*}
-S(\beta) &= \beta^2 \frac{\partial}{\partial \beta} \left( \frac{-1}{\beta} \log Z(\beta) \right) \\
-	&= \beta^2 \left[ \frac{\log Z(\beta)}{\beta^2} - \frac{1}{\beta Z(\beta)} \frac{\partial Z(\beta)}{\partial \beta} \right] \\
-	&= \log Z(\beta) - \frac{\beta^2}{\beta Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)}\\
-	&= \log Z(\beta) + \beta \sum_{x \in \sX} E(x) \mu_\beta (x)
-\end{align*}
-Now,
-\begin{align*}
-\mu_\beta(x) &= \frac{e^{-\beta E(x)}}{Z(\beta)} \\
-\implies \log \mu_\beta(x) &= - \beta E(x) - \log Z(\beta) \\
-\implies \beta E(x) &= -\log \mu_\beta(x) - \log Z(\beta)
-\end{align*}
-Substituting this in the expression for $S(\beta)$, we obtain
-\begin{align*}
-S(\beta) &= \log Z(\beta) + \sum_{x \in \sX} (-\log \mu_\beta(x) - \log Z(\beta)) \mu_\beta(x) \\
-	&= - \sum_{x \in \sX} \mu_\beta(x) \log \mu_\beta(x) \\
-	&= \frac{H(\mu_\beta)}{\log 2},
-\end{align*}
-where $H(\mu_\beta)$ is the Shannon entropy of the Boltzmann distibution.
-\end{proof}
-\item $ - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) = \langle E^2 \rangle - \langle E \rangle^2$, i.e, the variance of $E(x)$.
-\begin{proof}
-\begin{align*}
-- \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) &= - \frac{\partial}{\partial \beta} \left( \frac{\partial}{\partial \beta} (\beta F(\beta)) \right) \\
-	&= - \frac{\partial}{\partial \beta} U(\beta) \\
-	&= - \frac{\partial}{\partial \beta} \langle E \rangle \\
-	&= - \frac{\partial}{\partial \beta} \sum_{x \in \sX} \frac{E(x) e^{- \beta E(x)}}{Z(\beta)} \\
-	&= -\frac{1}{Z(\beta)} \sum_{x \in \sX} E(x) \frac{\partial}{\partial \beta} e^{- \beta E(x)} - \sum_{x \in \sX} E(x) e^{- \beta E(x)} \frac{\partial}{\partial \beta} \frac{1}{Z(\beta)} \\
-	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} + \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)^2} \sum_{y \in \sX} e^{- \beta E(y)} \\
-	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} - \left( \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)} \right) \left( \sum_{y \in \sX} E(y) \frac{e^{- \beta E(y)}}{Z(\beta)} \right) \\
-	&= \langle E^2 \rangle - \langle E \rangle^2
-\end{align*}
-\end{proof}
-\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
-\begin{proof}
-\begin{align*}
-- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
-	&= \langle E^2 \rangle - \langle E \rangle^2 \\
-	&= Var_{\mu_\beta}(E) \geq 0
-\end{align*}
-and hence $\Phi$ is convex.
-\end{proof}
-\end{itemize}
-\end{lem}
-
+%\section{Thermodynamic potentials}
+%In the study of the Boltzmann distribution, it is often useful to study a few functions depending on the system which summarize the system and provide useful information. Such functions are called thermodynamic potentials and are written as functions of the inverse temperature $\beta$. The following are the commonly used thermodynamic potentials.
+%\begin{defn}[Free energy]
+%The free energy $F(\beta)$ of the system is defined as
+%$$F(\beta) = \frac{-1}{\beta} \log Z(\beta),$$
+%where $Z(\beta)$ is the partition function.
+%\end{defn}
+%\begin{defn}[Free entropy]
+%The free entropy $\Phi(\beta)$ of the system is defined as
+%$$\Phi(\beta) = \log Z(\beta) = -\beta F(\beta)$$
+%\end{defn}
+%\begin{defn}[Internal energy]
+%The internal energy $U(\beta)$ of the system is defined as
+%$$U(\beta) = \frac{\partial}{\partial \beta} (\beta F(\beta))$$
+%\end{defn}
+%\begin{defn}[Canonical entropy]
+%The canonical entropy $S(\beta)$ of the system is defined as
+%$$S(\beta) = \beta^2 \frac{\partial F(\beta)}{\partial \beta}$$
+%\end{defn}
+%
+%\subsection{Properties of thermodynamic potentials}
+%The following are some useful properties of the above defined thermodynamic potentials.
+%\begin{lem}
+%\begin{itemize}
+%\item $F(\beta) = U(\beta) - \frac{1}{\beta} S(\beta) = \frac{-1}{\beta} \Phi(\beta)$
+%\begin{proof}
+%That $F(\beta) = \frac{-1}{\beta} \Phi(\beta)$ is clear from the definition of $\Phi(\beta)$. Now,
+%\begin{align*}
+%U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
+%	&= \beta \frac{\partial F}{\partial \beta} + F(\beta) \\
+%	&= \beta \frac{S(\beta)}{\beta^2} + F(\beta) && \text{ from the definition of $S(\beta)$} \\
+%\implies F(\beta) &= U(\beta) - \frac{1}{\beta} S(\beta),
+%\end{align*}
+%which was what was wanted.
+%\end{proof}
+%\item $U(\beta) = \langle E \rangle$
+%\begin{proof}
+%\begin{align*}
+%U(\beta) &= \frac{\partial}{\partial \beta} (\beta F(\beta)) \\
+%	&= \frac{\partial}{\partial \beta} ( -\log Z(\beta)) \\
+%	&= \frac{-1}{Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)} \\
+%	&= \sum_{x \in \sX} E(x) \frac{e^{-\beta E(x)}}{Z(\beta)} \\
+%	&= \langle E \rangle
+%\end{align*}
+%\end{proof}
+%\item The canonical entropy is equal to the Shannon entropy of the Boltzmann distribution upto a multiplicative constant and hence is non negative.
+%\begin{proof}
+%\begin{align*}
+%S(\beta) &= \beta^2 \frac{\partial}{\partial \beta} \left( \frac{-1}{\beta} \log Z(\beta) \right) \\
+%	&= \beta^2 \left[ \frac{\log Z(\beta)}{\beta^2} - \frac{1}{\beta Z(\beta)} \frac{\partial Z(\beta)}{\partial \beta} \right] \\
+%	&= \log Z(\beta) - \frac{\beta^2}{\beta Z(\beta)} \sum_{x \in \sX} \frac{\partial}{\partial \beta} e^{-\beta E(x)}\\
+%	&= \log Z(\beta) + \beta \sum_{x \in \sX} E(x) \mu_\beta (x)
+%\end{align*}
+%Now,
+%\begin{align*}
+%\mu_\beta(x) &= \frac{e^{-\beta E(x)}}{Z(\beta)} \\
+%\implies \log \mu_\beta(x) &= - \beta E(x) - \log Z(\beta) \\
+%\implies \beta E(x) &= -\log \mu_\beta(x) - \log Z(\beta)
+%\end{align*}
+%Substituting this in the expression for $S(\beta)$, we obtain
+%\begin{align*}
+%S(\beta) &= \log Z(\beta) + \sum_{x \in \sX} (-\log \mu_\beta(x) - \log Z(\beta)) \mu_\beta(x) \\
+%	&= - \sum_{x \in \sX} \mu_\beta(x) \log \mu_\beta(x) \\
+%	&= \frac{H(\mu_\beta)}{\log 2},
+%\end{align*}
+%where $H(\mu_\beta)$ is the Shannon entropy of the Boltzmann distibution.
+%\end{proof}
+%\item $ - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) = \langle E^2 \rangle - \langle E \rangle^2$, i.e, the variance of $E(x)$.
+%\begin{proof}
+%\begin{align*}
+%- \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) &= - \frac{\partial}{\partial \beta} \left( \frac{\partial}{\partial \beta} (\beta F(\beta)) \right) \\
+%	&= - \frac{\partial}{\partial \beta} U(\beta) \\
+%	&= - \frac{\partial}{\partial \beta} \langle E \rangle \\
+%	&= - \frac{\partial}{\partial \beta} \sum_{x \in \sX} \frac{E(x) e^{- \beta E(x)}}{Z(\beta)} \\
+%	&= -\frac{1}{Z(\beta)} \sum_{x \in \sX} E(x) \frac{\partial}{\partial \beta} e^{- \beta E(x)} - \sum_{x \in \sX} E(x) e^{- \beta E(x)} \frac{\partial}{\partial \beta} \frac{1}{Z(\beta)} \\
+%	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} + \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)^2} \sum_{y \in \sX} e^{- \beta E(y)} \\
+%	&= \sum_{x \in \sX} E(x)^2 \frac{e^{- \beta E(x)}}{Z(\beta)} - \left( \sum_{x \in \sX} E(x) \frac{e^{- \beta E(x)}}{Z(\beta)} \right) \left( \sum_{y \in \sX} E(y) \frac{e^{- \beta E(y)}}{Z(\beta)} \right) \\
+%	&= \langle E^2 \rangle - \langle E \rangle^2
+%\end{align*}
+%\end{proof}
+%\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
+%\begin{proof}
+%\begin{align*}
+%- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
+%	&= \langle E^2 \rangle - \langle E \rangle^2 \\
+%	&= Var_{\mu_\beta}(E) \geq 0
+%\end{align*}
+%and hence $\Phi$ is convex.
+%\end{proof}
+%\end{itemize}
+%\end{lem}
+%
 \section{Temperature limits of thermodynamic potentials}
 We wish to study the behaviour of the thermodynamic potentials in the limiting cases of high temperature ($\beta \rightarrow 0$) and low temperature ($\beta \rightarrow \infty$).
 \subsection{High temperature limit}

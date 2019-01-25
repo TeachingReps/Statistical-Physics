@@ -219,9 +219,10 @@ So, at low temperatures, all the particles will settle to the ground state, and 
 We will be primarily interested in the low temperature limit of systems, as it provides insight into the ``low energy structure'' of the system. 
 At high temperatures, the states are just random, which does not give us much information.  
 
-\section{Thermodynamic Potentials}
-Several properties of the Boltzmann distribution can be conveniently expressed in terms of additional quantites, called \textbf{thermodynamic potentials}. These also greatly simplify some of our calculations. 
-
+\section{Thermodynamic Potentials} 
+In the study of the Boltzmann distribution, it is often useful to study a few functions depending on the system which summarize the system and provide useful information. 
+Such functions are called \textbf{thermodynamic potentials} and are written as functions of the inverse temperature $\beta$. 
+The following are the commonly used thermodynamic potentials. 
 \begin{defn}
 The \textbf{free energy} of a system is defined as 
 \EQ{
@@ -303,6 +304,16 @@ We recall that $\frac{\partial \ln Z(\beta)}{\partial \beta} = \inner{E}$, to ge
 %\EQ{
 %-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right) =\inner{E^2}-\inner{E}^2.
 %}
+\end{proof}
+\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
+\begin{proof}
+Recall that the free entropy $\Phi(\beta) = -\beta F(\beta)$. 
+\begin{align*}
+- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
+	&= \langle E^2 \rangle - \langle E \rangle^2 \\
+	&= Var_{\mu_\beta}(E) \geq 0
+\end{align*}
+and hence $\Phi$ is convex.
 \end{proof}
 \end{enumerate}
 \end{lem}
