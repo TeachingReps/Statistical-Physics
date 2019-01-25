@@ -123,8 +123,8 @@ The average value of the spin, called the \textbf{magnetization} is
 \inner{\sigma}=\sum_{\sigma=\{+1,-1\}} \sigma \mu_{\beta}(\sigma)=\frac{e^{\beta B}-e^{-\beta B}}{e^{-\beta B}+e^{\beta B}}=\tanh(\beta B).
 }
 \begin{itemize}
-\item At high temperatures ($T>>|B|$ or $\beta \approx 0$, we have $e^{\beta B} \approx e^{-\beta B}$, so $\inner{\sigma} \approx 0$.  
-\item On the other hand, at low temperatures ($\beta \to 0$), we have two cases. 
+\item At high temperatures ($T>>|B|$ or $\beta \to 0$), we have $e^{\beta B} \approx e^{-\beta B}$, so $\inner{\sigma} \approx 0$.  
+\item At low temperatures ($\beta \to 0$), we have two cases. 
 
 If $B>0$, then $e^{\beta B} >> e^{-\beta B}$, so $\inner{\sigma} \approx 1$. 
 If $B<0$, then $e^{\beta B} << e^{-\beta B}$, so $\inner{\sigma} \approx -1$. 
@@ -136,7 +136,7 @@ That is, we have $\inner{\sigma} \approx \sign(B)$.
 \begin{shaded*} 
 \begin{exmp}[Pott's spin]
 Another spin variable is the \textbf{Potts spin} with $q$ states, 
-which takes values in $\sX=\{1,2,\ldots,q\}$. 
+which takes values in $\sX= [q] = \{1,2,\ldots,q\}$. 
 In this case, the energy of a particle with Potts spin $\sigma$, 
 when it is placed in a magnetic field of intensity $B$ pointing in direction $r$, 
 is given by 
@@ -159,106 +159,150 @@ The Boltzmann average of energy is given by
 \end{exmp}
 \end{shaded*}
 \begin{shaded*} 
-\begin{exmp}
-Let us consider the case of a particle in a closed container (bottle), which is placed in a gravitational field. The space of configurations is the 3-D volume of the bottle, which can be represented as $\sX=\text{BOTTLE}\subset \R^3$. \\
-The (potential) energy of a particle in a gravitational field is $E(x)=mg h(x)=w h(x)$, where $h(x)$ corresponds to the height of the configuration x. (Here, $x$ is not to be confused with the x-coordinate; it is simply a representation of the state of the particle.) \\
-In this case, the partition function is difficult to calculate, becuase $\sX$ is an infinite set. However, we can still find some things out. Letting the partition function be $Z(\beta)$, we see that
-\EQ{\mu_{\beta}(x)=\frac{e^{-\beta wh(x)}}{Z(\beta)} \text{ and } \mu_{\beta}(y)=\frac{e^{-\beta wh(y)}}{Z(\beta)}}
-\EQ{\frac{\mu_{\beta}(x)}{\mu_{\beta}(y)}=e^{\beta w\left(h(y)-h(x) \right)}}
-Let us fix $y=0$. We get 
+\begin{exmp}[Particles in a bottle]
+Let us consider the case of a particle in a closed container (bottle), which is placed in a gravitational field. 
+The space of configurations is the three-dimensional volume of the bottle, which can be represented as $\sX=\text{BOTTLE}\subset \R^3$. 
+
+The (potential) energy of a particle in a gravitational field is $E(x)=mg h(x)=w h(x)$, where $h(x)$ corresponds to the height of the configuration $x$. 
+Here, $x$ is not to be confused with the $x$-coordinate; it is simply a representation of the state of the particle. 
+
+In this case, the partition function is difficult to calculate, because $\sX$ is an infinite set. 
+However, we can still compute some related quantities in a straightforward fashion. 
+Letting the partition function be $Z(\beta)$, we see that the Boltzmann density is 
+\meq{3}{
+&\mu_{\beta}(x)=\frac{e^{-\beta wh(x)}}{Z(\beta)}, && \mu_{\beta}(y)=\frac{e^{-\beta wh(y)}}{Z(\beta)}, &&\frac{\mu_{\beta}(x)}{\mu_{\beta}(y)}=e^{\beta w\left(h(y)-h(x) \right)}.
+}
+Let us fix $y=0$. 
+We get 
 \EQ{\frac{\mu_{\beta}(x)}{\mu_{\beta}(0)}=e^{-\beta w h(x)}}
-The above equation tells us the greater the height of the particle, the lesser probability of the particle being in that state. This makes physical sense, because we expect most of the particles to be at low heights due to gravity. Note that this result was obtained without any explicit knowledge of the partition function. 
+The above equation tells us the greater the height of the particle, the smaller the probability of the particle being in that state. 
+This makes physical sense, because we expect most of the particles to be at low heights due to gravity. 
+Note that this result was obtained without any explicit knowledge of the partition function. 
 \end{exmp}
 \end{shaded*}
 
 \section{Temperature Limits}
-Let us now see that happens to the Boltzman distribution at high and low temperatures. \\
-At high temperatures, $\beta \to 0$. Therefore, we have $e^{-\beta E(x)} \to 1$ for all values of energy. The partition function is simply $Z(\beta)=\sum_{x \in \sX} e^{-\beta E(x)}=| \sX |$. The probability of the particle being in any state $x$ is:
-\EQ{\lim_{\beta \to 0} \mu_{\beta}(x)=\frac{1}{| \sX |}}
-which is a uniform distribution. This, in the high temperature limit, we expect every state to become equally probable.\\
-Note that this is in accordance with the Ising spin model. At high temperatures, the spin of the particles become randomly orientated, so the average spin (magnetization) will be 0. \\\\
-The case of low temperatures is more interesting. The probability of the particle being in state $x$ is 
-\EQ{\mu_{\beta}(x)=\frac{e^{-\beta E(x)}}{\sum_{x \in \sX}e^{-\beta E(x)}}}
+Let us now see that happens to the Boltzmann distribution at high and low temperatures. 
+The probability of the particle being in state $x$ according to the Boltzmann distribution is 
+\EQ{
+\mu_{\beta}(x)=\frac{e^{-\beta E(x)}}{\sum_{x \in \sX}e^{-\beta E(x)}}.
+}
+At high temperatures $\beta \to 0$, and therefore we have $e^{-\beta E(x)} \to 1$ for all values of energy. 
+The partition function is simply $Z(\beta)=\sum_{x \in \sX} e^{-\beta E(x)}=| \sX |$. The probability of the particle being in any state $x$ is 
+\EQ{
+\lim_{\beta \to 0} \mu_{\beta}(x)=\frac{1}{| \sX |}.
+}
+which is a uniform distribution, i.e. in the high temperature limit, we expect every state to become equally probable. 
+Note that this is in accordance with the Ising spin model. 
+At high temperatures, the spin of the particles become randomly orientated, so the average spin (magnetization) will be $0$. 
+
+The case of low temperature is more interesting. 
+We need the following definitions to understand the low temperature limit. 
 \begin{defn}
-The \textbf{ground state energy} of the system is the lowest enery attainable by it, denoted by $E_o$. A state corresponding to the ground state energy is called a \textbf{ground state}. Mathematically, a state $x_o \in \sX$ is a ground state if $E(x)>E(x_o)$  $\forall x \in \sX$. 
+The \textbf{ground state energy} of the system is the lowest energy attainable by it, denoted by $E_0 = \inf\{E(x): x \in \sX\}$. 
+A state corresponding to the ground state energy is called a \textbf{ground state}, 
+and the set of ground states is given by $\sX_0 = \set{x \in \sX: E(x) = E_0}$. 
+%Mathematically, a state $x_0 \in \sX$ is a ground state if $E(x)>E(x_0)$ for all $x \in \sX$. 
 \end{defn}
- Let the set of all ground states be $\sX_o$. The above equation can be written as:
-\begin{align*}
-\mu_{\beta} (x)=&\frac{e^{-\beta E(x)}}{e^{-\beta E_o} \sum_{x \in \sX} e^{-\beta \left(E(x)-E_o\right)}} \\
-=&\frac{e^{-\beta (E(x)-E_o)}}{|\sX_o|+\sum_{x \in \sX \backslash \sX_o} e^{-\beta (E(x)-E_o)}}
-\end{align*}
-Note that since $E(x)>E_0$ if $x \in \sX \backslash \sX_o$, the second term in the denominator goes to 0 as $\beta \to \infty$. The term in the numerator is 1 if $E(x)=E_o$ and it is 0 otherwise. Therefore, the probability distribution can be written as 
-\EQ{\mu_{\beta}(x)=\frac{1}{|\sX_o|}\mathbb{1}_{x \in \sX_o}}
-So, at low temperatures, all the particles will settle to the ground state, and all the other energy levels are left unpopulated.\\
-We will be primarily interested in the low temperature limit of systems, as it provides insight into the "low energy structure" of the system. At high temperatures, the states are just random, which does not give us much information.  
+%Let the set of all ground states be $\sX_0$. 
+In terms of the ground state $\sX_0$, we can write the Boltzmann distribution as 
+\EQ{
+\mu_{\beta} (x) %=\frac{e^{-\beta E(x)}}{e^{-\beta E_0} \sum_{x \in \sX} e^{-\beta \left(E(x)-E_0\right)}} \\
+=\frac{e^{-\beta (E(x)-E_0)}}{|\sX_0|+\sum_{x \in \sX \setminus \sX_0} e^{-\beta (E(x)-E_0)}}
+}
+Note that since $E(x)>E_0$ for all $x \in \sX \setminus \sX_0$, the second term in the denominator goes to 0 as $\beta \to \infty$. The term in the numerator is 1 if $E(x)=E_0$ and it is 0 otherwise. 
+Therefore, the probability distribution can be written as 
+\EQ{
+\mu_{\beta}(x)=\frac{1}{|\sX_0|}\indicator{x \in \sX_0}.
+}
+So, at low temperatures, all the particles will settle to the ground state, and all the other energy levels are left unpopulated. 
+We will be primarily interested in the low temperature limit of systems, as it provides insight into the ``low energy structure'' of the system. 
+At high temperatures, the states are just random, which does not give us much information.  
 
 \section{Thermodynamic Potentials}
 Several properties of the Boltzmann distribution can be conveniently expressed in terms of additional quantites, called \textbf{thermodynamic potentials}. These also greatly simplify some of our calculations. 
 
 \begin{defn}
 The \textbf{free energy} of a system is defined as 
-\EQ{F(\beta)=-\frac{1}{\beta} \ln Z(\beta)}
-\end{defn}
-
-\begin{defn}
+\EQ{
+F(\beta)\triangleq-\frac{1}{\beta} \ln Z(\beta).
+}
 The \textbf{free entropy} of a system is defined as 
-\EQ{\Phi(\beta)=-\beta F(\beta)=\ln Z(\beta)}
-\end{defn}
-
-\begin{defn}
+\EQ{
+\Phi(\beta)\triangleq -\beta F(\beta)=\ln Z(\beta).
+}
 The \textbf{internal energy} of a system is defined as 
-\EQ{U(\beta)=\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right)}
-\end{defn}
-
-\begin{defn}
+\EQ{
+U(\beta)\triangleq\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right).
+}
 The \textbf{cannonical entropy} of a system is defined as 
-\EQ{ S(\beta)=\beta^2 \frac{\partial F(\beta)}{\partial \beta} }
+\EQ{
+S(\beta)\triangleq\beta^2 \frac{\partial F(\beta)}{\partial \beta} = \beta[\frac{\partial}{\partial \beta}(\beta F(\beta)) - F(\beta)].
+}
 \end{defn}
 Using these definitions, we derive some relations between the potentials which will be useful later. 
 \begin{lem} Basic identities of thermodynamic potentials
 \begin{enumerate}
-\item $F(\beta)=U(\beta)-\frac{1}{\beta}S(\beta)=-\frac{1}{\beta} \Phi(\beta)$
+\item Relation between free energy, internal energy, and canonical entropy: $F(\beta)=U(\beta)-\frac{1}{\beta}S(\beta)=-\frac{1}{\beta} \Phi(\beta)$.
 \begin{proof}
-\EQ{U(\beta)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right)=F(\beta)+\beta \frac{\partial F(\beta)}{\partial \beta}=F(\beta)+\frac{1}{\beta}S(\beta)}
+From the definition, we can write 
+\EQ{
+U(\beta)=\frac{\partial}{\partial \beta} \left(\beta F(\beta) \right)=F(\beta)+\beta \frac{\partial F(\beta)}{\partial \beta}=F(\beta)+\frac{1}{\beta}S(\beta).
+}
 Rearranging, we get the required relation.
 \end{proof}
-\item $U(\beta)=\inner{ E }$ 
+\item Internal energy is the expected energy under the Boltzmann distribution. That is, $U(\beta)=\inner{ E}$.  
 \begin{proof}
-(Here onewards, for brevity, we simply use $\sum$ to represent $\sum_{x \in \sX}$.)
-\begin{align*}
-U(\beta)=&\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\partial}{\partial \beta}(- \ln Z(\beta)) \\
-=&-\frac{1}{Z(\beta)} \frac{\partial Z(\beta)}{\partial \beta}\\
-=&-\frac{1}{Z(\beta)} \frac{\partial}{\partial \beta} \sum e^{-\beta E(x)}\\
-=&-\frac{1}{Z(\beta)} \sum e^{-\beta E(x)} (-E(x))\\
-=&\sum \mu_{\beta}(x) E(x)\\
-=&\inner{ E }
-\end{align*}
+From the definition of free entropy, we can write 
+\EQ{
+U(\beta)=\frac{\partial}{\partial \beta}\left(-\Phi(\beta) \right)=\frac{\partial}{\partial \beta}(- \ln Z(\beta)) 
+=-\frac{1}{Z(\beta)} \frac{\partial Z(\beta)}{\partial \beta}.
+}
+%Here onwards, for brevity, we simply use $\sum$ to represent $\sum_{x \in \sX}$. 
+For a finite configuration space $\sX$, we can exchange the partial derivative and the summation, to write
+\EQ{
+U(\beta) =-\frac{1}{Z(\beta)} \frac{\partial}{\partial \beta} \sum_{x \in \sX} e^{-\beta E(x)}
+=-\frac{1}{Z(\beta)} \sum_{x \in \sX} e^{-\beta E(x)} (-E(x))
+=\sum_{x \in \sX} \mu_{\beta}(x) E(x)
+=\inner{E}.
+}
 \end{proof}
-\item $S(\beta)=H(\mu_\beta)$
+\item Canonical entropy is the Shannon entropy of the Boltzmann distribution. That is, $(\beta)= {H(\mu_\beta)}{\ln 2}.$
 \begin{proof}
-\begin{align*}
-S(\beta)=&\beta^2 \frac{\partial F}{\partial \beta}\\
-=&\beta^2 \frac{\partial }{\partial \beta} \left(-\frac{1}{\beta} \ln Z(\beta) \right)\\
-=& \beta^2 \left( \frac{1}{\beta^2} \ln Z(\beta) - \frac{1}{\beta }\frac{1}{Z(\beta)}\frac{\partial Z(\beta)}{\partial \beta} \right) \\
-=& \ln Z(\beta) +\sum \beta E(x) \mu_\beta (x) \hspace{10mm} \text{(this was evaluated in the last proof)} \\
-\end{align*}
-Now note that $\mu_{\beta}(x)=\frac{e^{-\beta E(x)}}{Z(\beta)}$. Taking ln on both sides, we have $\ln \mu_\beta(x)=\beta E(x)-\ln Z(\beta)$. Substituting for $\beta E(x)$, we have:
-\begin{align*}
-S(\beta)=& \ln Z(\beta)+\sum \mu_{\beta} \left(-\ln \mu_\beta(x)-\ln Z(\beta) \right)  \\
-=&-\sum \mu_\beta \ln \mu_\beta(x)  \hspace{15mm} (\sum \mu_{\beta}(x)=1)\\
-=&H(\mu_\beta)/\ln 2
-\end{align*}
+%Using the definition of canonical entropy, we can write 
+%\EQ{
+%S(\beta)=\beta^2 \frac{\partial F}{\partial \beta} 
+%=\beta^2 \frac{\partial }{\partial \beta} \left(-\frac{1}{\beta} \ln Z(\beta) \right)
+%= \beta^2 \left( \frac{1}{\beta^2} \ln Z(\beta) - \frac{1}{\beta }\frac{1}{Z(\beta)}\frac{\partial Z(\beta)}{\partial \beta} \right). 
+%}
+From the result in first two parts and the definition of free entropy, we can write the canonical entropy as 
+\EQ{
+S(\beta) = \Phi(\beta) + \beta U(\beta) =  \ln Z(\beta) +\sum_{x \in \sX} \beta E(x) \mu_\beta (x) = \sum_{x \in \sX}\mu_\beta(x)(\beta E(x)+\ln Z(\beta)). %\hspace{10mm} \text{(this was evaluated in the last proof)} 
+}
+Now note that $\mu_{\beta}(x)=\frac{e^{-\beta E(x)}}{Z(\beta)}$. 
+Taking natural log on both sides, we have $\ln \mu_\beta(x)= -\beta E(x)-\ln Z(\beta)$. 
+Therefore, we recognize that
+%Substituting for $\beta E(x)$, we have:
+\EQ{
+S(\beta)%&= \ln Z(\beta)+\sum \mu_{\beta} \left(-\ln \mu_\beta(x)-\ln Z(\beta) \right)  \\
+=-\sum_{x \in \sX} \mu_\beta \ln \mu_\beta(x) = H(\mu_\beta)\ln 2.
+}
 \end{proof}
-\textbf{Thus, the canonical entropy is the Shannon entropy of the Boltzmann distribution (up to a multiplicative constant).} 
-\item $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\inner{ E(x)^2 }-\inner{ E(x) }^2$
-\begin{proof}
-\begin{align*}
--\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=&-\frac{\partial}{\partial \beta} \left( U(\beta)\right) \\
-=&-\frac{\partial}{\partial \beta} \left( \frac{\sum e^{-\beta E(x)} E(x)} {Z(\beta)}\right) \\
-=&\frac{-1}{Z(\beta)} \left(\sum e^{-\beta E(x)} E(x) (-E(x)) \right)+\sum e^{-\beta E(x)} E(x) \frac{\partial Z(x)}{\partial \beta} \\
-=& \sum \frac{e^{-\beta E(x)}}{Z(\beta)} E(x)^2+\left(\sum e^{-\beta E(x)} E(x)\right) \left( \sum e^{-\beta E(x)} (-E(x))\right) \\
-=&\inner{ E(x)^2 }-\inner{ E(x) }^2
-\end{align*}
+%\textbf{Thus, the canonical entropy is the Shannon entropy of the Boltzmann distribution (up to a multiplicative constant).} 
+\item Second partial derivative of free entropy with respect to the inverse temperature is auto-covariance of energy under the Boltzmann distribution. 
+That is, $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\inner{ E(x)^2 }-\inner{ E(x) }^2$. 
+\begin{proof} 
+We can write the second partial derivative of free entropy as first partial derivative of the negative free energy, 
+and hence 
+\EQ{
+-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=-\frac{\partial}{\partial \beta} \left( U(\beta)\right) 
+=-\frac{\partial}{\partial \beta} \left( \frac{\sum_{x \in \sX} e^{-\beta E(x)} E(x)} {Z(\beta)}\right)
+=\sum_{x \in \sX} \mu_\beta(x) E(x)^2-\sum_{x \in \sX}\mu_\beta(x)E(x) \frac{1}{Z(\beta)}\frac{\partial Z(\beta)}{\partial \beta}.
+}
+We recall that $\frac{\partial \ln Z(\beta)}{\partial \beta} = \inner{E}$, to get the result.
+%\EQ{
+%-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right) =\inner{E^2}-\inner{E}^2.
+%}
 \end{proof}
 \end{enumerate}
 \end{lem}
