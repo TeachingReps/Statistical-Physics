@@ -47,7 +47,7 @@ This is called a \textbf{second-order phase transition}.
 
 \subsection{Energy spectrum and Micro-canonincal entropy density}
 When the number of particles $N$ grows, the volume of the configuration space increases exponentially, 
-i.e. $|\sX_N| = |\sX|^N$. 
+i.e. $|\sX^N| = |\sX|^N$. 
 We have seen before that the system is likely to be found in lowest-energy configurations with high probability at low temperatures. 
 From the definition of Boltzmann distribution, it is easy to check that conditioned on the system to be at  certain energy level, it is equally likely to be in any configuration with equal energy. 
 Therefore, one of the important factor of interest is the number of configurations for any given energy level.  
@@ -59,105 +59,168 @@ defined by the set of states with energy in the interval $[E, E+\Delta)$,
 The number of states in $\Omega_\Delta(E)$ is given by $\cN_\Delta (E) = \abs{\Omega_\Delta (E)}$. 
 %where $\Omega_\Delta (E)$ represents the set of particles for which the energy lies in $E$ and $E+\Delta$ and $N_\Delta (E)$ gives the total number of such particles. 
 
+\begin{defn}[Equality in leading exponential order]
+We say that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, if 
+\EQ{
+\lim_{N \to \infty} \frac{1}{N} \log\frac{A_N}{B_N}=0.
+}
+We denote this equality by  $A_N \stackrel{.}{=}_N B_N$. 
+\end{defn}
 The energy spectrum diverges exponentially in many systems as $N \to \infty$, if the energy is scaled linearly with $N$. 
-More precisely, there exists a function $s(e)$ such that, given two numbers $e$ and $\delta > 0$, 
+\begin{defn}[Micro-canonical entropy density]
+More precisely, there exists a function $s(e)$ called the \textbf{micro-canonical entropy density}, 
+such that given two numbers $e$ and $\delta > 0$, 
 \EQN{
 \label{eqn:MicroCanonicalEntropy}
 s(e) = \lim_{N \to \infty} \frac{1}{N} \log \cN_{N\delta}(Ne) = \sup_{e'\in [e,e+\delta]} s(e').
 }
-Compactly, we can write this as 
-\eq{
-\cN_\Delta(E) \stackrel{.}{=}_N \exp\left[N s\left(\frac{E}{N}\right)\right], 
+\end{defn}
+Using this notation, we can write the following equality for micro-canonical entropy density
+\EQN{
+\label{eqn:NumConfigPartition}
+\cN_\Delta(E) \stackrel{.}{=}_N e^{N s(E/N)}.
 }
-where the notation $\stackrel{.}{=}_N$ denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $\lim_{N \to \infty} \frac{1}{N} \log (A_N/B_N)=0$.
-
-The micro-canonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic
-potentials through a fundamental relation.
+The micro-canonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic potentials through a fundamental relation.
 
 \begin{rem}
-\label{rem:partitionFunctionWithEnergySpectrum}
-Given the whole energy band divided into $\Delta$ intervals, the partition function can be now written as 
-
-\eq{
-Z_N (\beta) &= \sum_{x \in \mathcal{X_N}} \exp(-\beta E(x)) = \sum_{x \in \mathcal{X_N}} \sum_{k=-\infty}^{\infty} \indicator{k\Delta \le \frac{E(x)}{N} < (k+1)\Delta} \exp(-\beta N k\Delta)\\
-& = \sum_{k=-\infty}^{\infty} \exp(-\beta N k\Delta) \sum_{x \in \mathcal{X_N}} \indicator{k\Delta \le \frac{E(x)}{N} < (k+1)\Delta} 
-\stackrel{.}{=}_N \sum_{k=-\infty}^{\infty} \exp(-\beta N k\Delta) \exp(N s(k\Delta)\\
-&= \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]\\
-&= \int \exp[N (s(e)-\beta e)] de
+\label{rem:PartitionFunctionWithEnergySpectrum} 
+Recall that energy function $E: \sX^N \to \R$, and hence we can divide the energy levels into $N \Delta$ intervals. 
+Then, we can partition the configuration space into configurations with energy level in one of these durations. 
+Specifically, we can define 
+\EQ{
+\Omega_{N\Delta}(Nk\Delta) = \set{x \in \sX^N: k\Delta \le \frac{E(x)}{N} < (k+1)\Delta}.
 }
+Clearly, $(\Omega_{N\Delta}(Nk\Delta): k \in \Z)$ partition the configuration space $\sX^N$, 
+and each of these partitions have cardinality $\abs{\Omega_{N\Delta}(Nk\Delta)} = \cN_{N\Delta}(Nk\Delta)$. 
+%Given the whole energy band divided into $\Delta$ intervals, 
+Therefore, we can write the partition function as 
+\EQ{
+Z_N (\beta) = \sum_{x \in \cX^N} e^{-\beta E(x)} =  \sum_{k=-\infty}^{\infty}e^{-\beta N k\Delta}\cN_{N\Delta}(Nk\Delta)\left(\frac{1}{\cN_{N\Delta}(Nk\Delta)}\sum_{x \in \Omega_{N\Delta}(Nk\Delta)} e^{-\beta N(\frac{E(x)}{N} - k\Delta)}\right).
+}
+From equation~\eqref{eqn:NumConfigPartition}, we get the following equality in leading exponential order $\cN_{N\Delta}(Nk\Delta) \stackrel{.}{=}_N e^{N s(k\Delta)}$. 
+%The second term can be approximated as an integral $\int_{k\Delta}^{(k+1)\Delta}e^{-\beta N(e - k\Delta)}de$. 
+If $\sX$ is discrete and $\Delta$ is small enough so that the energy levels are exactly at $N\Delta$ intervals, then we can write the partition function as 
+\EQ{
+Z(\beta)  %= \sum_{k=-\infty}^{\infty} \exp(-\beta N k\Delta) \sum_{x \in \cX_N} \indicator{k\Delta \le \frac{E(x)}{N} < (k+1)\Delta} 
+\stackrel{.}{=}_N \sum_{k=-\infty}^{\infty} e^{N (s(k\Delta)- \beta k\Delta)}. 
+%= \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]\\
+}
+For continuous energy levels, we can show that $Z_N(\beta) \stackrel{.}{=}_N \int e^{N (s(e)-\beta e)} de$, by taking limit of $\Delta \to 0$.
 \end{rem}
-
-
 \begin{prop}
 If the micro-canonical entropy density~\eqref{eqn:MicroCanonicalEntropy} exists for any $e$ and if the limit in equation~\eqref{eqn:MicroCanonicalEntropy} is uniform in $e$, then the free entropy density ~\eqref{eqn:density} exists and is given by
 \EQN{
-\phi(\beta) = \max_e [s(e) -\beta e]
+\phi(\beta) = \max_e (s(e) -\beta e).
 }
-If the maximum of $s(e)-\beta e$ is unique, then the internal-energy density equals $arg\max[s(e)-\beta e]$.
+If the maximum of $s(e)-\beta e$ is unique, 
+then the internal-energy density equals $\arg\max(s(e)-\beta e)$.
 \end{prop}
-
 \begin{proof}
 From the definition, the free entropy density $\phi(\beta)$ can be written as
-\eq{
-\phi(\beta) =  \lim_{N \to \infty} \frac{1}{N} \log(Z_N(\beta))
+\EQ{
+\phi(\beta) =  \lim_{N \to \infty} \frac{1}{N} \log(Z_N(\beta)).
 }
-By using the remark ~\ref{rem:partitionFunctionWithEnergySpectrum},
-\eq{
-\phi(\beta) &=  \lim_{N \to \infty} \frac{1}{N} \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]\\
-&= \sup_k [s(k\Delta)  -\beta k\Delta]\\
-&= \max_e [s(e)  -\beta e]
+From the computation of $N$-particle partition function in Remark~\ref{rem:PartitionFunctionWithEnergySpectrum}, we can evaluate this limit for discrete configuration space as 
+\EQ{
+\phi(\beta) =  \lim_{N \to \infty} \frac{1}{N} \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]
+= \sup_k [s(k\Delta)  -\beta k\Delta]
+= \max_e [s(e)  -\beta e].
 }
 \end{proof}
 
 \begin{shaded*} 
 \begin{exmp}[$N$ identical two-level systems]
-Let us $N$ identical two-level systems, i.e. $\sX _N = \sX \times \sX  \times \ldots \times \sX$, with $\sX = \{1,2\}$. We take the energy to be the sum of the single-system energies: $E(x) = E_{single}(x_1) + E_{single}(x_2) + \ldots + E_{single}(x_N) $ with $x_i \in \sX$. We set $E_{single}(1) = \epsilon_1, E_{single}(2) = \epsilon_2 > \epsilon_1$ and, $\Delta = \epsilon_2 - \epsilon_1$.
-
-The energy spectrum of this model is quite simple. For any energy $E = N \epsilon + n\Delta$,there are $\binom{N}{n}$ configurations $x$ with $E(x) = E$. 
-Where $n$ is the number of particles in level-2.
-
-w.k.t 
-\eq{
-N_\Delta(E) = \binom{N}{n} \approx 2^{N \mathcal{H}(\frac{n}{N})} \approx 2^{N \mathcal{H} \big(\frac{E-N\epsilon_1}{N\Delta} \big)}
+We consider an $N$ particle system, 
+where the configuration space of each particle is identical $\sX = \set{1,2}$ and consisting of two-levels. 
+That is, $\sX^N = \sX \times \sX  \times \dots \times \sX$. 
+For any configuration $x \in \sX^N$, we let $x_i \in \sX$ denote the configuration of $i$th particle. 
+As in the previous two-level system example, we let 
+\EQ{
+E_{single}(x_i) = \epsilon_1\indicator{x_i =1} + \epsilon_2\indicator{x_i =1},
 }
-Therefore, using the definition ~\eqref{eqn:MicrocanonicalEntropy}, we get
-\eq{
-s(e) = \mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big)\\
+where we assume $\epsilon_2 > \epsilon_1$ without any loss of generality and define the energy gap as $\Delta = \epsilon_2 - \epsilon_1$. 
+We take the energy of the $N$ particle system to be the sum of the single-particle energies, i.e. 
+\EQ{
+E(x) = E_{single}(x_1) + E_{single}(x_2) + \ldots + E_{single}(x_N). 
+} 
+We can next study the energy spectrum for this model. 
+For any configuration $x \in \sX^N$, we can define the set of particles in state $k \in \set{1,2}$ as 
+\EQ{
+S_k = \set{i \in [N]: x_i = k}.
 }
-The free energy can be now computed as,
-\eq{
-f(\beta) &= -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e [s(e)  -\beta e] = -\frac{1}{\beta} \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e]\\
-&= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta))
+We have $S_1 \cup S_2 = [N]$ and $S_1 \cap S_2 = \emptyset$. 
+If $\abs{S_2} = n$, then the system energy is given by 
+\EQ{
+E(x) = \epsilon_1(N-n)+ \epsilon_2n = N\epsilon_1 + n \Delta. 
+} 
+The number of possible subsets $S_2 \subseteq [N]$ such that $\abs{S_2} = n$ is equal to the binomial coefficient $\binom{N}{n}$. 
+Therefore, we conclude that $E(x) \in \set{E+n\Delta: n = 0, \dots, N}$ and for any energy $E = N \epsilon_1 + n\Delta$,there are $\binom{N}{n}$ configurations $x$ such that $E(x) = E$. 
+This is one of the rare examples, where we can completely specify the number of configurations at each energy level, which is 
+\EQ{
+\cN_\Delta(E) = \binom{N}{n} \approx 2^{N \cH(\frac{n}{N})} = 2^{N \cH \big(\frac{E-N\epsilon_1}{N\Delta} \big)} = 2^{N \cH \big(\frac{\frac{E}{N}-\epsilon_1}{\Delta} \big)}.
 }
-
-The above equation can be obtained by first solving $ \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}$. Substittuting this back and considering the fact that as $N \to \infty$ the expression $\exp(-\beta \Delta) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \Delta))$.
+Using the definition of micro-canonical entropy density~\eqref{eqn:MicroCanonicalEntropy}, we get
+\EQ{
+s(e) = \cH\Big(\frac{e-\epsilon_1}{\Delta}\Big).
+}
+We can write the free energy density in terms of micro-canonical entropy density as 
+\EQ{
+f(\beta) = -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e (s(e)  -\beta e) = -\frac{1}{\beta} \sup_e \left(\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e\right).
+%= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta)).
+}
+To evaluate the supremum in the above equation, 
+we take the first derivative of $\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e$ with respect to energy density $e$ and equate it to zero, to get the saddle point
+\EQ{
+e^{\ast}=\epsilon_1 + \Delta\frac{\exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}.
+}
+%The above equation can be obtained by first solving $ \sup_e [\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}$. 
+We can show that $e^{\ast}$ corresponds to the unique maxima. %, and since $\phi(\beta)$ is convex, it is a unique maxima. 
+Substituting this back into the expression for the free energy, we get 
+\EQ{
+f(\beta) =  -\frac{1}{\beta} \left(\cH\Big(\frac{e^{\ast}-\epsilon_1}{\Delta}\Big)  -\beta e^{\ast}\right)
+= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta)).
+}
+%and considering the fact that as $N \to \infty$ the expression $\exp(-\beta \Delta) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \Delta))$. 
+This expression is identical to the free energy for a single particle as expected, 
+since summation of energy functions amounts to no interaction system. 
+The free energy of non-interacting $N$ particle system, is the aggregate free energy of $N$ independent single particle systems. 
 \end{exmp}
 \end{shaded*}
 
-
 \section{Ferromagnets and Ising models}
-Magnetic materials contain molecules with a magnetic moments, that tend to align the external magnetic field felt by the molecule and these magnetic moments of two different molecules interact with each other.In many materials, the energy is lower when the moments align. 
+Magnetic materials contain molecules with individual magnetic moments, that tend to align the external magnetic field felt by the molecule. 
+Magnetic moments of different molecules interact with each other. 
+In many materials, the energy is lower when the moments align. 
 
-A simple mathematical model for considering a bunch of interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a d-dimensional cubic lattice. Consider a region $\mathbb{L}$, a cube of side $L:\mathbb{L}=\{1,2, \dots, L\}^d$. At each coordinate $i \in \mathbb{L}$, the state of a particle is an Ising spin $\sigma_i \in \{-1,1\}$.
+A simple mathematical model for considering a number of particles with interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a $d$-dimensional cubic lattice $\L$. 
+The cubic lattice $\L$ is determined by the vertices $[L]^d$ and the edges $((i,j) \in [L]^d \times [L]^d: \sum_{k=1}^d\abs{i_k-j_k} = 1)$ between the nearest neighbors.  
+At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$. 
 
 %\red{Insert figure here}
+Let $N = L^d$, then the $N$ particle system configuration $\sigma$ is given by assigning the values of spins  for each of the $N$ particles as $\sigma = (\sigma_1, \sigma_2, \dots, \sigma_N)$. 
+The space of configuration is $\sX^N = \{-1,1\}^N$. 
+The energy of an $N$ particle configuration $\sigma$ is given by
+\EQ{
+E(\sigma) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in [L]^d} \sigma_i.
+}
+where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in [L]^d$ which are nearest neighbours and $B$ is the applied external magnetic field. 
+Determining the free energy density $f(\beta)$ in the thermodynamic limit for this model is a non-trivial task. In 1924, Ernst Ising solved the $d=1$ case and showed the absence of phase transitions. 
+In 1948, Lars Onsager solved the $d=2$ case, exhibiting the first soluble `finite-dimensional' model with a second-order phase transition. 
+In higher dimensions, the problem is unsolved, although many important features of the solution are well understood.
 
-The system configuration $\underline{\sigma} = (\sigma_1, \sigma_2, \dots, \sigma_N)$ is given by assigning the values of all spins. The space of configuration is $\sX_N = \{+1,-1\}^L$, with $\sX= \{+1,-1\}$ and $N=L^d$.
-The energy $E(\underline{\sigma})$ of a given configuration $\underline{\sigma}$ is given by,
-\eq{
-E(\underline{\sigma}) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in \mathbb{L}} \sigma_i
+The two limiting cases that can be considered are of at high and low temperatures. 
+At high temperature when $\beta \to 0$, the energy no longer matters and the Boltzmann distribution is uniform over all configurations $\sigma \in \sX^N$. 
+That is, 
+\EQ{
+\mu_\beta (\sigma) = \frac{1}{2^N}. 
 }
-where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in \mathbb{L}$ which are nearest neighbours and B is the applied external magnetic field.
-Determining the free energy density $f(\beta)$ in the thermodynamic limit for this model is a non-trivial task. In 1924, Ernst Ising solved the $d=1$ case and showed the absence of phase transitions. In 1948, Lars Onsager solved the $d=2$ case, exhibiting the first soluble ‘finite-dimensional’ model with a second-order phase transition. In higher dimensions,the problem is unsolved, although many important features of the solution are well understood.
-
-The two limiting cases that can be considered are, at high temperature, $\beta=0$, the energy no longer matters and the Boltzmann distribution is uniform over all configurations $\sigma$ as
-\eq{
-\mu_\beta (\sigma) = \frac{1}{2^N}
+At low temperature when $\beta \to \infty$, 
+the Boltzmann distribution concentrates onto the ground state(s). 
+In the absence of external magnetic field, i.e $B=0$, the two degenerate ground states are given by,
+\meq{2}{
+&\sigma^+ = (\sigma_i = 1: i \in [L]^d),&
+&\sigma^- = (\sigma_i = -1: i \in [L]^d).
 }
-At low temperature, $\beta \to \infty$, the Boltzmann distribution concentrates onto the ground state(s). In the absence of external magnetic fiels, i.e $B=0$, the two degenerate ground states are given by,
-\eq{
-\underline{\sigma}^+ = (\sigma_i = +1, i \in [N])\\
-\underline{\sigma}^- = (\sigma_i = -1, i \in [N])\\
-}
-If the magnetic field is set to some non-zero value, one of the two configuration dominates: $\underline{\sigma}^+$ if $B>0$ and $\underline{\sigma}^-$ if $B<0$.
+If the magnetic field is set to some non-zero value, one of the two configuration dominates. 
+The ground state is $\sigma^+$ if $B>0$ and the ground state is $\sigma^-$ if $B<0$.
 \end{document} 
