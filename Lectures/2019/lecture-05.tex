@@ -284,37 +284,40 @@ Now note that $\mu_{\beta}(x)=\frac{e^{-\beta E(x)}}{Z(\beta)}$.
 Taking natural log on both sides, we have $\ln \mu_\beta(x)= -\beta E(x)-\ln Z(\beta)$. 
 Therefore, we recognize that
 %Substituting for $\beta E(x)$, we have:
-\EQ{
-S(\beta)%&= \ln Z(\beta)+\sum \mu_{\beta} \left(-\ln \mu_\beta(x)-\ln Z(\beta) \right)  \\
-=-\sum_{x \in \sX} \mu_\beta \ln \mu_\beta(x) = H(\mu_\beta)\ln 2.
-}
+%\EQ{
+$S(\beta)%&= \ln Z(\beta)+\sum \mu_{\beta} \left(-\ln \mu_\beta(x)-\ln Z(\beta) \right)  \\
+=-\sum_{x \in \sX} \mu_\beta \ln \mu_\beta(x) = H(\mu_\beta)\ln 2$.
+%}
 \end{proof}
 %\textbf{Thus, the canonical entropy is the Shannon entropy of the Boltzmann distribution (up to a multiplicative constant).} 
-\item Second partial derivative of free entropy with respect to the inverse temperature is auto-covariance of energy under the Boltzmann distribution. 
-That is, $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\inner{ E(x)^2 }-\inner{ E(x) }^2$. 
+\item The free entropy function $\Phi(\beta)$ is convex in inverse temperature $\beta$. 
+%Second partial derivative of free entropy with respect to the inverse temperature is auto-covariance of energy under the Boltzmann distribution. 
+%That is, $-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=\inner{ E^2 }-\inner{ E }^2$. 
 \begin{proof} 
 We can write the second partial derivative of free entropy as first partial derivative of the negative free energy, 
 and hence 
 \EQ{
--\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right)=-\frac{\partial}{\partial \beta} \left( U(\beta)\right) 
+\frac{\partial ^2}{\partial \beta^2} \left(\Phi(\beta) \right)=-\frac{\partial}{\partial \beta} \left( U(\beta)\right) 
 =-\frac{\partial}{\partial \beta} \left( \frac{\sum_{x \in \sX} e^{-\beta E(x)} E(x)} {Z(\beta)}\right)
 =\sum_{x \in \sX} \mu_\beta(x) E(x)^2-\sum_{x \in \sX}\mu_\beta(x)E(x) \frac{1}{Z(\beta)}\frac{\partial Z(\beta)}{\partial \beta}.
 }
-We recall that $\frac{\partial \ln Z(\beta)}{\partial \beta} = \inner{E}$, to get the result.
-%\EQ{
-%-\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right) =\inner{E^2}-\inner{E}^2.
-%}
+We recall that $\frac{\partial \ln Z(\beta)}{\partial \beta} = \inner{E}$, to obtain
+\EQ{
+\frac{\partial ^2}{\partial \beta^2} \left( \Phi(\beta) \right) = -\frac{\partial ^2}{\partial \beta^2} \left( \beta F(\beta) \right) =\inner{E^2}-\inner{E}^2.
+}
+This is auto-covariance of energy $E$ under the Boltzmann distribution $\mu_{\beta}$, and is always positive. 
+This implies the convexity of free entropy as a function of inverse temperature. 
 \end{proof}
-\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
-\begin{proof}
-Recall that the free entropy $\Phi(\beta) = -\beta F(\beta)$. 
-\begin{align*}
-- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
-	&= \langle E^2 \rangle - \langle E \rangle^2 \\
-	&= Var_{\mu_\beta}(E) \geq 0
-\end{align*}
-and hence $\Phi$ is convex.
-\end{proof}
+%\item The free entropy function $\Phi(\beta)$ is convex in $\beta$.
+%\begin{proof}
+%Recall that the free entropy $\Phi(\beta) = -\beta F(\beta)$. 
+%\begin{align*}
+%- \frac{\partial^2}{\partial \beta^2} \Phi(\beta) & - \frac{\partial^2}{\partial \beta^2} (\beta F(\beta)) \\
+%	&= \langle E^2 \rangle - \langle E \rangle^2 \\
+%	&= Var_{\mu_\beta}(E) \geq 0
+%\end{align*}
+%and hence $\Phi$ is convex.
+%\end{proof}
 \end{enumerate}
 \end{lem}
 \end{document}
