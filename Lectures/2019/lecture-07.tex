@@ -1,101 +1,95 @@
-\documentclass[letterpaper,english,12pt]{article}
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
 %opening
-\title{Lecture 7: The Thermodynamic Limit, Ferromagnets and Ising models}
-\author{Ajay Kumar Badita}
+\title{Lecture-07: The Thermodynamic Limit}
+%\author{Ajay Kumar Badita}
 
 \begin{document}
 \maketitle
-\section{The Thermodynamic Limit}
-The main purpose of statistical physics is to understand the macroscopic behaviour of a large number, $N\gg1$, of simple components (atoms, molecules, etc.) when they are brought together.
-For example, in the case of water in a bottle, the number of $H_2 O$ molecules $N$ is typically of order $10^{23}$ (18g of water contains approximately $6x10^{23}$ molecules), and this huge number leads physicists to focus on the $N \rightarrow \infty$ limit, also called \textbf{the thermodynamic limit}.
+\section{The thermodynamic limit}
+The main purpose of statistical physics is to understand the macroscopic behaviour of a large number, $N \gg1$, of microscopic components (atoms, molecules, etc.) under simple local interactions. 
+For example, in the case of water in a bottle, the number of $H_2 O$ molecules $N$ is typically of order $10^{23}$ (18g of water contains approximately $6 \times10^{23}$ molecules), and this huge number leads physicists to focus on the $N \to \infty$ limit, also called \textbf{the thermodynamic limit}.
 
 \subsection{The intensive thermodynamic potentials}
-For large N, the thermodynamic potentials are proportionl to $N$. The \textbf{intensive thermodynamic potentials} $f (\beta)$, $u (\beta)$, $s (\beta)$ are defined as follows.
+For large $N$, the thermodynamic potentials are proportional to $N$. 
+The \textbf{intensive thermodynamic potentials} $f (\beta)$, $u (\beta)$, $s (\beta)$ are defined as follows.
 
-\begin{defn}
-The \textbf{free energy density} is defined by 
-\EQN{
-\label{eqn:freeEnergyDensity}
-f(\beta) = \lim_{N \rightarrow \infty} \frac{F_N (\beta)}{N}
+\begin{defn}[Intensive thermodynamic potentials]
+Denoting the thermodynamic potentials for $N$ particle system as $F_N (\beta), U_N (\beta), S_N (\beta)$ for the free energy, the internal energy, and the canonical entropy respectively. 
+We can define the \textbf{free energy density},  the \textbf{energy density}, and the \textbf{entropy density} as 
+\meqn{3}{
+\label{eqn:density}
+&f(\beta) = \lim_{N \to \infty} \frac{F_N (\beta)}{N}, &&
+u(\beta) = \lim_{N \to \infty} \frac{U_N (\beta)}{N}, &&
+s(\beta) = \lim_{N \to \infty} \frac{S_N (\beta)}{N}.
 }
 \end{defn}
 
-\begin{defn}
-The \textbf{energy density} is defined by 
-\eq{
-u(\beta) = \lim_{N \rightarrow \infty} \frac{U_N (\beta)}{N}
-}
+Partition function $Z (\beta)$ is a sum of exponentials, and hence is smooth and analytic. 
+It follows that the free energy $F_N (\beta) = -\frac{1}{\beta}\ln Z(\beta)$ is also analytic. 
+\begin{defn}[Phase transition]
+We say that a \textbf{phase transition} occurs, whenever the free energy density $f (\beta)$ is non-analytic. 
 \end{defn}
-
-\begin{defn}
-The \textbf{entropy density} is defined by 
-\eq{
-s(\beta) = \lim_{N \rightarrow \infty} \frac{S_N (\beta)}{N}
-}
-\end{defn}
-
-where $F_N (\beta)$, $U_N (\beta)$, $S_N (\beta)$ the free energy, internal energy, and canonical entropy, respectively for a system with $N$  particle system.
-
-\begin{defn}
-$Z (\beta)$ is a function involving sum of exponentials, is smooth and analytic, there by the free energy $F_N (\beta)$ is also analytic.
-Whenever the free energy density $f (\beta)$ is non-analytic, we say that a \textbf{phase transition} occurs.
-Since the free entropy density $\phi (\beta) = -\beta f(\beta)$ is convex, the free energy density is necessarily continuous whenever it exits.
+Since the free entropy density $\phi (\beta) = -\beta f(\beta)$ is convex, the free energy density is necessarily continuous whenever it exists.
 The phase transitions correspond to qualitative changes in the underlying physical system.
-\end{defn}.  
-
-\paragraph{Types of singularities:}
-The non-analyticities occur at isolated points (say $\beta_c$).
+\begin{defn}[Types of singularities]
+Often, the non-analyticities occur at isolated points say $\beta_c$.
 \begin{itemize}
-\item
-	The free energy density is continuous, but its derivative with respect to $\beta$ is discontinuous at $\beta_c$. This singularity is called a \textbf{first-order phase transition}.
-\item
-	The free energy and its first derivative are continuous, but the second derivative is discontinuous at $\beta_c$. This is called a \textbf{second-order phase transition}.
+\item The free energy density is continuous, but its derivative with respect to $\beta$ is discontinuous at $\beta_c$. 
+This singularity is called a \textbf{first-order phase transition}.
+\item The free energy and its first derivative are continuous, but the second derivative is discontinuous at $\beta_c$. 
+This is called a \textbf{second-order phase transition}.
 \end{itemize}
+\end{defn}
 
-\subsection{Energy spectrum and Micro canonincal entropy density}
-When N grows, the volume of the configuration space increases exponentially:$|X_N| = |X|^N$ and most of the states are in lowest-energy configuration with high probability. Hence the important factor of interst is the number of configurations at a given energy. This information is given by the \textbf{energy spectrum} of the system,
-\eq{
-N_\triangle (E) = |\Omega_\triangle (E)|
+
+\subsection{Energy spectrum and Micro-canonincal entropy density}
+When the number of particles $N$ grows, the volume of the configuration space increases exponentially, 
+i.e. $|\sX_N| = |\sX|^N$. 
+We have seen before that the system is likely to be found in lowest-energy configurations with high probability at low temperatures. 
+From the definition of Boltzmann distribution, it is easy to check that conditioned on the system to be at  certain energy level, it is equally likely to be in any configuration with equal energy. 
+Therefore, one of the important factor of interest is the number of configurations for any given energy level.  
+This information is given by the \textbf{energy spectrum} of the system, 
+defined by the set of states with energy in the interval $[E, E+\Delta)$, 
+\EQ{
+\Omega_\Delta (E) \triangleq \{ x \in \sX^N : E \le E(x) < E+\Delta\}.
 }
-\eq{
-\Omega_\triangle (E) = \{ x \in \mathcal{X}_N : E \le E(x) < E+\triangle\}
-}
+The number of states in $\Omega_\Delta(E)$ is given by $\cN_\Delta (E) = \abs{\Omega_\Delta (E)}$. 
+%where $\Omega_\Delta (E)$ represents the set of particles for which the energy lies in $E$ and $E+\Delta$ and $N_\Delta (E)$ gives the total number of such particles. 
 
-where $\Omega_\triangle (E)$ represents the set of particles for which the energy lies in $E$ and $E+\triangle$ and $N_\triangle (E)$ gives the total number of such particles.
-The energy spectrum diverges exponentially in many systems as $N \rightarrow \infty$, if the energy is scaled linealry with $N$. More precisely, there exists a function $s(e)$ such that, given two numbers $e$ and $\delta > 0$,
-
+The energy spectrum diverges exponentially in many systems as $N \to \infty$, if the energy is scaled linearly with $N$. 
+More precisely, there exists a function $s(e)$ such that, given two numbers $e$ and $\delta > 0$, 
 \EQN{
-\label{eqn:limitMicrocanonicalEntropy}
-s(e) = \lim_{N \rightarrow \infty} \frac{1}{N} \log N_{N\delta}(Ne) = \sup_{e'\in [e,e+\delta]} s(e')
+\label{eqn:MicroCanonicalEntropy}
+s(e) = \lim_{N \to \infty} \frac{1}{N} \log \cN_{N\delta}(Ne) = \sup_{e'\in [e,e+\delta]} s(e').
 }
-In compact we can write this as,
+Compactly, we can write this as 
 \eq{
-N_\triangle(E) \stackrel{.}{=}_N exp[N s\Big{(}\frac{E}{N}\Big{)}]
+\cN_\Delta(E) \stackrel{.}{=}_N \exp\left[N s\left(\frac{E}{N}\right)\right], 
 }
+where the notation $\stackrel{.}{=}_N$ denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $\lim_{N \to \infty} \frac{1}{N} \log (A_N/B_N)=0$.
 
-Where the notation $\stackrel{.}{=}_N$ denotes that two quantities $A_N$ and $B_N$ are equal \textbf{to leading exponential order}, meaning $lim_{N \rightarrow \infty} \frac{1}{N} \log (A_N/B_N)=0$.
-
-The microcanonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic
+The micro-canonical entropy density $s(e)$ conveys a great amount of information about the system, and is directly related to the intensive thermodynamic
 potentials through a fundamental relation.
 
 \begin{rem}
 \label{rem:partitionFunctionWithEnergySpectrum}
-Given the whole energy band divided into $\triangle$ intervals, the partition function can be now written as 
+Given the whole energy band divided into $\Delta$ intervals, the partition function can be now written as 
 
 \eq{
-Z_N (\beta) &= \sum_{x \in \mathcal{X_N}} \exp(-\beta E(x)) = \sum_{x \in \mathcal{X_N}} \sum_{k=-\infty}^{\infty} \indicator{k\triangle \le \frac{E(x)}{N} < (k+1)\triangle} \exp(-\beta N k\triangle)\\
-& = \sum_{k=-\infty}^{\infty} \exp(-\beta N k\triangle) \sum_{x \in \mathcal{X_N}} \indicator{k\triangle \le \frac{E(x)}{N} < (k+1)\triangle} 
-\stackrel{.}{=}_N \sum_{k=-\infty}^{\infty} \exp(-\beta N k\triangle) \exp(N s(k\triangle)\\
-&= \sum_{k=-\infty}^{\infty} \exp[N (s(k\triangle)  -\beta k\triangle)]\\
+Z_N (\beta) &= \sum_{x \in \mathcal{X_N}} \exp(-\beta E(x)) = \sum_{x \in \mathcal{X_N}} \sum_{k=-\infty}^{\infty} \indicator{k\Delta \le \frac{E(x)}{N} < (k+1)\Delta} \exp(-\beta N k\Delta)\\
+& = \sum_{k=-\infty}^{\infty} \exp(-\beta N k\Delta) \sum_{x \in \mathcal{X_N}} \indicator{k\Delta \le \frac{E(x)}{N} < (k+1)\Delta} 
+\stackrel{.}{=}_N \sum_{k=-\infty}^{\infty} \exp(-\beta N k\Delta) \exp(N s(k\Delta)\\
+&= \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]\\
 &= \int \exp[N (s(e)-\beta e)] de
 }
 \end{rem}
 
 
 \begin{prop}
-If the microcanonical entropy density ~\eqref{eqn:limitMicrocanonicalEntropy} exists for any $e$ and if the limit in eqn ~
-\eqref{eqn:limitMicrocanonicalEntropy}) is uniform in $e$, then the free entropy density ~\eqref{eqn:freeEnergyDensity} exists and is given by
+If the micro-canonical entropy density~\eqref{eqn:MicroCanonicalEntropy} exists for any $e$ and if the limit in equation~\eqref{eqn:MicroCanonicalEntropy} is uniform in $e$, then the free entropy density ~\eqref{eqn:density} exists and is given by
 \EQN{
 \phi(\beta) = \max_e [s(e) -\beta e]
 }
@@ -105,38 +99,38 @@ If the maximum of $s(e)-\beta e$ is unique, then the internal-energy density equ
 \begin{proof}
 From the definition, the free entropy density $\phi(\beta)$ can be written as
 \eq{
-\phi(\beta) =  \lim_{N \rightarrow \infty} \frac{1}{N} \log(Z_N(\beta))
+\phi(\beta) =  \lim_{N \to \infty} \frac{1}{N} \log(Z_N(\beta))
 }
 By using the remark ~\ref{rem:partitionFunctionWithEnergySpectrum},
 \eq{
-\phi(\beta) &=  \lim_{N \rightarrow \infty} \frac{1}{N} \sum_{k=-\infty}^{\infty} \exp[N (s(k\triangle)  -\beta k\triangle)]\\
-&= \sup_k [s(k\triangle)  -\beta k\triangle]\\
+\phi(\beta) &=  \lim_{N \to \infty} \frac{1}{N} \sum_{k=-\infty}^{\infty} \exp[N (s(k\Delta)  -\beta k\Delta)]\\
+&= \sup_k [s(k\Delta)  -\beta k\Delta]\\
 &= \max_e [s(e)  -\beta e]
 }
 \end{proof}
 
 \begin{shaded*} 
 \begin{exmp}[$N$ identical two-level systems]
-Let us $N$ identical two-level systems, i.e. $\mathcal{X} _N = \mathcal{X} \times \mathcal{X}  \times \ldots \times \mathcal{X}$, with $\mathcal{X} = \{1,2\}$. We take the energy to be the sum of the single-system energies: $E(x) = E_{single}(x_1) + E_{single}(x_2) + \ldots + E_{single}(x_N) $ with $x_i \in \mathcal{X}$. We set $E_{single}(1) = \epsilon_1, E_{single}(2) = \epsilon_2 > \epsilon_1$ and, $\triangle = \epsilon_2 - \epsilon_1$.
+Let us $N$ identical two-level systems, i.e. $\sX _N = \sX \times \sX  \times \ldots \times \sX$, with $\sX = \{1,2\}$. We take the energy to be the sum of the single-system energies: $E(x) = E_{single}(x_1) + E_{single}(x_2) + \ldots + E_{single}(x_N) $ with $x_i \in \sX$. We set $E_{single}(1) = \epsilon_1, E_{single}(2) = \epsilon_2 > \epsilon_1$ and, $\Delta = \epsilon_2 - \epsilon_1$.
 
-The energy spectrum of this model is quite simple. For any energy $E = N \epsilon + n\triangle$,there are $\binom{N}{n}$ configurations $x$ with $E(x) = E$. 
+The energy spectrum of this model is quite simple. For any energy $E = N \epsilon + n\Delta$,there are $\binom{N}{n}$ configurations $x$ with $E(x) = E$. 
 Where $n$ is the number of particles in level-2.
 
 w.k.t 
 \eq{
-N_\triangle(E) = \binom{N}{n} \approx 2^{N \mathcal{H}(\frac{n}{N})} \approx 2^{N \mathcal{H} \big(\frac{E-N\epsilon_1}{N\triangle} \big)}
+N_\Delta(E) = \binom{N}{n} \approx 2^{N \mathcal{H}(\frac{n}{N})} \approx 2^{N \mathcal{H} \big(\frac{E-N\epsilon_1}{N\Delta} \big)}
 }
-Therefore, using the definition ~\eqref{eqn:limitMicrocanonicalEntropy}, we get
+Therefore, using the definition ~\eqref{eqn:MicrocanonicalEntropy}, we get
 \eq{
-s(e) = \mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big)\\
+s(e) = \mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big)\\
 }
 The free energy can be now computed as,
 \eq{
-f(\beta) &= -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e [s(e)  -\beta e] = -\frac{1}{\beta} \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big)  -\beta e]\\
-&= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \triangle))
+f(\beta) &= -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e [s(e)  -\beta e] = -\frac{1}{\beta} \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e]\\
+&= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta))
 }
 
-The above equation can be obtained by first solving $ \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\triangle}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \triangle)}{1+\exp(-\beta \triangle)}$. Substittuting this back and considering the fact that as $N \rightarrow \infty$ the expression $\exp(-\beta \triangle) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \triangle))$.
+The above equation can be obtained by first solving $ \sup_e [\mathcal{H}\Big(\frac{e-\epsilon_1}{\Delta}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}$. Substittuting this back and considering the fact that as $N \to \infty$ the expression $\exp(-\beta \Delta) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \Delta))$.
 \end{exmp}
 \end{shaded*}
 
@@ -148,7 +142,7 @@ A simple mathematical model for considering a bunch of interacting moments is th
 
 %\red{Insert figure here}
 
-The system configuration $\underline{\sigma} = (\sigma_1, \sigma_2, \dots, \sigma_N)$ is given by assigning the values of all spins. The space of configuration is $\mathcal{X}_N = \{+1,-1\}^L$, with $\mathcal{X}= \{+1,-1\}$ and $N=L^d$.
+The system configuration $\underline{\sigma} = (\sigma_1, \sigma_2, \dots, \sigma_N)$ is given by assigning the values of all spins. The space of configuration is $\sX_N = \{+1,-1\}^L$, with $\sX= \{+1,-1\}$ and $N=L^d$.
 The energy $E(\underline{\sigma})$ of a given configuration $\underline{\sigma}$ is given by,
 \eq{
 E(\underline{\sigma}) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in \mathbb{L}} \sigma_i
@@ -160,7 +154,7 @@ The two limiting cases that can be considered are, at high temperature, $\beta=0
 \eq{
 \mu_\beta (\sigma) = \frac{1}{2^N}
 }
-At low temperature, $\beta \rightarrow \infty$, the Boltzmann distribution concentrates onto the ground state(s). In the absence of external magnetic fiels, i.e $B=0$, the two degenerate ground states are given by,
+At low temperature, $\beta \to \infty$, the Boltzmann distribution concentrates onto the ground state(s). In the absence of external magnetic fiels, i.e $B=0$, the two degenerate ground states are given by,
 \eq{
 \underline{\sigma}^+ = (\sigma_i = +1, i \in [N])\\
 \underline{\sigma}^- = (\sigma_i = -1, i \in [N])\\
