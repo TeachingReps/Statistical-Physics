@@ -1,0 +1,141 @@
+\documentclass[letterpaper,english,12pt]{article}
+\input{header}
+
+%opening
+\title{Ferromagnets and Ising Model}
+%\author{A R Shaarad}
+
+\begin{document}
+\maketitle
+\section{Ising Model}
+
+In an earlier discussion on Ising models, some of its qualitative properties were studied. The energy in the two limiting cases - infinite ($\beta \to 0$) and zero temperature ($\beta \to \infty$) - with and without an external magnetic field ($B$) were briefly discussed. It was learnt that, there are two degenerate ground states in the absence of an external magnetic field. However, in its presence, one of the two states dominate. This response of the system to external magnetization is different at the two limiting cases, which necessitates a detailed analyses. To this end, we define a \textit{rescaled} magnetic field, $$x=\beta B,$$ and take limits $\beta \to 0$ or $\beta \to \infty$, keeping $x$ fixed. With this, we will subsequently study some of the qualitative properties of the resultant model.
+
+\begin{defn}[Expected Spin]
+	The expected value of any spin in a region $\mathbb{L}=\{1,\ldots,L\}^{d}$, in the two limits, is  
+	
+	\[\langle\sigma_{i}\rangle =
+	\begin{cases}
+	\tanh(x) & \quad \text{for } \beta \to 0 \\
+	\tanh(Nx) & \quad \text{for } \beta \to \infty
+	\end{cases}	\]
+
+While each spin reacts independently for $\beta \to 0$, the response is cooperative as $\beta \to \infty$.
+\end{defn}
+\begin{defn}[Average Magnetization] An useful quantity in describing the response of the system to an external magnetic field is the average magnetization,
+	$$M_{N}(\beta,B)=\frac{1}{N}\sum_{i\in \mathbb{L}}\langle\sigma_{i}\rangle$$
+	
+	$M_{N}(\beta,B)$ is an odd function of $B$ due to the symmetry between up and down directions, as a consequence, $M_{N}(\beta,0) = 0$. 
+
+\end{defn}
+
+\begin{defn}[Spontaneous Magnetization] A cooperative response can be evidenced by considering spontaneous magnetization,
+	
+$$M_{+}(\beta) = \lim \limits_{B \rightarrow 0^{+}}\limits \lim_{N\rightarrow\infty}M_{N}(\beta,B).$$
+
+A few remarks about spontaneous magnetization,
+\begin{enumerate}
+	\item It exists at $\beta=\infty,~M_{+}(\infty)=1$, while $M_{+}(0)=0$
+	\item Paramagnetic Phase: In high temperature phase ($\beta < \beta_{c}(d)$), $M_{+}(0)=0$
+	\item For $d=1$, $\beta_{c}(1)=\infty$, $M_{+}(0)=0$, $\beta<\beta_{c}$ 
+	\item Ferromagnetic Phase: For $d\geq 2$, $\beta_{c}(d)$ is finite, and $M_{+}(\beta)>0$, $\forall \beta > \beta_{c}(d)$
+	\item A phase transition occurs at $\beta_{c}$, and the corresponding temperature $T_{c} = 1/\beta_{c}$ is the critical temperature
+	
+	\end{enumerate}
+\end{defn}
+
+\subsection{The one-dimensional case}
+
+Consider a one-dimensional system ($d=1$) of $N$ spins, with energy ($E(\sigma)$)
+
+$$E(\sigma)=-\sum_{i=1}^{N-1}\sigma_{i}\sigma_{i+1}-B\sum_{i=1}^{N}\sigma_{i}.$$
+
+The partial partition function where the configurations of all spins $\sigma_{1},\cdots,\sigma_{p}$ have been summed over, at fixed $\sigma_{p+1}$:
+
+$$z_{p}(\beta,B,\sigma_{p+1})=\sum_{\sigma_{1},\hdots,\sigma_{p}}\exp\bigg[\beta\sum_{i=1}^{p}\sigma_{i}\sigma_{i+1}+\beta B \sum_{i=1}^{p}\sigma_{i}\bigg].$$
+
+The partition function is given by,
+
+$$Z_{N}(\beta,B)=\sum_{\sigma_{N}}z_{N-1}(\beta,B,\sigma_{N})\exp(\beta B\sigma_{N}).$$ 
+
+The partial partition function can be expressed recursively,
+
+$$z_{p}(\beta,B,\sigma_{p+1})=\sum_{\sigma_{p}}\exp\bigg[\beta \sigma_{p}\sigma_{p+1}+\beta B \sigma_{p}\bigg]\sum_{\sigma_{1},\hdots,\sigma_{p-1}}\exp\bigg[\beta\sum_{i=1}^{p-1}\sigma_{i}\sigma_{i+1}+\beta B \sum_{i=1}^{p-1}\sigma_{i}\bigg],$$
+$$z_{p}(\beta,B,\sigma_{p+1})= \sum_{\sigma_{p}=\pm 1} T(\sigma_{p+1},\sigma_{p})z_{p}(\beta,B,\sigma_{p}),$$ 
+
+where $T(\sigma_{p+1},\sigma_{p}):= \exp[\beta \sigma_{p+1} \sigma_{p}+\beta B \sigma_{p}]$, which is a $2 \times 2$ matrix:
+
+$$T = 
+\begin{bmatrix}
+	e^{\beta-\beta B} & e^{-\beta-\beta B} \\
+	e^{-\beta+\beta B} & e^{\beta-\beta B} 
+	\end{bmatrix}.$$
+
+Introducing the scalar product between two vectors $(a,b) = a_{1}b_{1}+a_{2}b_{2}$, the partition function can be expressed in matrix form as,
+
+$$Z_{N}(\beta,B) = (\psi_{L},T^{N-1}\psi_{R}),$$
+
+where, $\psi_{L} = \begin{bmatrix}  \exp(\beta B)\\ \exp(-\beta B)\end{bmatrix}$ and $\psi_{R} = \begin{bmatrix} 1\\ 1\end{bmatrix}$. The eigenvalues of the transfer matrix $T$ are,
+ 
+ $$\lambda_{1,2} = e^{\beta}\cosh(\beta B)\pm \sqrt{e^{2\beta} \sinh^{2}(\beta B) + e^{-2\beta}}.$$
+ 
+ Let $\psi_{1}$ and $\psi_{2}$ be the corresponding eigenvectors, then, 
+ 
+ $$\psi_{R} = u_{1}\psi_{1}+u_{2}\psi_{2}.$$
+ 
+ Then, the partition function can be written as,
+ 
+ $$Z_{N}(\beta,B) = u_{1}(\psi_{L},\psi_{1})\lambda_{1}^{N-1}+u_{2}(\psi_{L},\psi_{2})\lambda_{2}^{N-1}.$$
+
+\begin{defn}[Free Entropy Density] It is given by 
+	$$\phi(\beta,B) = \lim \limits_{N\rightarrow\infty}\frac{1}{N}\phi_{N}(\beta,B),$$
+	$$\implies \phi(\beta,B) =\lim \limits_{N\rightarrow\infty}\frac{1}{N}\log Z_{N}(\beta,B)$$
+	
+	However, for finite $\beta$, in the large $N$ limit, the partition function is dominated by the largest eigenvalue $\lambda_{1}$, and therefore 
+	
+	$$\phi(\beta,B) = \log \lambda_{1}.$$
+
+	\end{defn}
+
+\begin{defn}[Expected Spin] Using the transfer matrix we can compute the expected value of a spin,
+	
+$$\langle \sigma_{i}\rangle  = \frac{1}{Z_{N}(\beta,B)}(\psi_{L},T^{i-1}\hat{\sigma}T^{N-i}\psi_{R}),~\text{where,}$$ 
+
+$$\hat{\sigma} = \begin{bmatrix} 1 & 0 \\ 0 & -1\end{bmatrix}.$$
+	
+	\end{defn}
+
+\begin{defn}[Average Magnetization] It can be computed by averaging over the position $i$. In the thermodynamic limit, 
+	
+	$$\lim \limits_{N\rightarrow\infty}M_{N}(\beta,B) = \frac{\sinh (\beta B)}{\sqrt{\sinh^{2}(\beta B)+e^{-4\beta}}} = \frac{1}{\beta}\frac{\partial \phi}{\partial B}(\beta,B).$$
+
+For $\beta < \infty$, the average magnetization is an analytic function of $\beta$ and $B$. At any non-zero temperature, the spontaneous magnetization is zero,
+
+$$M_{+}(\beta) = 0,~\forall \beta < \infty.$$
+
+The susceptibility associated with average magnetization is given by,
+
+$$\chi_{M}(\beta)=\frac{\partial M}{ \partial B}(\beta,0) = \beta e^{2\beta}.$$
+
+The system behaves like the spins were blocked into groups of $^\chi(\beta)/_\beta$ spins each. The spins in each group are restricted to a value, while spins in different groups are independent. For $B=0$ and $\delta N<i<j<(1-\delta)N$, one finds at large $N$, 
+
+$$\langle \sigma_{i}\sigma_{j}\rangle = e^{-|i-j|/\xi(\beta)}+ \Theta (e^{-\alpha N}),$$
+
+where, $\xi(B) = \frac{-1}{\log \tanh \beta}$ is the distance below which two spins are well correlated, and is called the correlation length of the model. This length increases with decrease in temperature, that is, spins become more correlated at higher temperatures. The relation between correlation length and susceptibility is given by,
+
+ $$\chi_{M}(\beta)=\beta \sum_{i=-\infty}^{\infty}e^{\frac{-|i|}{\xi(\beta)}}+\Theta(e^{-\alpha N}).$$
+ 
+ This makes it evident that a large susceptibility must correspond to a large correlation length. 
+	\end{defn}
+
+\subsection{The Curie-Weiss Model}
+
+The exact solution of the one-dimensional model, lead Ising to think that there couldn’t be a phase transition in any dimension. This was debunked by a qualitative theory of ferromagnetism which was put forward by Pierre Curie. It assumed the existence of a phase transition at non-zero temperature $T_{c}$ (Curie point) and a non-vanishing spontaneous magnetization for $T<T_{c}$. The dilemma was eventually solved by Onsager solution of the two-dimensional model. 
+
+Consider $N$ Ising spins $\sigma_{i}\in \{\pm 1\}$ and a configuration $\sigma = (\sigma_{1},\hdots,\sigma_{N})$. Unlike the Ising model, the spins are not a part of a $d-$dimensional lattice, instead, they all interact in pairs. The absence of any finite-dimensional geometrical structure makes the Curie-Weiss model one among the mean-field models. The energy function, in the presence of a magnetic field $B$, is given by:
+
+$$E(\underline{\sigma}) = -\frac{1}{N}\sum_{(ij)}\sigma_{i}\sigma_{j}-B\sum_{i=1}^{N}\sigma_{i}.$$ 
+
+It needs to be mentioned that the summation over $(ij)$ involves $O(N^{2})$ terms of order $O(1)$. Therefore, the energy function is scaled by $^1/_N$ to obtain a non-trivial free-energy density in the thermodynamic limit. The instantaneous magnetization which is a function of the configuration:
+$$m(\underline{\sigma}) = \frac{1}{N}\sum_{i=1}^{N}\sigma_{i}.$$
+\end{document}
