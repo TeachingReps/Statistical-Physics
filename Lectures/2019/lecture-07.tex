@@ -194,13 +194,22 @@ In many materials, the energy is lower when the moments align.
 
 A simple mathematical model for considering a number of particles with interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a $d$-dimensional cubic lattice $\L$. 
 The cubic lattice $\L$ is determined by the vertices $[L]^d$ and the edges $((i,j) \in [L]^d \times [L]^d: \sum_{k=1}^d\abs{i_k-j_k} = 1)$ between the nearest neighbors.  
-At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$. 
+At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$(See Fig.~\ref{figure:IsingSpins}). 
 
 %\red{Insert figure here}
+\begin{figure}
+\centering
+\input{./Figures/IsingSpins}
+\caption{A configuration of a two-dimensional Ising model with L = 5. There is an Ising spin $\sigma_i$ on each vertex $i$, shown by an arrow pointing up if $\sigma_i = +1$ and pointing down if $\sigma_i = −1$.
+The energy (~\ref{EnergyOfNparticleConfig})  is given by the sum of two types of contributions: $(i)$ a term $-\sigma_i\sigma_i$ for each edge $(ij)$ of the graph, such that the energy is minimized when the two neighbouring spins $\sigma_i$ and $\sigma_j$ point in the same direction; and $(ii)$ a term $−B\sigma_i$ for each site $i$, due to the coupling to an external magnetic field.The configuration shown here has an energy $−8 + 9B$.}
+\label{figure:IsingSpins}
+\end{figure}
+
 Let $N = L^d$, then the $N$ particle system configuration $\sigma$ is given by assigning the values of spins  for each of the $N$ particles as $\sigma = (\sigma_1, \sigma_2, \dots, \sigma_N)$. 
 The space of configuration is $\sX^N = \{-1,1\}^N$. 
 The energy of an $N$ particle configuration $\sigma$ is given by
-\EQ{
+\EQN{
+\label{EnergyOfNparticleConfig}
 E(\sigma) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in [L]^d} \sigma_i.
 }
 where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in [L]^d$ which are nearest neighbours and $B$ is the applied external magnetic field. 
