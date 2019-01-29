@@ -173,12 +173,12 @@ we take the first derivative of $\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\bet
 \EQ{
 \pd{\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)}{e}\Big|_{e=e^{\ast}} - \beta = 0.
 }
-Recall that $\pd{\cH(p)}{p} = \ln(1/p-1)$ to obtain the saddle point
+Recall that $\pd{\cH(p)}{p} = \ln(1/p-1)$ to obtain the stationary point
 \EQ{
 e^{\ast}=\epsilon_1 + \Delta\frac{\exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}.
 }
 %The above equation can be obtained by first solving $ \sup_e [\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big) -\beta e]$ as by taking the first differention and set to zero, we get the saddle point as $ e=\frac{\epsilon_1 + \epsilon_2 \exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}$. 
-We can show that $e^{\ast}$ corresponds to the unique maxima. %, and since $\phi(\beta)$ is convex, it is a unique maxima. 
+Since $\cH(p)$ is a concave function of $p$, it follows that $e^{\ast}$ corresponds to the unique maxima. %, and since $\phi(\beta)$ is convex, it is a unique maxima. 
 Substituting this back into the expression for the free energy, we get 
 \EQ{
 f(\beta) =  -\frac{1}{\beta} \left(\cH\Big(\frac{e^{\ast}-\epsilon_1}{\Delta}\Big)  -\beta e^{\ast}\right)
@@ -235,9 +235,9 @@ At low temperature when $\beta \to \infty$,
 the Boltzmann distribution concentrates onto the ground state(s). 
 In the absence of external magnetic field, i.e $B=0$, the two degenerate ground states are given by,
 \meq{2}{
-&\sigma^+ = (\sigma_i = 1: i \in [L]^d),&
-&\sigma^- = (\sigma_i = -1: i \in [L]^d).
+&\sigma_+ = (\sigma_i = 1: i \in [L]^d),&
+&\sigma_- = (\sigma_i = -1: i \in [L]^d).
 }
 If the magnetic field is set to some non-zero value, one of the two configuration dominates. 
-The ground state is $\sigma^+$ if $B>0$ and the ground state is $\sigma^-$ if $B<0$.
+The ground state is $\sigma_+$ if $B>0$ and the ground state is $\sigma_-$ if $B<0$.
 \end{document} 
