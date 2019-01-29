@@ -166,10 +166,14 @@ s(e) = \cH\Big(\frac{e-\epsilon_1}{\Delta}\Big).
 We can write the free energy density in terms of micro-canonical entropy density as 
 \EQ{
 f(\beta) = -\frac{1}{\beta} \phi(\beta) = -\frac{1}{\beta} \sup_e (s(e)  -\beta e) = -\frac{1}{\beta} \sup_e \left(\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e\right).
-%= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta)).
+%= \epsilon_1 - \frac{1}{\beta}  \log (1+\exp(-\beta \Delta)).
 }
 To evaluate the supremum in the above equation, 
-we take the first derivative of $\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e$ with respect to energy density $e$ and equate it to zero, to get the saddle point
+we take the first derivative of $\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)  -\beta e$ with respect to energy density $e$ and equate it to zero, to get 
+\EQ{
+\pd{\cH\Big(\frac{e-\epsilon_1}{\Delta}\Big)}{e}\Big|_{e=e^{\ast}} - \beta = 0.
+}
+Recall that $\pd{\cH(p)}{p} = \ln(1/p-1)$ to obtain the saddle point
 \EQ{
 e^{\ast}=\epsilon_1 + \Delta\frac{\exp(-\beta \Delta)}{1+\exp(-\beta \Delta)}.
 }
@@ -178,9 +182,9 @@ We can show that $e^{\ast}$ corresponds to the unique maxima. %, and since $\phi
 Substituting this back into the expression for the free energy, we get 
 \EQ{
 f(\beta) =  -\frac{1}{\beta} \left(\cH\Big(\frac{e^{\ast}-\epsilon_1}{\Delta}\Big)  -\beta e^{\ast}\right)
-= \epsilon_1 - \frac{1}{\beta}  log (1+\exp(-\beta \Delta)).
+= \epsilon_1 - \frac{1}{\beta}  \log (1+\exp(-\beta \Delta)).
 }
-%and considering the fact that as $N \to \infty$ the expression $\exp(-\beta \Delta) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+log (1+\exp(-\beta \Delta))$. 
+%and considering the fact that as $N \to \infty$ the expression $\exp(-\beta \Delta) \approx 1$ gives the value of $\sup_e$ as $-\beta\epsilon_1+\log (1+\exp(-\beta \Delta))$. 
 This expression is identical to the free energy for a single particle as expected, 
 since summation of energy functions amounts to no interaction system. 
 The free energy of non-interacting $N$ particle system, is the aggregate free energy of $N$ independent single particle systems. 
@@ -194,16 +198,29 @@ In many materials, the energy is lower when the moments align.
 
 A simple mathematical model for considering a number of particles with interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a $d$-dimensional cubic lattice $\L$. 
 The cubic lattice $\L$ is determined by the vertices $[L]^d$ and the edges $((i,j) \in [L]^d \times [L]^d: \sum_{k=1}^d\abs{i_k-j_k} = 1)$ between the nearest neighbors.  
-At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$. 
+At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$(See Fig.~\ref{figure:IsingSpins}). 
 
-%\red{Insert figure here}
 Let $N = L^d$, then the $N$ particle system configuration $\sigma$ is given by assigning the values of spins  for each of the $N$ particles as $\sigma = (\sigma_1, \sigma_2, \dots, \sigma_N)$. 
 The space of configuration is $\sX^N = \{-1,1\}^N$. 
 The energy of an $N$ particle configuration $\sigma$ is given by
-\EQ{
+\EQN{
+\label{eqn:EnergyOfNparticleConfig}
 E(\sigma) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in [L]^d} \sigma_i.
 }
-where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in [L]^d$ which are nearest neighbours and $B$ is the applied external magnetic field. 
+where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in [L]^d$ which are nearest neighbors and $B$ is the applied external magnetic field. 
+
+%\red{Insert figure here}
+\begin{figure}
+\centering
+\input{./Figures/IsingSpins}
+\caption{A configuration of a two-dimensional Ising model with L = 5. There is an Ising spin $\sigma_i$ on each vertex $i$, shown by an arrow pointing up if $\sigma_i = 1$ and pointing down if $\sigma_i = -1$.
+The energy~\eqref{eqn:EnergyOfNparticleConfig}  is given by the sum of two types of contributions: 
+$(i)$ a term $-\sigma_i\sigma_i$ for each edge $(i, j)$ of the graph, such that the energy is minimized when the two neighboring spins $\sigma_i$ and $\sigma_j$ point in the same direction; 
+and $(ii)$ a term $-B\sigma_i$ for each site $i$, due to the coupling to an external magnetic field. 
+The configuration shown here has an energy $-8+9B$.}
+\label{figure:IsingSpins}
+\end{figure}
+
 Determining the free energy density $f(\beta)$ in the thermodynamic limit for this model is a non-trivial task. In 1924, Ernst Ising solved the $d=1$ case and showed the absence of phase transitions. 
 In 1948, Lars Onsager solved the $d=2$ case, exhibiting the first soluble `finite-dimensional' model with a second-order phase transition. 
 In higher dimensions, the problem is unsolved, although many important features of the solution are well understood.
