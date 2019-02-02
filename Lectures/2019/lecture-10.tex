@@ -1,0 +1,250 @@
+
+\documentclass[letterpaper,english,12pt]{article}
+\input{header}
+%\usepackage{witharrows}
+%opening
+\title{Lecture-0: Many Random Variables}
+\author{Vivek VP}
+
+\begin{document}
+\maketitle
+\section{Qualitative view of Random Variables}
+Physical systems of particles can be modelled by assigning a random variable to state of each particles. Here we assume the particles have no interaction or interaction is minimal. Thus for $N$ particles we have an $N$ length vector $\underbar x = (x_1,x_2,\dots ,x_N)$ with probability 
+\begin{equation}
+  P_N(\underbar x) = P_N(X_1,\dots ,x_N) .
+\end{equation}
+An instance of this would be Boltzmann distribution for a physical system with $N$ degrees of freedom. Shannon Entropy of this distribution is 
+  \begin{equation}
+      H_N = -\E {log P_N(\underbar x) }
+  \end{equation}
+  Typically $H_N$ grows linearly with $N$ for large $N$. So entropy per variable $h_n=H_N/N$ has a finite limit.
+  \begin{defn}
+  $h: \lim_{N\to\infty} h_N $
+  \end{defn}
+  We will be interested in defining the quantity 
+  \begin{equation}
+      r(\underbar x) = 1/N log \big[ 1/P_N(\underbar x)\big]
+  \end{equation}
+  to characterize any particular realization.We would like to know how close is $r(x)$ to $h_N$. In most cases $r(x)$ is peaked around $r=h_N$.Often probability distribution of $r(\underbar x)$ behave exponentially with 
+  \begin{equation}
+   P\lbrace r(x) \approx \rho \rbrace=e^{-NI(\rho)}
+   \end{equation}
+   where
+   $I(\rho)$ has minimum at $\rho = h$.
+   and $I(h)=0$
+   From this observation and (3) we have 
+   \begin{equation}
+       P_N(x) = e^{-Nh}
+   \end{equation}
+   Total probability of realization $\underbar x$ with $r(x) \approx h$ is 1. This will imply number of configurations with major contribution to probability is $e^{Nh}. $This in general is a  small number when compared to total number of configurations $\mathcal{X}^N$. Thus 
+  \section{Large deviations for independent variables}
+  \begin{thm}(Sanov) Let $s1,\dots s_N\in\mathcal{X}$ be $N$ i.i.d random variables drawn from the probability distribution $p(x)$, and let $K\subset \mathcal{M(X)}$ be a compact set of probability distributions over $\mathcal{X}$. If $q$ is the type of $(s1,\dots,s_N)$ then
+  \begin{equation}
+      \P\big[q\in K\big]= e^{-ND(q^*\parallel p)}
+  \end{equation}
+  where $q^* = \text{arg min}_{q\in K}D(q\parallel p)$, and $D(q\parallel p)$ is the Kullback-Leibler divergence.
+  \end{thm}
+  
+% \begin{aligned}
+%   \mathds{P}\big[q\in K] &= \sum_{q'\in K}P[q_s=q']\\ 
+ 
+%   \end{aligned}
+
+\begin{proof} \\
+  Now for a particular $q'$ \\
+  \begin{equation}
+  \begin{split}
+      (P(q_{s}=q')) & =  \prod_{x\in \mathcal{X}}^{} P(Nq'(x) \text{times $x$ appears in s)}\\
+      & ={N \choose Nq'(x_1), Nq'(x_2), \dots, Nq'(x_{\abs{\mathcal{X}}})} \prod_{x \in \mathcal{X}} p(x)^{Nq'(x)}\\
+      & ={N! \choose{Nq'(x_1)}!,Nq'(x_2)!,\dots,Nq'(x_{\abs{\mathcal{X}}})!} \prod_{x \in \mathcal{X}} p(x)^{Nq'(x)}\\
+    %   & ={N \choose{Nq'(x_1)},Nq'(x_2),\dots,Nq'(x_{\abs(\mathcal{X}))}}
+  \end{split}
+  \end{equation}
+  
+  Using Stirlings equation 
+  \begin{equation}
+  \log n! = n \log n 
+  
+  \end{equation}
+  \begin{equation}
+      n! = 2^{n\log n}
+  \end{equation}
+  
+  
+  \begin{equation}
+   
+  \dfrac{N!}{(Nq'(x_1))! (Nq'(x_2))! \dots (Nq'(x_{\abs{\mathcal{X}}})!} 
+   =  2^{N\log N - Nq_1\log{Nq_1} - Nq_2\log{Nq_2} \dots Nq_{\abs{\mathcal{X}}}\log{Nq_{\abs{\mathcal{X}}}}
+  
+  \end{equation}
+  \begin{equation}
+      \prod_{x \in \mathcal{X}} p(x)^{Nq'(x)}= \prod_{x \in \mathcal{X}} 2^{Nq'(x)\log p(x)}
+  \end{equation}
+  We have KL Divergence D as \\
+  \begin{equation}
+      D(q \parallel p) = \sum_{x}{}q(x)\log \dfrac{q(x)}{p(x)}
+  \end{equation}
+  From $7,10,11,12$ we have
+  \begin{equation}
+      P(q_{s}=q') = \prod_{x\in \mathcal{X}}2^{-ND(q \parallel p)}
+  \end{equation}
+  By approximating with leading term in exponential
+  we have 
+  \begin{equation}
+       P(q_{s}=q') = e^{-ND(q* \parallel p)}
+  \end{equation}
+  \end{proof}
+  
+ \begin{exmp}
+ 
+ A simple model of a column of the atmosphere is obtained by considering $N$ particles in the earth's gravitational field.The state of particle $i \in \lbrace 1,2, \dots, N \rbrace $ is given by a single coordinate $z_i\geq 0$ which measures its height with respect to level. To simplify , we make assumption $z_i$ is integer.
+ \begin{equation}
+     E=\sum_{i=1}{N}z_i
+ \end{equation}
+ Consider a configuration $:{z_1,\dots,z_N}$. Its type can be interpreted as:
+ \begin{equation}
+   \rho(z) = \displaystyle 1/N\sum_{i=1}^{N}\mathds{I}_{z=z_i}  
+ \end{equation}
+ 
+ \begin{equation}
+     \rho_eq(z)=\langle \rho(z) \rangle = (1-e^{-\beta})e^{-\beta z}
+ \end{equation}
+ 
+ \begin{equation}
+     D(\rho_{\lambda} \parallel \rho_{eq}) = \log{  \frac{1-e^{-\lambda}}{1-e^{-\beta}}  + \frac{\beta -\lambda}{e^{\lambda}-1}}
+ \end{equation}
+ 
+ \begin{figure}[h!]
+  \includegraphics[width=\linewidth]{EarthAtmo.jpeg}
+  \caption{Equilbrium density profile}
+  \label{fig:Earthatmo}
+\end{figure}
+Following observations can be made from the figure 
+\begin{itemize}
+    \item 
+\end{itemize}
+ \end{exmp}
+ \section{How typical is an empirical average?}
+%  $\bar{f}$
+ \begin{equation}
+     \bar{f} = \frac{1}{N}\sum_{i=1}^{N}f(s_i)
+ \end{equation}
+ \begin{cor}
+ Let $s1,\dots ,s_N$ be $N$ i.i.d random variables drawn from a probability distribution $p(.)$. Let $f:\mathcal{X}\rightarrow \R$ be a real-valued  function and let $\bar{f}$ be its empirical average. If $A\subset R$ is a closed interval of the real axis, then 
+ \begin{equation}
+     \P\big[\bar{f}\in A]= e^{[-NI(A)]},
+ \end{equation}
+ where
+ \begin{equation}
+     I(A)=\min_q\big[D(q\parallel p)| \sum_{x\in\mathcal{X}}^{} q(x)f(x) \in A]
+ \end{equation}
+ \end{cor}
+ \begin{proof}
+ 
+ \begin{equation}
+     K= \Big\{ q\in \mathcal{M}(\mathcal{X}|\sum_{x\in\mathcal{X}}^{} q(x)f(x) \in A \Big\}
+ \end{equation}
+ \end{proof}
+ 
+ \begin{exmp}
+   \begin{equation}
+       \P \{s_1 + \dots + s_N \leq  = 0\} = \{ \inf_{z\geq 0} \E {e^{-zs_1}}  \}^N
+   \end{equation}
+     
+ \end{exmp}
+ 
+ \begin{exmp}
+   We look at N particles in a gravitational field, and consider the average height of the particles 
+   \begin{equation}
+       \bar{z}= \dfrac{1}{N}\sum_{i=1}^{N}z_i.
+    \end{equation}
+     Expected value of this quantity  is 
+       \begin{equation}
+           \E{\bar{z}}= z_{eq}= (e^\beta -1)^{-1}.
+           \end{equation}
+           The probability of a fluctuation in $\bar{z}$ is easily computed using the obove corollary.For $z>z_{eq}$ we obtain \\
+           \begin{equation}
+               \P(z>\bar{z}) = e^{-NI(z)},
+           \end{equation}
+           where 
+           \begin{equation}
+               I(z) = \big(1+z\big)\log \big( \dfrac{1+z_{eq}}{1+z}\big) + z\log{\big(\dfrac{z}{z_{eq}}\big)}
+           \end{equation}
+           
+       
+   
+ \end{exmp}
+% \begin{itemize}
+
+% \item Use the environment definitions for lemma, theorem, definition, proof, example, and other such environments you may need, wherever necessary. Usage of {\bf Definition} for a definition is not acceptable. Different environments are listed in this document below.
+% \item Add the .tex file header in your latex file for the below commands to work (\textbackslash input\{header\}, second line of the source file sampleLecture.tex).
+% \item Make sure that there are no spelling mistakes in the scribed notes.
+% \item Use environments such as align, equation, eqnarray or gather to deal with multi-line equations, instead of newline characters. 
+% \item Use punctuation in all equations.
+% \item Always make sure that the lecture notes uploaded is complete.
+% \item Any math symbol in a line should be within math environment \$\$. For example, \$Y\$ is used to write a math symbol $Y$.
+% \item Revise your lectures before uploading, so that there no variations in the style in which the document is prepared.
+% \item If you are using figures in the tex file, put them in the Figures folder.
+% \item Please label and caption the figures.
+% \item Use full sentences for captions as well, and even when writing equations.
+% \item Motivate each section with a sentence or two, on why are we studying this?
+% \end{itemize}
+% \section{Examples usage of environments}
+% \begin{itemize}
+% \item Equation with multiple cases:
+% \begin{equation}
+% A = 
+% \begin{cases}
+% 1 &if~TRUE\\
+% 0 &if~FALSE.
+% \end{cases}
+% \end{equation}
+% \item Theorem:
+% \begin{thm}
+% Theorem goes here
+% \end{thm}
+% \item Corollary:
+% \begin{cor}
+% content...
+% \end{cor}
+% \item Proposition:
+% \begin{prop}
+% content...
+% \end{prop}
+% \item Lemma:
+% \begin{lem}
+% content...
+% \end{lem}
+% \item Definition:
+% \begin{defn}
+% Definition
+% \end{defn}
+% \item Conjecture:
+% \begin{conj}
+% Content...
+% \end{conj}
+% \item Example:
+% \begin{exmp}
+% Content...
+% \end{exmp}
+% \item Assumptions:
+% \begin{assum}
+% Content...
+% \end{assum}
+% \item Axiom:
+% \begin{axiom}
+% Content...
+% \end{axiom}
+% \item Remark:
+% \begin{rem}
+% Content...
+% \end{rem}
+% \item Note:
+% \begin{note}
+% This is a note.
+% \end{note}
+% \end{itemize}
+% \begin{note}
+% Scribed notes that does not follow the guidelines mentioned above attracts penalty.
+% \end{note}
+\end{document}
