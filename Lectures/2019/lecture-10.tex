@@ -1,6 +1,7 @@
 
 \documentclass[letterpaper,english,12pt]{article}
-\input{header}
+\input{../../header}
+\graphicspath{{./Figures/}}
 %\usepackage{witharrows}
 %opening
 \title{Lecture-0: Many Random Variables}
@@ -50,8 +51,8 @@ An instance of this would be Boltzmann distribution for a physical system with $
  
 %   \end{aligned}
 
-\begin{proof} \\
-  Now for a particular $q'$ \\
+\begin{proof} 
+  Now for a particular $q'$ 
   \begin{equation}
   \begin{split}
       (P(q_{s}=q')) & =  \prod_{x\in \mathcal{X}}^{} P(Nq'(x) \text{times $x$ appears in s)}\\
@@ -63,35 +64,34 @@ An instance of this would be Boltzmann distribution for a physical system with $
   
   Using Stirlings equation 
   \begin{equation}
-  \log n! = n \log n 
-  
+  \log n! = n \log n
   \end{equation}
-  \begin{equation}
-      n! = 2^{n\log n}
-  \end{equation}
-  
   
   \begin{equation}
-   
-  \dfrac{N!}{(Nq'(x_1))! (Nq'(x_2))! \dots (Nq'(x_{\abs{\mathcal{X}}})!} 
-   =  2^{N\log N - Nq_1\log{Nq_1} - Nq_2\log{Nq_2} \dots Nq_{\abs{\mathcal{X}}}\log{Nq_{\abs{\mathcal{X}}}}
-  
+    n! = 2^{n\log n}
   \end{equation}
+  
+  
+  \begin{equation}
+  \dfrac{N!}{(Nq'(x_1))! (Nq'(x_2))! \dots (Nq'(x_{\abs{\mathcal{X}}}))!} 
+  =  2^{N\log N - Nq_1\log{Nq_1} - Nq_2\log{Nq_2} \dots Nq_{\abs{\mathcal{X}}} \log{Nq_{\abs{\mathcal{X}}}}}
+  \end{equation}
+  
   \begin{equation}
       \prod_{x \in \mathcal{X}} p(x)^{Nq'(x)}= \prod_{x \in \mathcal{X}} 2^{Nq'(x)\log p(x)}
   \end{equation}
-  We have KL Divergence D as \\
+  We have KL Divergence D as 
   \begin{equation}
-      D(q \parallel p) = \sum_{x}{}q(x)\log \dfrac{q(x)}{p(x)}
+      D(q \Vert p) = \sum_{x}{}q(x)\log \dfrac{q(x)}{p(x)}
   \end{equation}
   From $7,10,11,12$ we have
   \begin{equation}
-      P(q_{s}=q') = \prod_{x\in \mathcal{X}}2^{-ND(q \parallel p)}
+      P(q_{s}=q') = \prod_{x\in \mathcal{X}}2^{-ND(q \Vert p)}
   \end{equation}
   By approximating with leading term in exponential
   we have 
   \begin{equation}
-       P(q_{s}=q') = e^{-ND(q* \parallel p)}
+       P(q_{s}=q') = e^{-ND(q* \Vert p)}
   \end{equation}
   \end{proof}
   
@@ -103,15 +103,15 @@ An instance of this would be Boltzmann distribution for a physical system with $
  \end{equation}
  Consider a configuration $:{z_1,\dots,z_N}$. Its type can be interpreted as:
  \begin{equation}
-   \rho(z) = \displaystyle 1/N\sum_{i=1}^{N}\mathds{I}_{z=z_i}  
+   \rho(z) = \displaystyle 1/N\sum_{i=1}^{N}\indicator{z=z_i}  
  \end{equation}
  
  \begin{equation}
      \rho_eq(z)=\langle \rho(z) \rangle = (1-e^{-\beta})e^{-\beta z}
  \end{equation}
- 
+ Using Boltzmann probability distribution expected density profile can be computed as follows.
  \begin{equation}
-     D(\rho_{\lambda} \parallel \rho_{eq}) = \log{  \frac{1-e^{-\lambda}}{1-e^{-\beta}}  + \frac{\beta -\lambda}{e^{\lambda}-1}}
+     D(\rho_{\lambda} \Vert \rho_{eq}) = \log{  \frac{1-e^{-\lambda}}{1-e^{-\beta}}  + \frac{\beta -\lambda}{e^{\lambda}-1}}
  \end{equation}
  
  \begin{figure}[h!]
@@ -136,13 +136,13 @@ Following observations can be made from the figure
  \end{equation}
  where
  \begin{equation}
-     I(A)=\min_q\big[D(q\parallel p)| \sum_{x\in\mathcal{X}}^{} q(x)f(x) \in A]
+     I(A)=\min_q\big[D(q\Vert p)| \sum_{x\in \sX}^{} q(x)f(x) \in A]
  \end{equation}
  \end{cor}
  \begin{proof}
  
  \begin{equation}
-     K= \Big\{ q\in \mathcal{M}(\mathcal{X}|\sum_{x\in\mathcal{X}}^{} q(x)f(x) \in A \Big\}
+     K= \Big\{ q\in \mathcal{M}(\sX)|\sum_{x\in \sX}^{} q(x)f(x) \in A \Big\}
  \end{equation}
  \end{proof}
  
@@ -162,7 +162,7 @@ Following observations can be made from the figure
        \begin{equation}
            \E{\bar{z}}= z_{eq}= (e^\beta -1)^{-1}.
            \end{equation}
-           The probability of a fluctuation in $\bar{z}$ is easily computed using the obove corollary.For $z>z_{eq}$ we obtain \\
+           The probability of a fluctuation in $\bar{z}$ is easily computed using the obove corollary.For $z>z_{eq}$ we obtain 
            \begin{equation}
                \P(z>\bar{z}) = e^{-NI(z)},
            \end{equation}
