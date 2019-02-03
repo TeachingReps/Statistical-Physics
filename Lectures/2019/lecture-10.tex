@@ -42,6 +42,7 @@ An instance of this would be Boltzmann distribution for a physical system with $
    \begin{equation}
    	\text{Number of typical configurations}=e^{Nh}<<\sX^N
    \end{equation}
+   This has a lot of implications.For example if we want to estimate an observable $\mathcal{O}$ we can sample configuration and it will give good estimates because major part of total probability is distributed among typical configurations. But it takes orderof $e^{N(\log\abs{\mathcal{X}})-h}$ time to generate a sample. Monte Carlo methods provide better solution for this problem
   \section{Large deviations for independent variables}
   \begin{thm}(Sanov) Let $s1,\dots s_N\in\mathcal{X}$ be $N$ i.i.d random variables drawn from the probability distribution $p(x)$, and let $K\subset \mathcal{M(X)}$ be a compact set of probability distributions over $\mathcal{X}$. If $q$ is the type of $(s1,\dots,s_N)$ then
   \begin{equation}
@@ -135,16 +136,20 @@ An instance of this would be Boltzmann distribution for a physical system with $
      \sum_{z}^{} \rho_{\lambda}(z) \log \frac{\rho_{\lambda}(z)}{\rho_{eq}(z)} =     
      \log{  \frac{1-e^{-\lambda}}{1-e^{-\beta}}  + \frac{\beta -\lambda}{e^{\lambda}-1}}
  \end{equation}
- 
- \begin{figure}[h!]
+ We now plot KL divergence as a function of $\lambda$ in figure \ref{fig:Earthatmo}.
+ \begin{equation}
+ 	I_{\beta}(\lambda)= D(\rho_{\lambda} \Vert \rho_{eq})
+ \end{equation}
+ \begin{figure}[h!] \label{fig}
   \includegraphics[width=\linewidth]{EarthAtmo.jpeg}
   \caption{Equilbrium density profile}
   \label{fig:Earthatmo}
 \end{figure}
-It can be noted from the figure that small values of $\lambda$ are very rare.
+It can be noted from the figure \ref{fig:Earthatmo} that small values of $\lambda$ are very rare.
  \end{exmp}
  \section{How typical is an empirical average?}
 %  $\bar{f}$
+ The empirical average of a measurement is given by:
  \begin{equation}
      \bar{f} = \frac{1}{N}\sum_{i=1}^{N}f(s_i)
  \end{equation}
