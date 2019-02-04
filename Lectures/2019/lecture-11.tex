@@ -1,0 +1,123 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-11: Correlated Variables}
+
+
+\begin{document}
+\maketitle
+\section{Asymptotic equipartition}
+We can count the number of configurations $X  \in \sX^N$ with either a given type $q(x)$ or a given empirical average  $\bar{f}$ of some observable $f: \sX^N \to \R$. 
+We say that `there are approximately $2^{NH(q)}$ sequences with type $q$'. 
+\begin{prop}
+ The number $\cN_{K,N}$ of sequences $X \in \sX^N$ which have a type belonging to the compact set $K \subset \sM(X)$ behaves as $\cN_{K,N} \ee 2^{NH(q^\ast)}$, where $q^\ast =\arg\max\{H(q): q \in  K\}$.
+\end{prop}
+\begin{proof} 
+Let $p(x)$ be the uniform probability distribution on $\sX$, then $P_p\set{q \in K} = \frac{\cN_{K,N}}{\abs{\sX}^N}$. 
+From Sanov's theorem, we know that $P_p\set{q \in K}  \ee e^{-N D(q^{\ast} \Vert p)}$. 
+Since $p$ is uniform over $\sX$, we have $D(q \Vert p) = \E_q\log_2 q(x) + \E_q\log_2\abs{\sX} = -H(q) + \log_2\abs{\sX}$. 
+Combining the above results, we get that 
+\EQ{
+\cN_{K,N} = \P_p(q \in K)2^{N \log_2\abs{\sX}} \ee 2^{NH(q^\ast)}.
+} 
+\end{proof}
+As a consequence of Sanov's theorem, 
+we know that for any \emph{i.i.d.} random sequence $X \in \sX^N$ of $N$  with the common probability distribution $p(x)$, the most probable type is $p(x)$ itself, and that deviations are exponentially rare in $N$. 
+We expect that almost all the probability will be concentrated into sequences that have a type close to $p(x)$ in some sense. 
+On the other hand, because of the above proposition, the number of such sequences is exponentially smaller than the total number of possible sequences $\abs{\sX}^N$. 
+
+Let's define what is meant by a sequence having a type `close to $p(x)$'. 
+Given a sequence $X$, we introduce the quantity empirical entropy defined as
+\EQ{
+r(X) \triangleq -\frac{1}{N}\log_2P_N(X) = -\frac{1}{N}\sum_{i=1}^N\log_2p(X_i).
+}
+Clearly, $\expect{r(X)} = H(p)$. 
+\begin{defn} 
+A random sequence $X \in \sX^N$ is called $\epsilon$\textbf{-typical} iff $\abs{r(X)-H(p)} \le \epsilon$. 
+\end{defn}
+\begin{thm} 
+Let $T_{N,\epsilon}$ be the set of $\epsilon$-typical sequences, then the following hold. 
+\begin{enumerate}[(i)]
+\item $\lim_{N \to \infty}P\set{X \in T_{N,\epsilon}} = 1$. 
+\item For large enough $N$, we have $2^{N(H(p)-\epsilon)} \le \abs{T_{N,\epsilon}} \le 2^{N(H(p)+\epsilon)}$. 
+\item For any $x \in T_{N,\epsilon}$, we have $2^{-N(H(p)+\epsilon)} \le P\set{X = x} \le 2^{-N(H(p)-\epsilon)}$.
+\end{enumerate}
+\end{thm}
+\begin{proof} 
+From Corollary to the Sanov's theorem, we have $P\set{X \notin T_{N,\epsilon}} \ee e^{-NI}$, 
+where the exponent 
+\EQ{
+I = \min\set{D(q \Vert p): q \notin K}, \text{ where } K =\set{q \in \sM(\sX): \abs{\E_qr(X) -H(p)}  \le \epsilon}.
+} 
+\begin{enumerate}[(i)]
+\item That is, we can write $K = \set{q \in \sM(\sX): \abs{D(q\Vert p)+ H(q)- H(p)} \le \epsilon}$. 
+It follows that $p \in K$ and hence $I > 0$. 
+Therefore, $\lim_{N \to \infty}P\set{X \notin T_{N,\epsilon}} = 0$. 
+\item The compact set of types of the sequence $X \in T_{N,\epsilon}$ is given by $K$. 
+Let $q \in K$, then we have $\abs{D(q\Vert p)+ H(q)- H(p)} \le \epsilon$, which implies that $\abs{H(q) - H(p)} \le \epsilon$. 
+From the previous proposition, we have 
+\EQ{
+2^{N(H(p)-\epsilon)} \le \abs{T_{N,\epsilon}} \le 2^{N(H(p)+\epsilon)}.
+}
+\item Recall that $T_{N,\epsilon} = \set{x \in \sX^N: \abs{r(x)- H(p)} \le \epsilon}$, and hence 
+for any $x \in T_{N,\epsilon}$ we have $P\set{X =x} = 2^{-Nr(x)}$. 
+The result follows. 
+\end{enumerate}
+\end{proof}
+
+\begin{defn} 
+The behavior described in the above theorem is called the \textbf{asymptotic equipartition property}. 
+\end{defn}
+
+\section{Correlated variables}
+For independent random variables in finite spaces, 
+the probability of a large deviation is easily computed by combinatorics. 
+We now present some general result for large deviations of non-independent random variables using  Legendre transforms and saddle point methods. 
+
+\subsection{Legendre transformation} 
+Consider the joint distribution of a set of $N$ random variables over the configuration space $\sX^N$ given by 
+\EQ{
+P_N(x) = P_N(x_1, \dots, x_N),~ x \in \sX^N. 
+}
+Let $f: \sX \to \R$ be a real valued function, and its empirical average 
+\EQ{
+\of(X) = \frac{1}{N}\sum_{i=1}^Nf(X_i). 
+}
+We showed that finite fluctuation of $\of$ is exponentially unlikely for \emph{i.i.d.} random variables. 
+We will show the same for `weakly correlated' random variables. 
+In particular, let $P_N(x)$ be the Boltzmann distribution of $N$ particle interacting system, and $f$ be a macroscopic observable. 
+Then, we will show that the relative fluctuation of macroscopic observables is small. 
+\begin{assum}
+The distribution of $\of$ follows a \textbf{large-deviation principle}, meaning that the asymptotic behavior of the distribution at large $N$ is 
+\EQ{
+P_N(\of) \ee e^{-N I(\of)},
+}
+with a \textbf{rate function} $I(\of) \ge 0$. 
+\end{assum}
+In order to determine the rate function, a useful method is to `tilt' the measure $P_N(\cdot)$ in such
+a way that the rare events responsible for $O(1)$ fluctuations of $\of$ become likely. 
+\begin{defn} 
+The \textbf{logarithmic moment-generating function} of $\of$ is defined as 
+\EQ{
+\psi_N(t) \triangleq \frac{1}{N}\log\expect{e^{Nt\of(x)}},~ t \in \R.
+}
+\end{defn}
+When the large-deviation principle holds, we can evaluate the large-$N$ limit of $\psi_N(t)$ using the saddle point method
+\EQ{
+\psi(t) \triangleq \lim_{N \to \infty}\psi_N(t) = \lim_{N \to \infty}\frac{1}{N}\log\int d\of e^{-NI(\of)}e^{Nt\of}.
+}
+It follows that $\psi(t)$ is the Legendre transform of $I(\of)$
+\EQ{
+\psi(t) = \sup\set{t\of - I(\of): \of \in \R}. 
+}
+Since $\psi(t)$ is supremum of affine functions in $t$, it is convex in $t$. 
+Therefore, we can invert the Legendre transform as 
+\EQ{
+I_\psi(\of) = \sup\set{t\of - \psi(t): t \in \R},
+}
+where $I_\psi(\of)$ is the convex envelope of $I(\of)$. 
+This procedure is useful when computing $\psi(t)$ is easier than the probability distribution $P_N(\of)$.
+
+\end{document}
