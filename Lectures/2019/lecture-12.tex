@@ -1,0 +1,158 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-12: The G\"{a}rtner-Ellis Theorem}
+
+
+\begin{document}
+\maketitle
+\section{The G\"{a}rtner-Ellis Theorem}
+We will state a simplified version of the general theorem. 
+\begin{defn} 
+For any function $F: \R \to \R$, we say that $x \in \R$ is an \textbf{exposed point} of the function $F$ if there exists $t \in \R$ such that $ty- F(y)> tx -F(x)$ for any $y \neq x$. 
+\end{defn}
+If $F$ is convex, a sufficient condition for $x$ to be an exposed point is that $F$ is twice differentiable at $x$, with $F''(x) > 0$. 
+\begin{thm}[G\"{a}rtner-Ellis] 
+Consider a function $f: \sX^N \to \R$. 
+We assume that for an $N$-length random sequence $X \in \sX^N$ the normalized log moment generating function $\psi_N(t) = \frac{1}{N}\log\E e^{tNf}$ exists, and has a finite limit $\psi(t) = \lim_{N\to\infty}\frac{1}{N}\psi_N(t)$, 
+for any $t \in \R$.  
+Let $I_\psi$ be the inverse Legendre transform and $\c E$ be the corresponding set of exposed points of the function $I_\psi$, 
+then the following hold. 
+\begin{enumerate}
+\item For any closed set $F \in \R$, 
+\EQ{
+\lim\sup_{N \to \infty}\frac{1}{N}\log P_N\set{f \in F} \le -\inf_{f \in F}I_\psi(f).
+}
+\item 
+For any open set $G \in \R$, 
+\EQ{
+\lim\sup_{N \to \infty}\frac{1}{N}\log P_N\set{f \in G} \ge -\inf_{f \in G \cap \c{E}}I_\psi(f).
+}
+\item  If $\psi(t)$ is differentiable for any $t \in \R$, then the last statement holds true if the $\inf$ is taken over the whole set $G$ (rather than over $G\cap \c{E}$).
+\end{enumerate}
+\end{thm}
+\begin{proof} 
+%We assume that the large-deviation principle holds for the function $f$ with a rate function $I(f)$, such that $P_N(f) \ee e^{-N I(f)}$. 
+Since the Legendre transform is convex in $t$ and its inverse is convex in $f$, 
+we can write the Legendre transform as the Legendre transform of its inverse. 
+That is, 
+\meq{2}{
+&I_\psi(f) = \sup_{t \in \R}[tf - \psi(t)],&&\psi(t) = \sup_{f}[tf - I_\psi(f)].
+}
+Since $\psi(t) = \lim_{N \to \infty} \frac{1}{N}\log\E e^{tNf}$, it follows that the large-deviation principle holds for the function $f$ with a rate function $I_\psi(f)$, such that $P_N(f) \ee e^{-N I_\psi(f)}$.
+\end{proof}
+The inverse Legendre transform yields an upper bound on the probability of a large fluctuation of the macroscopic observable. 
+This upper bound is tight unless a `first-order phase transition' occurs, corresponding to a discontinuity in the first derivative of $\psi(t)$, as we saw in the low-temperature phase of the Curie-Weiss model.
+It is worth mentioning that $\psi(t)$ can be non-analytic at a point $t^\ast$ even though its first derivative is continuous at $t^\ast$. 
+This corresponds, to a `higher-order' phase transition. 
+%Such phenomena have interesting probabilistic interpretations too.
+
+\subsection{Typical sequences}
+We can re-write the log moment generation function for the empirical entropy $r(x) = -\frac{1}{N}\log P_N(x)$, as 
+\EQ{
+\psi_N(t) = \frac{1}{N}\log\E e^{tNf} = \frac{1}{N}\log\sum_{x}P_N(x)e^{tNr(x)} =  \frac{1}{N}\log\sum_{x}P_N(x)^{1-t}.
+}
+Let $P_N(x) = e^{-\beta E(x)}/Z_N(\beta)$ be the Boltzmann distribution with the energy function $E(x)$ and the partition function $Z_N(\beta) = \sum_x e^{-\beta E(x)}$, 
+then in terms of the free-energy density $f_N(\beta) = -\frac{1}{N\beta}\log Z_N(\beta)$, we can write  
+\EQ{
+\psi_N(t) = \frac{1}{N}(\log\sum_{x}e^{-\beta(1-t)E(x)}- (1-t)\log Z_N(\beta))  = \beta (1-t) f_N(\beta) - \beta f_N((1-t)\beta).
+}
+Assuming that the thermodynamic limit $f(\beta) = \lim_{N\to\infty}\frac{1}{N}f_N(\beta)$ exists and is finite, 
+It follows that the Legendre transform $\psi(t)$ exists for the empirical entropy. 
+We can apply the G\"{a}rtner-Ellis theorem to compute the probability of a large fluctuation of the empirical entropy $r(x)$. 
+
+As long as $f(\beta)$ is analytic, large fluctuations are exponentially rare and the asymptotic equipartition property of independent random variables is essentially recovered. 
+This follows from the fact that $\E_Pr(X) = h(P_N) = \frac{1}{N}H(P_N)$, 
+and the set of $\epsilon$-typical sequences is 
+\EQ{
+T_{N,\epsilon} = \set{ x \in \sX^N: \abs{r(X)-h(P_N)} \le \epsilon}.
+}
+\begin{enumerate}
+\item Under certain conditions, we can show that $\lim_{N\to\infty}P_N\set{X \in T_{N,\epsilon}} = 1$. 
+\item From the definition of $r(X)$ and $T_{N,\epsilon}$, it follows that for any $x \in T_{N,\epsilon}$
+\EQ{
+2^{-N(h(P_N)+\epsilon)}\le P_N(x) \le 2^{-N(h(P_N)-\epsilon)}.
+}
+\end{enumerate}
+
+On the other hand, if there is a phase transition at $\beta = \beta_c$, 
+where the first derivative of $f(\beta)$ is discontinuous, 
+then the likelihood $r(x)$ may take several distinct values with a non-vanishing probability. 
+This is what happened in the Curie-Weiss example. 
+
+\section{The Gibbs Free Energy} 
+We provide a motivation for the Boltzmann distribution to be a natural choice for probability distribution of the configuration of a physical system. 
+\subsection{Variational principle}
+Consider a system with a configuration space $\sX$ , and an energy function $E: \sX \to \R$. 
+The Boltzmann distribution is 
+\EQ{
+\mu_\beta(x) = \frac{e^{-\beta E(x)}}{Z(\beta)} = \exp\left(-\beta (E(x)+\frac{1}{\beta}\log Z(\beta))\right)= e^{-\beta (E(x)-F(\beta))},
+}
+where the `free energy' $F(\beta)$, is a function of the inverse temperature $\beta$ defined by the fact that $\sum_{x \in \sX} \mu_\beta(x) = 1$. 
+\begin{defn}
+We define the \textbf{Gibbs free energy} $G: \sM(\sX) \to \R$ as the following real-valued functional over the space of probability distributions on $\sX$
+\EQ{
+G[P] = \sum_{x \in \sX}P(x)E(x) + \frac{1}{\beta}\sum_{x \in \sX}P(x)\log P(x).
+}
+\end{defn}
+The Gibbs free energy should not be confused with the free energy $F(\beta)$. 
+\begin{prop}
+The Gibbs free energy $G: \sM(\sX) \to \R$ is a convex functional, 
+and it achieves its unique minimum on the Boltzmann distribution $P = \mu_\beta$. 
+Moreover, $G[\mu_\beta] = F(\beta)$, where $F(\beta)$ is the free energy.
+\end{prop}
+\begin{proof}
+It is easy to rewrite the Gibbs free energy in terms of the KL divergence between $P$ and the Boltzmann distribution $\mu_\beta$
+\EQ{
+G[P]= \frac{1}{\beta}\sum_{x \in \sX}P(x)\log\frac{P(x)}{e^{-\beta E(x)}}  = \frac{1}{\beta}D(P\Vert \mu_\beta)+F(\beta). 
+}
+%This representation implies straightforwardly the following proposition (the Gibbs variational principle).
+\end{proof}
+\red{The relation between the Gibbs free energy and the KL divergence implies a simple probabilistic interpretation of the Gibbs variational principle. 
+Imagine that a large number $\cN$ of copies of the same physical system have been prepared. 
+Each copy is described by the same energy function $E(x)$. 
+Now consider the empirical distribution $P$ of the $\cN$ copies. 
+Typically, $P$ will be close to the Boltzmann distribution $\mu_\beta$. 
+Sanov's theorem implies that the probability of an `atypical' distribution is exponentially small in $\cN$:
+\EQ{ 
+\P[P ] \ee \exp\left(-\cN (G[P ] - F(\beta))\right).
+}
+}
+
+When the partition function of a system cannot be computed exactly, the above result suggests a general line of approach for estimating the free energy: one can minimize the Gibbs free energy in some restricted subspace of `trial probability distributions' $P$.  
+These trial distributions should be simple enough that $G[P]$ can be computed, 
+but the restricted subspace should also contain distributions which are able to give a good approximation to the true behavior of the physical system. 
+For each new physical system one will thus need to find a good restricted subspace. 
+
+\subsection{Mean-field approximation}
+Mean-field approximation is taking the class of distributions over independent variables as the trial family. 
+\begin{shaded*}
+\begin{exmp}[Ising Model] 
+Consider particles on the lattice $\L$ of nodes $[L]^d$ and edges $((i,j): \abs{i-j}=1)$. 
+Each particle at node $i$ has spin $\sigma_i \in \sX = \set{-1,1}$. 
+The energy function under the external magnetic field $B$ is given by 
+\EQ{
+E(\sigma) = -\frac{1}{d}\sum_{(i,j)}\sigma_i\sigma_j - B\sum_i\sigma_i. 
+}
+We assume periodic boundary conditions, and choose the trial family of distributions to be 
+\EQ{
+Q_m(\sigma) = \prod_{i}q_m(\sigma_i),
+}
+where $q_m(\sigma_i) = \frac{(1+m)}{2}\indicator{\sigma_i=1}+ \frac{(1-m)}{2}\indicator{\sigma_i=-1}$ for some $m \in [-1,1]$. 
+That is, under the distribution $Q_m$, the spins are \emph{i.i.d.} with mean $m$. 
+
+We can find the density of Gibbs free energy as 
+\EQ{
+g(m; \beta, B) \triangleq \frac{G[Q_m]}{\abs{L}^d} = -\frac{1}{2}m^2 - Bm-\frac{1}{\beta}\cH(\frac{1+m}{2}). 
+}
+From the Gibbs variational principle, we have 
+\EQ{
+f_d(\beta, B) \le \inf_mg(m; \beta, B) = f_{\text{CW}}(\beta, h) - \frac{1}{2}. 
+}
+\end{exmp}
+\end{shaded*}
+Indeed, the mean-field approximation becomes better the larger the dimension $d$, and it is asymptotically exact for $d \to \infty$.
+\end{document}
+
