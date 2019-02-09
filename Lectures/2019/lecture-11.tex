@@ -1,6 +1,9 @@
 % !TEX spellcheck = en_US
 % !TEX spellcheck = LaTeX
+
 \documentclass[letterpaper,english,10pt]{article}
+
+
 \input{../../header}
 
 \title{Lecture-11: Correlated Variables}
@@ -119,5 +122,59 @@ I_\psi(\of) = \sup\set{t\of - \psi(t): t \in \R},
 }
 where $I_\psi(\of)$ is the convex envelope of $I(\of)$. 
 This procedure is useful when computing $\psi(t)$ is easier than the probability distribution $P_N(\of)$.
+The above method informally captures the essence of G\"{a}rtner-Ellis theorem(explained in the following lecture).
+\begin{shaded*}\begin{exmp}
+Consider the one-dimensional Ising model, with external magnetic field $B=0$.We have $x_i= \sigma_i \in \{+1,-1\}$, and $P_N(\boldsymbol{\sigma})=exp[-\beta E(\boldsymbol{\sigma} )]/Z$ the Boltzmann distribution with energy function 
+\EQ{
+E(\boldsymbol{\sigma} )= - \sum_{i=1}^{N-1} \sigma_i\sigma_{i+1}  }
+We want to compute the large deviation properties of the magnetization.
+\EQ{
+m(\boldsymbol{\sigma} )= \frac{1}{N}\sum_{i=1}^{N} \sigma_i
+}
+In order to evaluate probability of a large fluctuation of $m$ we can apply the moment generating function of $m$.
+\EQ{
+\begin{split}
+\psi_N(t) & = \frac{1}{N}\log\expect{e^{Ntm(\boldsymbol{\sigma})}}
+\\ & = \frac{1}{N}\log\expect{exp[t\sum_{i=1}^{N}\sigma_i]}
+\end{split}
+}
+The above expectation is taken over Boltzmann distribution. Hence,
+\EQ{
+\begin{split}
+    \psi_N(t) & =\frac{1}{N}\log\frac{\sum_{\sigma} exp(\beta\sum_{i=1}^{N-1}\sigma_i \sigma_{i+1}+t\sum_{i=1}^{N}\sigma_i)}{\sum_{\sigma} exp(\beta\sum_{i=1}^{N-1}\sigma_i \sigma_{i+1})}
+\\ \\ & =\frac{1}{N} \log \frac{z_n(\beta,\frac{t}{\beta})}{z_n(\beta,0)}
+\end{split}
+}
+Using the relation between free entropy($\phi(\beta))$ and partition function$(z(\beta))$ for limiting value of N, we get
+\EQ{
+\psi(t) =  \phi(\beta,\frac{t}{\beta})-\phi(\beta,0).
+}
+In one of the previous lectures we have derived the following formal expression for free entropy in one dimensional Ising model.
+\EQ{
+\phi(\beta,B) =  \log\Bigg[e^\beta \cosh(\beta B)+\sqrt{e^{2\beta} \sinh^2(\beta B)+e^{-2\beta}}\Bigg]
+}
+Therefore,
+\EQ{
+\begin{split}
+\psi(t) & =\log\frac{\Bigg[e^\beta \cosh t + \sqrt{e^{2\beta} \sinh^2t + e^{-2\beta}}\Bigg]}{e^\beta + e^{-\beta}}
+\\ & =\log\frac{\Bigg[\cosh t + \sqrt{\sinh^2t + e^{-4\beta}}\Bigg]}{1 + e^{-2\beta}}
+\end{split}
+}
+and rate function,
+
+\EQ{
+I_\psi(m) = \sup_{t \in \R}\set{tm - \psi(t)}
+}
+\end{exmp}\end{shaded*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.8\textwidth]{rate_fn.png}
+    \caption{Rate function for the magnetization of the one-dimensional ising model}
+\end{figure}
+\begin{flushleft}
+\textbf{Inference from figure 1: }As $\beta$ increases i.e as temperature decreases the probability of large fluctuations increases.
+\end{flushleft}
+
 
 \end{document}
