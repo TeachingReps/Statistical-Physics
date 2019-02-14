@@ -11,7 +11,21 @@
 
 \begin{document}
 \maketitle
-
+\section{Glauber Dynamics}
+\begin{defn}
+Given a configuration space $\sX^V$ for a graph $G = (V,E)$, we can define \textbf{Glauber dynamics} or \textbf{Gibbs sampler} to be a the following reversible Markov chain which has stationary distribution $\pi$, 
+and transition probabilities 
+\EQ{
+P(x,y) = \begin{cases}
+\frac{1}{N}\frac{\pi(y)}{\pi(s(x,y))}, &y \in s(x),\\
+0, & y \notin s(x).
+\end{cases}
+}
+Here we define $V(x,y) = \set{v \in V: x \neq y}$, and the set of possible transitions $s(x) = \set{y \in \sX^V: \abs{V(x,y)} = 1}$, and the set of possible transitions at vertex $V(x,y)$ as  $s(x,y)= \set{z \in \sX^V: z_w = x_w, w \notin V(x,y)}$. 
+\end{defn}
+\begin{exerc}
+Show that the Glauber dynamics is a reversible Markov chain with the stationary distribution $\pi$. 
+\end{exerc}
 \section{Comparison of Monte Carlo Methods}
 We have seen that Monte Carlo sampling methods give us the desired stationary distribution starting from a base Markov chain. 
 Assuming one step of the Markov chain takes unit time, 
@@ -86,7 +100,7 @@ Total variation distance between $\mu$ and $\nu$ determine how close can a coupl
 \begin{prop}
 Let $\mu$ and $\nu$ be two distributions on the configuration space $\sX^N$, then 
 \EQ{
- \norm{\mu-\nu}_{\text{TV}}  = \inf\set{P\set{X\neq Y}: (X,Y) \text{ a coupling of distributions } \mu, \nu}. 
+\norm{\mu-\nu}_{\text{TV}}  = \inf\set{P\set{X\neq Y}: (X,Y) \text{ a coupling of distributions } \mu, \nu}. 
 }
 \end{prop}
 \begin{proof}
@@ -95,6 +109,8 @@ For any coupling $(X,Y)$ of the distributions $\mu, \nu$ and any event $A \subse
 \mu(A)-\nu(A) = P\set{X \in A} - P\set{Y \in A} \le P\set{X \in A, Y \notin A} \le P\set{X \neq Y}.
 }
 Therefore, it follows that $\norm{\mu-\nu}_{\text{TV}}  \le P\set{X\neq Y}$ for all  couplings $(X,Y)$ of distributions $\mu, \nu$. 
+
+Next we find a coupling $(X,Y)$ for which $ \norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}$. 
 \end{proof}
 \begin{defn}
 For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
