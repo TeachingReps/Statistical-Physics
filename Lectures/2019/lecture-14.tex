@@ -6,7 +6,7 @@
 \usepackage{bm}
 \graphicspath{{./Figures/}}
 
-\title{Lecture-14: Markov Chain Mixing}
+\title{Lecture-14: Total Variation Distance}
 
 
 \begin{document}
@@ -97,6 +97,13 @@ Any two distributions $\mu$ and $\nu$ have an independent coupling.
 However, when the two distributions are not identical, 
 it will not be possible for the random variables to always have the same value. 
 Total variation distance between $\mu$ and $\nu$ determine how close can a coupling get to having $X$ and $Y$ identical. 
+\begin{defn}
+For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
+the coupling $(X,Y)$ is \textbf{optimal} if  
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}.
+}
+\end{defn}
 \begin{prop}
 Let $\mu$ and $\nu$ be two distributions on the configuration space $\sX^N$, then 
 \EQ{
@@ -111,13 +118,30 @@ For any coupling $(X,Y)$ of the distributions $\mu, \nu$ and any event $A \subse
 Therefore, it follows that $\norm{\mu-\nu}_{\text{TV}}  \le P\set{X\neq Y}$ for all  couplings $(X,Y)$ of distributions $\mu, \nu$. 
 
 Next we find a coupling $(X,Y)$ for which $ \norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}$. 
-\end{proof}
-\begin{defn}
-For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
-the coupling $(X,Y)$ is \textbf{optimal} if  
+In terms of the set $B  = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$, we can write
 \EQ{
-\norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}.
+p \triangleq \sum_{x \in \sX}\mu(x)\wedge\nu(x) = \mu(B^c) + \nu(B) = 1 - (\mu(B)-\nu(B)) = 1 - \norm{\mu-\nu}_{\text{TV}}.
+} 
+By the definition of $p$, the function $\frac{\mu\wedge\nu}{p}: \sX^N \to [0,1]$ is a probability distribution on $\sX^N$. 
+Let us call this distribution as $\gamma_3(x) \triangleq \frac{\mu(x)\wedge\nu(x)}{p}$. 
+We also define the following two function from the configuration space $\sX^N$ to $[0,1]$ as  
+\meq{2}{
+&\gamma_1(x) \triangleq \frac{\mu(x)-\nu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \in B}, &&\gamma_2(x) \triangleq \frac{\nu(x)-\mu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \notin B}.
 }
-\end{defn}
-
+From the definition of the set $B$, we can easily verify that $\gamma_1(\sX^N) = \gamma_1(B) = \gamma_2(B^c) = \gamma_2(\sX^N) = 1$. 
+%We define independent random variables $W,V$ with distributions $\gamma_1, \gamma_2$ respectively, 
+%a random variable $Z$ with distribution $\gamma_3$, and 
+We define a binary random variable $\xi \in \set{0,1}$ such that $\E \xi = p$, 
+and the conditional distribution of $(X,Y)$ such that 
+\EQ{
+P((X, Y) = (x,y)\given \xi) = \gamma_3(x)\indicator{x=y}\xi + (1-\xi)\gamma_1(x)\gamma_2(y).
+}
+Since $\gamma_1, \gamma_2, \gamma_3$ are distributions, it follows that $P\set{(X,Y) = (x,y)} = p\gamma_3(x)\indicator{x = y} + (1-p)\gamma_1(x)\gamma_2(y)\indicator{x\neq y}$ is a joint distribution function. 
+From the definition of the set $B$, we observe that 
+\eq{
+P\set{X = x} &= p\gamma_3(x) + (1-p)\gamma_1(x) = \mu(x)\wedge\nu(x) + (\mu(x) - \nu(x))\indicator{x \in B} = \mu(x)\\
+P\set{Y = y} &= p\gamma_3(y) + (1-p)\gamma_2(y) = \mu(y)\wedge\nu(y) + (\nu(y) - \mu(y))\indicator{y \notin B} = \nu(y).
+}
+That is, $(X,Y)$ is a coupling of the distributions $\mu, \nu$ and $P\set{X \neq Y} = 1-p = \norm{\mu - \nu}_{\text{TV}}$. 
+\end{proof}
 \end{document}
