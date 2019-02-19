@@ -5,7 +5,7 @@
 \input{../../header}
 \graphicspath{{./Figures/}}
 
-\title{Lecture-14: Markov Chain Mixing}
+\title{Lecture-14: Total Variation Distance}
 
 
 \begin{document}
@@ -96,6 +96,13 @@ Any two distributions $\mu$ and $\nu$ have an independent coupling.
 However, when the two distributions are not identical, 
 it will not be possible for the random variables to always have the same value. 
 Total variation distance between $\mu$ and $\nu$ determine how close can a coupling get to having $X$ and $Y$ identical. 
+\begin{defn}
+For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
+the coupling $(X,Y)$ is \textbf{optimal} if  
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}.
+}
+\end{defn}
 \begin{prop}
 Let $\mu$ and $\nu$ be two distributions on the configuration space $\sX^N$, then 
 \EQ{
@@ -110,13 +117,130 @@ For any coupling $(X,Y)$ of the distributions $\mu, \nu$ and any event $A \subse
 Therefore, it follows that $\norm{\mu-\nu}_{\text{TV}}  \le P\set{X\neq Y}$ for all  couplings $(X,Y)$ of distributions $\mu, \nu$. 
 
 Next we find a coupling $(X,Y)$ for which $ \norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}$. 
-\end{proof}
-\begin{defn}
-For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
-the coupling $(X,Y)$ is \textbf{optimal} if  
+In terms of the set $B  = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$, we can write
 \EQ{
-\norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}.
+p \triangleq \sum_{x \in \sX}\mu(x)\wedge\nu(x) = \mu(B^c) + \nu(B) = 1 - (\mu(B)-\nu(B)) = 1 - \norm{\mu-\nu}_{\text{TV}}.
+} 
+By the definition of $p$, the function $\frac{\mu\wedge\nu}{p}: \sX^N \to [0,1]$ is a probability distribution on $\sX^N$. 
+Let us call this distribution as $\gamma_3(x) \triangleq \frac{\mu(x)\wedge\nu(x)}{p}$. 
+We also define the following two function from the configuration space $\sX^N$ to $[0,1]$ as  
+\meq{2}{
+&\gamma_1(x) \triangleq \frac{\mu(x)-\nu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \in B}, &&\gamma_2(x) \triangleq \frac{\nu(x)-\mu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \notin B}.
+}
+From the definition of the set $B$, we can easily verify that $\gamma_1(\sX^N) = \gamma_1(B) = \gamma_2(B^c) = \gamma_2(\sX^N) = 1$. 
+%We define independent random variables $W,V$ with distributions $\gamma_1, \gamma_2$ respectively, 
+%a random variable $Z$ with distribution $\gamma_3$, and 
+We define a binary random variable $\xi \in \set{0,1}$ such that $\E \xi = p$, 
+and the conditional distribution of $(X,Y)$ such that 
+\EQ{
+P((X, Y) = (x,y)\given \xi) = \gamma_3(x)\indicator{x=y}\xi + (1-\xi)\gamma_1(x)\gamma_2(y).
+}
+Since $\gamma_1, \gamma_2, \gamma_3$ are distributions, it follows that $P\set{(X,Y) = (x,y)} = p\gamma_3(x)\indicator{x = y} + (1-p)\gamma_1(x)\gamma_2(y)\indicator{x\neq y}$ is a joint distribution function. 
+From the definition of the set $B$, we observe that 
+\eq{
+P\set{X = x} &= p\gamma_3(x) + (1-p)\gamma_1(x) = \mu(x)\wedge\nu(x) + (\mu(x) - \nu(x))\indicator{x \in B} = \mu(x)\\
+P\set{Y = y} &= p\gamma_3(y) + (1-p)\gamma_2(y) = \mu(y)\wedge\nu(y) + (\nu(y) - \mu(y))\indicator{y \notin B} = \nu(y).
+}
+That is, $(X,Y)$ is a coupling of the distributions $\mu, \nu$ and $P\set{X \neq Y} = 1-p = \norm{\mu - \nu}_{\text{TV}}$. 
+\end{proof}
+\subsection{The convergence theorem}
+\begin{thm}[Convergence Theorem] 
+Let $X: T \to \sX^N$ be an irreducible and aperiodic Markov chain with transition probability matrix $P$ and stationary distribution $\pi$. 
+Then there exist constants $\alpha \in (0,1)$ and $C > 0$ such that
+\EQ{
+\max_{x \in \sX^N}\norm{\pi_x^t - \pi}_{\text{TV}} \le C\alpha^t.
+}
+\end{thm}
+\begin{proof}
+Since the Markov chain $X$ is irreducible and aperiodic, 
+there exists a positive integer $r$ such that $P^r$ has strictly positive entries. 
+Let $\Pi$ be the matrix with $\abs{\sX}^N$ rows, 
+each of which is the row vector $\pi$. 
+We chose a $\delta > 0$  sufficiently small such that 
+\EQ{
+\delta \le \min\set{\frac{P^r(x,y)}{\pi(y)}: x, y \in \sX^N}.
+} 
+Let $\bar{\delta} = 1-\delta$, then we can define a matrix $Q = \frac{1}{\bar{\delta}}(P^r- \delta\Pi)$. 
+We can verify that $Q$ is a stochastic matrix by right multiplying it with vector $\bU$. 
+We can also verify that for any stochastic matrix $M$, we have $M\Pi = \Pi$ and if $\pi$ is an invariant distribution of $M$, then $\Pi M = \Pi$. 
+We next show by induction that 
+\EQ{
+P^{rk} = (\delta\Pi + \bar{\delta}Q)^k = (1-\bar{\delta}^k)\Pi+\bar{\delta}^kQ^k.
+}
+The base case of $k=1$ is true by definition. 
+We assume the inductive hypothesis holds true for $k =n$,  then
+\EQ{
+P^{r(n+1)} = P^{rn}P^r = [(1-\bar{\delta}^n)\Pi+\bar{\delta}^nQ^n]P^r = (1-\bar{\delta}^n)\Pi + \bar{\delta}^nQ^n((1- \bar{\delta})\Pi + \bar{\delta}Q). 
+}
+The first equality follows from the fact that $\Pi P^r = \Pi$ and the second equality from the definition of stochastic matrix $Q$. 
+Since $Q^n\Pi = \Pi$, we have 
+\EQ{
+P^{r(n+1)} = (1-\bar{\delta}^n)\Pi + \bar{\delta}^nQ^n((1- \bar{\delta})\Pi + \bar{\delta}Q) = (1-\bar{\delta}^{n+1})\Pi +  \bar{\delta}^{n+1}Q^{n+1}. 
+}
+Hence, the result follows from the induction. 
+By post-multiplication with $P^j$, we get 
+\EQ{
+P^{rk+j} - \Pi = \bar{\delta}^k(Q^kP^j- \Pi).
+}
+We can write the total-variation distance between $\pi^{t}_x$ and $\pi$ for $t=rk+j$
+\EQ{
+\norm{\pi^{t}_x-\pi}_{\text{TV}} = \norm{P^{rk+j}(x, \cdot)-\pi(\cdot)}_{\text{TV}} 
+%= \frac{1}{2}\sum_{y \in \sX^N}\abs{P^{rk+j}(x, y)-\pi(y)} 
+\le \bar{\delta}^k \norm{Q^{k}P^j-\pi}_{\text{TV}} \le  \bar{\delta}^k \le C\alpha^t,
+}
+for $\alpha = \bar{\delta}^{1/r}$ and $C = 1/\bar{\delta}$. 
+\end{proof}
+\subsection{Maximal distance from stationarity}
+\begin{defn}
+The maximal distance between $t$-step distribution $\pi^t$ and stationary distribution $\pi$ over all initial configurations $x \in\sX^N$ is defined as 
+\EQ{
+d(t) \triangleq \max_{x \in \sX^N}\norm{P^t(x, \cdot), \pi(x)}_{\text{TV}}.
+}
+The maximal distance between $t$-step distributions $P^t(x, \cdot)$ and $P^t(y, \cdot)$ over all initial configurations $x, y \in\sX^N$ is defined as 
+\EQ{
+\bar{d}(t) \triangleq \max_{x \in \sX^N}\norm{P^t(x, \cdot), \pi(x)}_{\text{TV}}.
 }
 \end{defn}
-
+\begin{lem} The following relation between maximal distances is true, 
+\EQ{
+d(t) \le \bar{d}(t) \le 2d(t). 
+}
+\end{lem}
+\begin{proof} 
+It is immediate from the triangle inequality for the total variation distance that $\bar{d}(t) \le 2d(t)$.
+To show that $d(t) ? \bar{d}(t)$, note first that since $\pi$ is stationary, 
+we have $\pi(A) = ??\sum_{y \in \sX^N}\pi(y)P^t(y, A)$ for any set $A$. 
+Therefore, 
+\EQ{
+P^{t}(x,A)- \pi(A) = \sum_{y \in \sX^N}\pi(y)(P^t(x,A)- P^t(y,A)) \le  \sum_{y \in \sX^N}\pi(y)\norm{P^t(x,\cdot)- P^t(y,\cdot)}_{\text{TV}} \le \bar{d}(t), 
+}
+by the triangle inequality and the definition of total variation. 
+Maximizing the left-hand side over $x$ and $A$ yields $d(t) \le \bar{d}(t)$.  
+\end{proof}
+\begin{exerc}
+Show the following. 
+\meq{2}{
+&d(t) = \sup_{\mu \in \sM(\sX^N)}\norm{\mu P^t - \pi}_{\text{TV}}, && \sup_{\mu, \nu \in \sM(\sX^N)}\norm{\mu P^t - \nu P^t}_{\text{TV}}.
+} 
+\end{exerc}
+\begin{lem}
+The function $\bar{d}$ is sub-multiplicative. 
+That is, $\bar{d}(s + t) \le \bar{d}(s)\bar{d}(t)$. 
+\end{lem}
+\begin{proof} 
+Fix $x, y \in \sX^N$ and let $X_s, Y_s$ denote the configuration of a Markov chain with homogeneous transition probability matrix $P$ starting from initial state $x,y$ respectively. 
+Let $(X_s, Y_s)$ be the optimal coupling of $P^s(x, \cdot)$ and $P^s(y, \cdot)$. 
+Hence 
+\EQ{
+\norm{P^s(x, \cdot) - P^s(y, \cdot)}_{\text{TV}} = P\set{X_s \neq Y_s}.
+}
+We can write 
+\EQ{
+P^{s+t}(x, w) = \sum_{z \in \sX^N}P\set{X_s = z}P^t(z, w) = \E P^t(X_s, w).
+}
+Hence, we can write for a set $A$, 
+\EQ{
+P^{s+t}(x, A) - P^{s+t}(y, A) = \E[P^t(X_s, A) - P^t(Y_s, A)] \le \E[\bar{d}(t)\indicator{X_s \neq Y_s}] = \bar{d}(t)P\set{X_s \neq Y_s}.
+}
+\end{proof}
 \end{document}

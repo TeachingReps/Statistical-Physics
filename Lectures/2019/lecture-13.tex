@@ -1,0 +1,124 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+\usepackage{bm}
+\graphicspath{{./Figures/}}
+
+\title{Lecture-13: The Monte Carlo Method}
+
+\begin{document}
+\maketitle
+\section{The Monte Carlo Method}
+In fields like Statistical Physics and Combinatorial Optimization we often come across the problem of sampling a configuration $X \in \sX^N$
+from a given distribution $P(X)$. This can be difficult when N is large, because there are too many configurations and or because the distribution $P(X)$ is specified by Boltzmann formula with computationally infeasible Partition Function. This motivates the study of Monte Carlo Method.
+
+\subsection{Properties of Markov Chains}
+Let $(X_t \in \sX^N:t \in N)$ be a Markov chain with state space $\sX^N$, and set of transition rates $w(x \to y)$ with $x,y \in \sX^N$, which satisfy the following conditions.
+
+\begin{enumerate}[(i)]
+\item \textbf{Irreducibility :} For any pair of configurations $x,y \in \sX^N$, there exists a path $(x_0,x_1,\dots, x_n)$ of length n, connecting $x_0 = x$ and $x_n = y$ with non-zero probability, i.e.
+$w(x_i \to x_{i+1}) > 0$ for all $i \in \{0,\dots,n-1\}$.
+
+\item \textbf{Aperiodicity :} For any pair of configurations $x,y \in \sX^N \times \sX^N$, there exists a positive integer $n(x,y)$ such that for any $n \geq n(x,y)$, there exists a path of length $n$ connecting $x$ and $y$ with non-zero probability. Notice that, for an irreducible chain, aperiodicity is easily enforced by allowing the configuration to remain unchanged with non-zero probability: $w(x \to x) > 0$.
+
+\item \textbf{Stationarity :} There exists a distribution $\pi \in \sM(\sX^N)$ such that
+\EQ{\sum_{x \in \sX^N}\pi(x)w(x \to y) = \pi(y) \hspace{3em}\forall y \in \sX^N .}
+\item \textbf{Reversibility :} The transition probability satisfy the detailed balance equation
+\EQ{\pi(x)w(x \to y) = \pi(y)w(y \to x) \hspace{3em}\forall x,y \in \sX^N .}
+\end{enumerate}
+\textbf{Note :}
+ For Finite chains Irreducibility and Aperiodicity implies Stationarity.
+\begin{thm}
+ Let $X_0,X_1,\dots, X_t,\dots $ be random variables distributed according to the Markov chain with transition probabilites $w(x \to y)$ and initial condition $X_0 = x_0$.Let the Markov chain satisfy the conditions $(\romannumeral 1) - (\romannumeral 3)$ . Let $f: \sX^N \to \R$ be any real valued function. Then
+\begin{enumerate}
+\item The probability distribution of $X_t$ converges to the stationary distribution:
+\EQ{\lim_{t \to \infty} P[X_t = x] = \pi(x).}
+\item Time averages converge to averages over the stationary distribution
+\EQ{\lim_{t \to \infty} \frac{1}{t} \sum_{s = 1}^{t}f(X_s) = \sum_{x}\pi(x)f(x) \hspace{3em} almost \: surely.}
+\end{enumerate}
+\end{thm}
+%\begin{proof}
+%The proof of this Theorem can be found in any textbook on Markov %processes.
+%\end{proof}
+The \textbf{Goal} is to design and simulate a process that converges to the stationary distribution of interest.
+
+\section{Metropolis Chains}
+\textbf{Goal :} Given state space $\sX^N$ and stationary distribution $\pi$, find a Markov chain with transition probability matrix P such that $\pi P = \pi$.
+\newline
+The approach of Metropolis chains is to first consider an initial base markov chain with certain transition probability matrix and modify the transition probabilities appropriately so that the new chain has the desired stationary distribution. 
+
+\subsection{Symmetric base chain}
+Let $\psi$ be a symmetric transition probability matrix of the base chain over $\sX^N$.
+\newline
+Since $\psi$ is symmetric and has vector of ones as an eigenvector, it is easy to see that $\psi$ satisfies reversibility with respect to uniform distribution on $\sX^N$, i.e.
+\EQ{\psi\mathbb{1} = \mathbb{1} \implies \frac{\mathbb{1}^T}{|\sX^N|}\psi = \frac{\mathbb{1}^T}{|\sX^N|} \implies \frac{1}{|\sX^N|}\psi(x,y) = \frac{1}{|\sX^N|}\psi(y,x) \; \forall \: x,y \in \sX^N}
+
+Note that $\psi(x,\cdot)$ is the distribution over next state, starting from state $x$.
+Define $a(x,y)$ as the acceptance probability of transition from $x$ to $y$.
+The new chain evolves as follows : when at state $x$, a candidate move is generated from distribution $\psi(x,\cdot)$. If the proposed new state is $y$, then the move is "accepted" with probability $a(x,y)$ and with remaining probability chain remains at $x$. Thus the transition probabilities of the new chain becomes,
+
+\EQ{P(x,y) = \begin{cases}\psi(x,y)a(x,y) & if \; y \neq x \\ 1 - \sum\limits_{z:z \neq x} \psi(x,z)a(x,z) & if \; y = x \end{cases}}
+
+The transition matrix P has stationary distribution $\pi$ if reversibility condition holds, i.e.
+\EQ{\pi(x)\psi(x,y)a(x,y) = \pi(y)\psi(y,x)a(y,x) \hspace{3em} \forall x \neq y}
+Define $b(x,y) = \pi(x)a(x,y)$.Thus the condition becomes 
+\EQ{b(x,y) = b(y,x) \hspace{3em} \forall x \neq y}
+By definition we see that,
+\EQ{b(x,y) \leq \pi(x)}
+\EQ{b(y,x) \leq \pi(y)}
+Thus,
+\EQ{b(x,y) = b(y,x) \leq \min\{\pi(x),\pi(y)\}}
+\EQ{a(x,y) \leq \min\{1,\frac{\pi(y)}{\pi(x)}\}}
+Choose 
+\EQ{a(x,y) = 1 \wedge \left(\frac{\pi(y)}{\pi(x)}\right) := \min\{1,\frac{\pi(y)}{\pi(x)}\}}
+This choice of acceptance probability is called Metropolis Hastings.
+The \textbf{Metropolis Chain} for probability distribution $\pi$ and symmetric transition probability matrix $\psi$ is defined as
+
+\EQ{P(x,y) = \begin{cases}\psi(x,y)\left[1 \wedge \frac{\pi(y)}{\pi(x)}\right] & if \; y \neq x \\ 1 - \sum\limits_{z:z \neq x} \psi(x,z)\left[1 \wedge \frac{\pi(z)}{\pi(x)}\right] & if \; y = x \end{cases}}
+\textbf{Remark :} If the desired stationary distribution $\pi$ is a Boltzmann distribution, this method has an advantage that we don't need to compute partition function explicitly which is computationally infeasible in many cases.
+\begin{shaded}
+\begin{exmp}[Metropolis algorithm for $N$-particle system]
+Consider a system of $N$ Ising spins $\sigma = (\sigma_1 \dots \sigma_N)$ with energy function $E(\sigma)$ and inverse temperation $\beta$. We are interested in sampling the Boltzmann distribution $\mu_\beta = \frac{e^{-\beta E(\sigma)}}{Z_\beta}$. The \textbf{Metropolis algorithm} with random updatings is defined as follows. Call $\sigma^{(i)}$ the configuration which coincides with $\sigma$ but for the site $i$ i.e.   
+\EQ{\sigma^{(i)} : \begin{cases} \sigma_j^{(i)} = \sigma_j & i \neq j \\ \sigma_i^{(i)} = -\sigma_i \end{cases}} 
+  and let $\Delta E_i(\sigma) \equiv E(\sigma^{(i)}) - E(\sigma)$. At each step, an integer $i \in [N]$ is chosen randomly with flat probability distribution and the spin $\sigma_i$ is flipped with probability
+ \EQ{w_i(\sigma) = \exp \{-\beta \max[\Delta E_i(\sigma),0]\} = min \{1,\frac{\mu_\beta(\sigma^{(i)})}{\mu_\beta(\sigma)}\}}
+We can write transition probability matrix as
+\EQ{w(\sigma \to \tau) = \begin{cases} \frac{1}{N}w_i(\sigma) & \tau = \sigma^{(i)} \;\; \forall i = 1,2,\dots,N \\
+1 - \frac{1}{N}\sum\limits_{i=1}^{N}w_i(\sigma) & \tau = \sigma \\
+0 & otherwise \end{cases}}
+Consider the detailed balance equation with respect to $\mu_\beta$
+\EQ{\mu_\beta(\sigma)w_i(\sigma) = min\{\mu_\beta(\sigma),\mu_\beta(\sigma^{(i)})\} = \mu_\beta(\sigma^{(i)}) w_i(\sigma^{(i)})}
+Thus the chain is Irreducible and Reversible.
+\end{exmp}
+\end{shaded}
+\subsection{General base chain}
+The Metropolis chain can also be defined when the initial transition matrix is not symmetric. For a general (irreducible) transition matrix $\psi$ and an arbitrary probability distribution $\pi$ on $\sX^N$, the Metropolized chain is executed as follows. When at state $x$, generate a state $y$ from $\psi(x,\cdot)$. Move to y with probability
+\EQ{\frac{\pi(y)\psi(y,x)}{\pi(x)\psi(x,y)} \wedge 1} and remain at x with  the complementary probability. The transition matrix $P$ for this chain is
+	
+\EQ{P(x,y) = \begin{cases}\psi(x,y)\left[1 \wedge \frac{\pi(y)\psi(y,x)}{\pi(x)\psi(x,y)}\right] & if \; y \neq x \\ 1 - \sum\limits_{z:z \neq x} \psi(x,z)\left[1 \wedge \frac{\pi(z)\psi(z,x)}{\pi(x)\psi(x,z)}\right] & if \; y = x \end{cases}}
+\section{Glauber Dynamics}
+Glauber Dynamics is similar to Metropolis chains.
+The chain evolves as follows: From state $x$ , we choose $v \in [N]$ uniformly at random and move to new state according to $\pi^{x,v}$ defined as
+\EQ{\pi^{x,v}(y) = \pi(y | \Omega(x,v)) = \begin{cases}
+\frac{\pi(y)}{\pi(\Omega(x,v))} & if \; y \in \Omega(x,v) \\
+0 & if \; y \not\in \Omega(x,v)\end{cases}}
+where $\Omega(x,v) = \{y \in \sX^N : y(w) = x(w)\; \forall w \neq v \}$.
+\begin{shaded}
+\begin{exmp}[Glauber Dynamics for N-particle system]
+For this system $\Omega(\sigma,i) = \{\sigma,\sigma^{(i)} \}$.
+Thus,
+\EQ{w_i(\sigma) = \pi^{\sigma,i}(\sigma^{(i)}) = \frac{\mu_\beta(\sigma^{(i)})}{\mu_\beta(\sigma^{(i)}) + \mu_\beta(\sigma)} = \frac{exp(-\beta E(\sigma^{(i)}))}{exp(-\beta E(\sigma^{(i)})) + exp(-\beta E(\sigma))}}
+\EQ{w_i(\sigma) = \frac{1}{1 + exp(\beta \Delta E_i(\sigma))} = \frac{1}{2}\left[1 - \frac{exp(\beta \Delta E_i(\sigma)) - 1}{exp(\beta \Delta E_i(\sigma)) + 1} \right]}
+\EQ{w_i(\sigma) = \frac{1}{2}\left[ 1 - \tanh\left(\frac{\beta \Delta E_i(\sigma)}{2}\right)\right]}
+
+We can write transition probability matrix as
+\EQ{w(\sigma \to \tau) = \begin{cases} \frac{1}{N}w_i(\sigma) & \tau = \sigma^{(i)} \;\; \forall i = 1,2,\dots,N \\
+1 - \frac{1}{N}\sum\limits_{i=1}^{N}w_i(\sigma) & \tau = \sigma \\
+0 & otherwise \end{cases}}
+Consider the detailed balance equation with respect to $\mu_\beta$
+\EQ{\mu_\beta(\sigma)w_i(\sigma) = \frac{\mu_\beta(\sigma)\mu_\beta(\sigma^{(i)})}{\mu_\beta(\sigma^{(i)}) + \mu_\beta(\sigma)} = \mu_\beta(\sigma^{(i)})w_i(\sigma^{(i)})}
+Thus the chain is Irreducible and Reversible.
+\end{exmp}
+\end{shaded}
+\end{document}
