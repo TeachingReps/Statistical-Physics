@@ -2,7 +2,8 @@
 % !TEX spellcheck = LaTeX
 \documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
-\graphicspath{{./Figures/}}
+
+
 
 \title{Lecture-13: The Monte Carlo Method}
 
@@ -120,4 +121,19 @@ Consider the detailed balance equation with respect to $\mu_\beta$
 Thus the chain is Irreducible and Reversible.
 \end{exmp}
 \end{shaded}
+
+\begin{defn}
+Given a configuration space $\sX^V$ for a graph $G = (V,E)$, we can define \textbf{Glauber dynamics} or \textbf{Gibbs sampler} to be a the following reversible Markov chain which has stationary distribution $\pi$, 
+and transition probabilities 
+\EQ{
+P(x,y) = \begin{cases}
+\frac{1}{N}\frac{\pi(y)}{\pi(s(x,y))}, &y \in s(x),\\
+0, & y \notin s(x).
+\end{cases}
+}
+Here we define $V(x,y) = \set{v \in V: x \neq y}$, and the set of possible transitions $s(x) = \set{y \in \sX^V: \abs{V(x,y)} = 1}$, and the set of possible transitions at vertex $V(x,y)$ as  $s(x,y)= \set{z \in \sX^V: z_w = x_w, w \notin V(x,y)}$. 
+\end{defn}
+\begin{exerc}
+Show that the Glauber dynamics is a reversible Markov chain with the stationary distribution $\pi$. 
+\end{exerc}
 \end{document}
