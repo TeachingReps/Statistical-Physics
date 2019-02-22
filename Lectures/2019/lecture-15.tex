@@ -22,7 +22,7 @@ Since the Markov chain $X$ is irreducible and aperiodic,
 there exists a positive integer $r$ such that $P^r$ has strictly positive entries. 
 Let $\Pi$ be the matrix with $\abs{\sX}^N$ rows, 
 each of which is the row vector $\pi$. 
-We chose a $\delta > 0$  sufficiently small such that 
+We choose a $\delta > 0$  sufficiently small such that 
 \EQ{
 \delta \le \min\set{\frac{P^r(x,y)}{\pi(y)}: x, y \in \sX^N}.
 } 
@@ -38,12 +38,12 @@ We assume the inductive hypothesis holds true for $k =n$,  then
 \EQ{
 P^{r(n+1)} = P^{rn}P^r = [(1-\bar{\delta}^n)\Pi+\bar{\delta}^nQ^n]P^r = (1-\bar{\delta}^n)\Pi + \bar{\delta}^nQ^n((1- \bar{\delta})\Pi + \bar{\delta}Q). 
 }
-The first equality follows from the fact that $\Pi P^r = \Pi$ and the second equality from the definition of stochastic matrix $Q$. 
+The second equality follows from inductive hypothesis and the last equality follows from definition of stochastic matrix $Q$ and the fact that $\Pi P^r = \Pi$. 
 Since $Q^n\Pi = \Pi$, we have 
 \EQ{
 P^{r(n+1)} = (1-\bar{\delta}^n)\Pi + \bar{\delta}^nQ^n((1- \bar{\delta})\Pi + \bar{\delta}Q) = (1-\bar{\delta}^{n+1})\Pi +  \bar{\delta}^{n+1}Q^{n+1}. 
 }
-Hence, the result follows from the induction. 
+Hence, the result follows from induction. 
 By post-multiplication with $P^j$, we get 
 \EQ{
 P^{rk+j} - \Pi = \bar{\delta}^k(Q^kP^j- \Pi).
@@ -60,22 +60,26 @@ for $\alpha = \bar{\delta}^{1/r}$ and $C = 1/\bar{\delta}$.
 \begin{defn}
 The maximal distance between $t$-step distribution $\pi^t$ and stationary distribution $\pi$ over all initial configurations $x \in\sX^N$ is defined as 
 \EQ{
-d(t) \triangleq \max_{x \in \sX^N}\norm{P^t(x, \cdot), \pi(x)}_{\text{TV}}.
+d(t) \triangleq \max_{x \in \sX^N}\norm{P^t(x, \cdot) - \pi}_{\text{TV}}.
 }
 The maximal distance between $t$-step distributions $P^t(x, \cdot)$ and $P^t(y, \cdot)$ over all initial configurations $x, y \in\sX^N$ is defined as 
 \EQ{
-\bar{d}(t) \triangleq \max_{x \in \sX^N}\norm{P^t(x, \cdot), \pi(x)}_{\text{TV}}.
+\bar{d}(t) \triangleq \max_{x, y \in \sX^N}\norm{P^t(x, \cdot) - P^t(y, \cdot)}_{\text{TV}}.
 }
 \end{defn}
-\begin{lem} The following relation between maximal distances is true, 
+\begin{lem} 
+\label{lemma:d_bar_d_relation}
+The following relation between maximal distances is true, 
 \EQ{
 d(t) \le \bar{d}(t) \le 2d(t). 
 }
 \end{lem}
 \begin{proof} 
 It is immediate from the triangle inequality for the total variation distance that $\bar{d}(t) \le 2d(t)$.
-To show that $d(t) ? \bar{d}(t)$, note first that since $\pi$ is stationary, 
-we have $\pi(A) = ??\sum_{y \in \sX^N}\pi(y)P^t(y, A)$ for any set $A$. 
+To show that $d(t) \le \bar{d}(t)$, note first that since $\pi$ is stationary, 
+we have $\pi(A) = \sum_{y \in \sX^N}\pi(y)P^t(y, A)$ for any set $A$ since:
+\EQ{
+\pi(A) = \sum_{a \in A} \pi(a) = \sum_{a \in A} \sum_{y \in \sX^N} \pi(y)P^t(y, a) = \sum_{y \in \sX^N} \pi(y) \sum_{a \in A} P^t(y, a) = \sum_{y \in \sX^N}\pi(y)P^t(y, A).} 
 Therefore, 
 \EQ{
 P^{t}(x,A)- \pi(A) = \sum_{y \in \sX^N}\pi(y)(P^t(x,A)- P^t(y,A)) \le  \sum_{y \in \sX^N}\pi(y)\norm{P^t(x,\cdot)- P^t(y,\cdot)}_{\text{TV}} \le \bar{d}(t), 
@@ -83,12 +87,28 @@ P^{t}(x,A)- \pi(A) = \sum_{y \in \sX^N}\pi(y)(P^t(x,A)- P^t(y,A)) \le  \sum_{y \
 by the triangle inequality and the definition of total variation. 
 Maximizing the left-hand side over $x$ and $A$ yields $d(t) \le \bar{d}(t)$.  
 \end{proof}
-\begin{exerc}
-Show the following. 
-\meq{2}{
-&d(t) = \sup_{\mu \in \sM(\sX^N)}\norm{\mu P^t - \pi}_{\text{TV}}, && \sup_{\mu, \nu \in \sM(\sX^N)}\norm{\mu P^t - \nu P^t}_{\text{TV}}.
-} 
-\end{exerc}
+\begin{prop}
+$d(t) = \sup_{\mu \in \sM(\sX^N)}\norm{\mu P^t - \pi}_{\text{TV}}$.
+\end{prop}
+\begin{proof}
+We will first show that $\sup_{\mu \in \sM(\sX^N)}\norm{\mu P^t - \pi}_{\text{TV}} \le d(t)$. To see this note that:
+\EQ{
+\norm{\mu P^t - \pi}_{\text{TV}} = \norm{\sum_{x \in \sX^N} \mu_x P^t(x, \cdot) - \pi}_{\text{TV}} \le \sum_{x \in \sX^N} \mu_x \norm{P^t(x, \cdot) - \pi}_{\text{TV}} \le d(t).
+}
+The first inequality follows from convexity of total variation distance and the second inequality is a result of the definition of $d(t)$. Taking $\sup$ over all distributions $\mu \in \sM(\sX^N)$ on left hand side proves the desired result.
+Further, let $x^\ast = \mathrm{arg}\max_{x \in \sX^N} \norm{P^t(x, \cdot) - \pi}_{\text{TV}}$ and define $\mu^\ast$ such that $\mu_x=1$ if $x = x^\ast$ and $0$ otherwise. Clearly $\mu^\ast \in \sM(\sX^N)$ and $d(t) = \norm{\mu^\ast P^t - \pi}_{\text{TV}}$, thus demonstrating the equality.
+\end{proof}
+\begin{prop}
+$\bar{d}(t) = \sup_{\mu, \nu \in \sM(\sX^N)}\norm{\mu P^t - \nu P^t}_{\text{TV}}$.
+\end{prop}
+\begin{proof}
+As in the previous proposition, we will first show that $\sup_{\mu, \nu \in \sM(\sX^N)}\norm{\mu P^t - \nu P^t}_{\text{TV}} \le \bar{d}(t)$:
+\EQ{
+\norm{\mu P^t - \nu P^t}_{\text{TV}} = \norm{\sum_{x \in \sX^N} \mu_x P^t(x, \cdot) - \sum_{y \in \sX^N} \nu_y P^t(y, \cdot)}_{\text{TV}} \le \sum_{x, y \in \sX^N} \mu_x \nu_y \norm{P^t(x, \cdot) - P^t(y, \cdot)}_{\text{TV}} \le \bar{d}(t).
+}
+As before, the first inequality follows from convexity of total variation distance and the second inequality is due to the definition of $\bar{d}(t)$. Taking $\sup$ over all distributions $\mu, \nu \in \sM(\sX^N)$ on left hand side proves the desired result.
+Moreover, if $x^\ast, y^\ast = \mathrm{arg}\max_{x, y \in \sX^N} \norm{P^t(x, \cdot) - P^t(y, \cdot)}_{\text{TV}}$ and $\mu^\ast, \nu^\ast$ are defined such that $\mu_x=1 (\nu_y = 1)$ if $x = x^\ast (y = y^\ast)$ and $0$ otherwise then clearly $\mu^\ast, \nu^\ast \in \sM(\sX^N)$ and $\bar{d}(t) = \norm{\mu^\ast P^t - \nu^\ast P^t}_{\text{TV}}$, thus demonstrating the equality.
+\end{proof}
 \begin{lem}
 The function $\bar{d}$ is sub-multiplicative. 
 That is, $\bar{d}(s + t) \le \bar{d}(s)\bar{d}(t)$. 
@@ -108,5 +128,12 @@ Hence, we can write for a set $A$,
 \EQ{
 P^{s+t}(x, A) - P^{s+t}(y, A) = \E[P^t(X_s, A) - P^t(Y_s, A)] \le \E[\bar{d}(t)\indicator{X_s \neq Y_s}] = \bar{d}(t)P\set{X_s \neq Y_s}.
 }
+\end{proof}
+
+\begin{prop}
+For any $c, t \in \Z_+$, $d(ct) \le \bar{d}(ct) \le \bar{d}(t)^c$.
+\end{prop}
+\begin{proof}
+The first inequality is a direct consequence of Lemma \ref{lemma:d_bar_d_relation} whereas the second inequality is due to the fact that $\bar{d}$ is sub-multiplicative.
 \end{proof}
 \end{document}
