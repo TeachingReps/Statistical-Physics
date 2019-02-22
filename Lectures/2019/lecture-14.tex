@@ -2,10 +2,7 @@
 % !TEX spellcheck = LaTeX
 \documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
-<<<<<<< HEAD
 \graphicspath{{./Figures/}}
-=======
->>>>>>> 7b743ac6e2c986957da0fa761b1728db419eff97
 
 \title{Lecture-14: Total Variation Distance}
 
@@ -16,7 +13,7 @@
 We have seen that Monte Carlo sampling methods give us the desired stationary distribution starting from a base Markov chain. 
 Assuming one step of the Markov chain takes unit time, 
 we can compare their computational efficiency in terms of number of operations needed per sample,  
-and the number of sampled needed to reach \textit{close enough} to the desired stationary distribution. 
+and the number of samples needed to reach \textit{close enough} to the desired stationary distribution. 
 
 \subsection{Total variation distance}
 The closeness of two distributions can be measured by the following distance metric.
@@ -28,6 +25,7 @@ The \textbf{total variation distance} between two probability distributions $\mu
 \end{defn}
 This definition is probabilistic in the sense that the distance between $\mu$ and $\nu$ is the maximum difference between the probabilities assigned to a single event by the two distributions. 
 \begin{prop}
+\label{prop:equivalenceOfTvDefinitions}
 Let $\mu$ and $\nu$ be two probability distributions on the configuration space $\sX^N$. 
 Let $B = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$, then 
 \EQ{
@@ -51,14 +49,26 @@ Thus, we get that
 \norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}[\mu(B)-\nu(B) + \nu(B^c)-\mu(B^c)] = \frac{1}{2}\sum_{x \in \sX^N}\abs{\mu(x)-\nu(x)}.
 }
 \end{proof}
-\begin{exerc}
-Show that $\norm{\mu-\nu}_{\text{TV}}$ is a distance.  
-\end{exerc}
 \begin{prop}
-Let $\mu$ and $\nu$ be two probability distributions on the configuration space $\sX^N$. 
-For any observable $f: \sX^N \to \R$, we have 
+For probability distributions $\mu$ and $\nu$ on configuration space $\sX^N$, $\norm{\mu-\nu}_{\text{TV}}$ is a distance.
+\end{prop}
+\begin{proof}
+Note from Proposition \ref{prop:equivalenceOfTvDefinitions} that $\norm{\mu-\nu}_{\text{TV}} = \sum_{x \in B}[\mu(x) - \nu(x)]$, where $B = \set{x \in \sX^N: \mu(x) \geq \nu(x)}$, hence $\norm{\mu-\nu}_{\text{TV}} \geq 0$. The set $B$ can not be empty as $\mu$ and $\nu$ are probability distributions and one can not dominate the other for all $x \in \sX^N$. Similarly $\mu(x) = \nu(x), \forall x \in B$ iff $B = \sX^N$. Thus, $\norm{\mu-\nu}_{\text{TV}} = 0$ iff $\mu = \nu$. To verify that $\norm{\mu-\nu}_{\text{TV}} = \norm{\nu-\mu}_{\text{TV}}$, note that:
 \EQ{
-\norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}\sup\set{\sum_{x \in \sX^N}f(x)\mu(x) - \sum_{x \in \sX^N}f(x)\nu(x): \max_{x \in \sX^N}\abs{f(x)} \le 1}.
+\norm{\mu-\nu}_{\text{TV}} = \sum_{x \in B}[\mu(x) - \nu(x)] = \sum_{x \in B^c}[\nu(x) - \mu(x)] = \norm{\nu-\mu}_{\text{TV}}
+}
+Finally, let $\pi$ be a probability distribution over configuration space $\sX^N$. Then,
+\begin{align*}
+\norm{\mu-\nu}_{\text{TV}} &= \frac{1}{2} \sum_{x \in \sX^N} \abs{\mu(x) - \nu(x)} \\
+&\leq \frac{1}{2} \sum_{x \in \sX^N} \abs{\mu(x) - \pi(x)} + \frac{1}{2} \sum_{x \in \sX^N} \abs{\pi(x) - \nu(x)} \\
+&= \norm{\mu-\pi}_{\text{TV}} + \norm{\pi-\nu}_{\text{TV}}
+\end{align*}
+Since $\norm{\mu-\nu}_{\text{TV}}$ is positive (unless $\mu = \nu$), symmetric and obeys triangle inequality, it is a distance. 
+\end{proof}
+\begin{prop}
+Let $\mu$ and $\nu$ be two probability distributions on the configuration space $\sX^N$ and $F = \set{f:\sX^N \to \R : \max_{x \in \sX^N}\abs{f(x)} \le 1}$ be a set of observables, we have 
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}\sup\set{\sum_{x \in \sX^N}f(x)\mu(x) - \sum_{x \in \sX^N}f(x)\nu(x): f \in F}.
 }
 \end{prop}
 \begin{proof}
@@ -82,7 +92,7 @@ That is, a coupling $(X, Y)$ satisfies $P\set{X = x} = \mu(x)$ and $P\set{Y = y}
 Any two distributions $\mu$ and $\nu$ have an independent coupling. 
 However, when the two distributions are not identical, 
 it will not be possible for the random variables to always have the same value. 
-Total variation distance between $\mu$ and $\nu$ determine how close can a coupling get to having $X$ and $Y$ identical. 
+Total variation distance between $\mu$ and $\nu$ determines how close can a coupling get to having $X$ and $Y$ identical. 
 \begin{defn}
 For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
 the coupling $(X,Y)$ is \textbf{optimal} if  
@@ -110,7 +120,7 @@ p \triangleq \sum_{x \in \sX}\mu(x)\wedge\nu(x) = \mu(B^c) + \nu(B) = 1 - (\mu(B
 } 
 By the definition of $p$, the function $\frac{\mu\wedge\nu}{p}: \sX^N \to [0,1]$ is a probability distribution on $\sX^N$. 
 Let us call this distribution as $\gamma_3(x) \triangleq \frac{\mu(x)\wedge\nu(x)}{p}$. 
-We also define the following two function from the configuration space $\sX^N$ to $[0,1]$ as  
+We also define the following two functions from the configuration space $\sX^N$ to $[0,1]$ as  
 \meq{2}{
 &\gamma_1(x) \triangleq \frac{\mu(x)-\nu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \in B}, &&\gamma_2(x) \triangleq \frac{\nu(x)-\mu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \notin B}.
 }
