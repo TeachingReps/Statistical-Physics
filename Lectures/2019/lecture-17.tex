@@ -26,9 +26,13 @@ and their occupancy is set by a Boltzmann probability
 \EQ{
 \mu_\beta(j)= \frac{1}{Z_N(\beta)}e^{-\beta E_j}, Z_N(\beta) = \sum_{j=1}^{2^N}e^{- \beta E_j}.
 }
-Studying the REM thus consists of examining a probabilistic object over levels that are them- selves probabilistically distributed. Each realization of disorder is a sample, but calculating the properties of a specific sample with finite N is typically very difficult?it corresponds to finding an optimal distribution of a particular instance of a problem. We will instead average over these samples, which we denote E(·), and is typically a much easier calculation to perform. Because a lot of systems have thermodynamic potentials X that self-average, i.e., ?concentrate? as N increases, i.e., for any tolerance ? > 0
-?? ???? X N ?? X N ?? ???? ??
-lim P ?? ?E ???? =0, (3)
+Studying the REM thus consists of examining a probabilistic object over levels that are themselves probabilistically distributed. 
+The REM is a \textbf{disordered model}: the energy is not a deterministic function, but rather a stochastic process. A particular realization of such a process is usually called a \textbf{sample} (or \textbf{instance}). 
+Each realization of disorder is a sample, but calculating the properties of a specific sample with finite $N$ is typically very difficult--it corresponds to finding an optimal distribution of a particular instance of a problem. We will instead average over these samples, which we denote $\E(\cdot)$, and is typically a much easier calculation to perform. 
+Because a lot of systems have thermodynamic potentials $X$ that self-average, that is, ``concentrate'' as $N$ increases, i.e., for any tolerance $\theta > 0$
+\EQ{
+\lim_{N\to\infty}\Pr\set{\abs{\frac{X_N}{N}-\frac{\E X_N}{N}} \ge \theta} = 0,
+}
 this calculation is also meaningful for large systems. Because the concentration is also often exponential in N,
      N????N N??
 ??????XN ??XN?????? ??.?N?
