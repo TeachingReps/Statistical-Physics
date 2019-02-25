@@ -3,7 +3,7 @@
 \documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
 
-\title{Lecture-16: Mixing times}
+\title{Lecture-17: Random Energy Model}
 
 
 \begin{document}
@@ -18,39 +18,256 @@ The properties of the different realizations are indeed typically equivalent in 
 We discuss these concepts below in more details.
 
 \section{Definition}
-The simplest disordered model is the Random Energy Model (REM), which was introduced by Derrida in 1980. The position of its M = 2N energy levels is quenched, i.e., frozen or fixed,
+The simplest disordered model is the Random Energy Model (REM), which was introduced by Derrida in 1980. 
+The density function of the energy $E_i$ for state $i$ is given by 
 \EQ{
-P(E)=\sqrt{1}{\sqrt{\pi N}}e^{-E^2/N},
+P(E)=\frac{1}{\sqrt{\pi N}}e^{-E^2/N}.
 }
-and their occupancy is set by a Boltzmann probability
+The position of its $M = 2^N$ energy levels is quenched, i.e., frozen or fixed. 
+That is, $(E_1, \dots, E_{2^N})$ is a set of $2^N$ energy levels each chosen independent and identically from the distribution $P(E)$, 
+and the occupancy of state $i$ is given by the Boltzmann probability
 \EQ{
 \mu_\beta(j)= \frac{1}{Z_N(\beta)}e^{-\beta E_j}, Z_N(\beta) = \sum_{j=1}^{2^N}e^{- \beta E_j}.
 }
 Studying the REM thus consists of examining a probabilistic object over levels that are themselves probabilistically distributed. 
-The REM is a \textbf{disordered model}: the energy is not a deterministic function, but rather a stochastic process. A particular realization of such a process is usually called a \textbf{sample} (or \textbf{instance}). 
+The REM is a \textbf{disordered model}: the energy is not a deterministic function, but rather a stochastic process. 
+A particular realization of such a process is usually called a \textbf{sample} (or \textbf{instance}). 
 Each realization of disorder is a sample, but calculating the properties of a specific sample with finite $N$ is typically very difficult--it corresponds to finding an optimal distribution of a particular instance of a problem. We will instead average over these samples, which we denote $\E(\cdot)$, and is typically a much easier calculation to perform. 
 Because a lot of systems have thermodynamic potentials $X$ that self-average, that is, ``concentrate'' as $N$ increases, i.e., for any tolerance $\theta > 0$
 \EQ{
 \lim_{N\to\infty}\Pr\set{\abs{\frac{X_N}{N}-\frac{\E X_N}{N}} \ge \theta} = 0,
 }
-this calculation is also meaningful for large systems. Because the concentration is also often exponential in N,
-     N????N N??
-??????XN ??XN?????? ??.?N?
-P??N?E N ????=e X, (4) ????
-  
-sa(?) & ln(?(?,?+?))/10 0.7
-0.6 0.5 0.4 0.3 0.2 0.1
-sa(?) & ln(?(?,?+?))/19 0.7
-0.6 0.5 0.4 0.3 0.2 0.1
-sa(?) & ln(?(?,?+?))/28 0.7
-0.6 0.5 0.4 0.3 0.2 0.1
-2
-                     -0.5
-0.0
+this calculation is also meaningful for large systems. Because the concentration is also often exponential in $N$, 
+\EQ{
+\lim_{N\to\infty}\Pr\set{\abs{\frac{X_N}{N}-\frac{\E X_N}{N}} \ge \theta} \overset{\cdot}{=} e^{-N\delta_X},
+}
+where $\delta_X$ is a positive constant that may depend on the thermodynamic potential. 
+Because this is the case for the REM, $\E X_N$ is often a good estimate, 
+even for systems with finite $N$. 
+
+\section{REM thermodynamics}
+Let us now calculate the partition function of the disorder-averaged REM. 
+
+\subsection{Entropy}
+Consider an energy interval $\cI = [N\epsilon, N (\epsilon + \delta)]$, 
+and the number of energy levels within that interval $\cN (\epsilon, \epsilon + \delta)$. 
+For each state $i$, the probability that $E_i \in \cI$ is independent from other states is given by 
+\EQ{
+P_\cI  = \sqrt{\frac{\pi}{N}}\int_{\epsilon}^{\epsilon+\delta}e^{-Nx^2}dx,
+}
+by changing the variable $x = E/N$, integrated with $dx = dE/N$ for the variable $x \in [\epsilon, \epsilon+\delta]$. 
+Therefore, it follows that $\cN (\epsilon, \epsilon + \delta) = \sum_{i=1}^{2^N}\indicator{E_i \in \cI}$ is binomially distributed, as sum of $2^N$ \emph{i.i.d.} Bernoulli random variables with mean $P_\cI$. 
+It follows that 
+\meq{3}{
+&\E\cN(\epsilon, \epsilon + \delta)  = 2^N P_\cI,&
+&\Var{\cN(\epsilon, \epsilon + \delta)} = 2^NP_\cI(1-P_\cI),&
+&\frac{\Var{\cN (\epsilon, \epsilon + \delta)}}{(\E\cN(\epsilon, \epsilon + \delta))^2} = 2^{-N}\left(\frac{1}{P_\cI}-1\right) \approx \frac{1}{2^NP_\cI}.
+}
+Defining $s_a(x) \triangleq \ln 2 - x^2$, we observe that 
+\meq{2}{
+&\E\cN(\epsilon, \epsilon + \delta)  \stackrel{\cdot}{=} \exp\left[N\max_{x \in [\epsilon, \epsilon+\delta]}s_a(x)\right],&
+&\frac{\Var{\cN (\epsilon, \epsilon + \delta)}}{(\E\cN(\epsilon, \epsilon + \delta))^2} \stackrel{\cdot}{=} \exp\left[-N\max_{x \in [\epsilon, \epsilon+\delta]}s_a(x)\right].
+}
+%by taking the saddle point approximation. 
+Note also that $s_a(x) \ge 0$ iff $x \in [-\epsilon^\ast, \epsilon^\ast]$ where $\epsilon^\ast = \sqrt{\ln2}$.  
+
+When $\epsilon \notin [-\epsilon^{\ast}, \epsilon^\ast]$, the average density of energy levels is exponentially small in $N$: for a typical sample, there is no configuration at energy $E_i \approx N\epsilon$. 
+In contrast, when $\epsilon \in (-\epsilon^{\ast}, \epsilon^\ast)$, 
+there is an exponentially large density of levels, and the fluctuations of this density are very small. 
+This result is illustrated by a small numerical experiment in Fig. 5.1. 
+
+\begin{prop}
+Defining the entropy function 
+\EQ{
+s(\epsilon) = 
+\begin{cases}
+s_a(\epsilon), & \abs{\epsilon} \le \epsilon^\ast,\\
+-\infty, & \abs{\epsilon} > \epsilon^\ast.
+\end{cases}
+}
+then, for any pair $\epsilon$ and $\delta$, with probability one 
+$\lim_{N\to\infty}\cN(\epsilon, \epsilon+\delta) = \sup_{x \in [\epsilon, \epsilon+\delta]}s(x)$.
+\end{prop}
+\begin{proof}
+Assume an interval $[\epsilon, \epsilon+\delta]$ disjoint from $[-\epsilon^\ast, \epsilon^\ast]$, 
+and 
+\EQ{
+\E\cN(\epsilon, \epsilon+\delta) \stackrel{\cdot}{=}e^{-AN},
+}
+where $A = \sup_{x \in [\epsilon, \epsilon+\delta]}s_a(x) > 0$. 
+Since $\cN$ is an integer, we have from Markov inequality 
+\EQ{
+P\set{\cN(\epsilon, \epsilon+\delta)> 0} \le \E\cN(\epsilon, \epsilon+\delta) \le e^{-AN}.
+}
+That is, the probability of having an energy level in a fixed interval outside of $[-\epsilon^\ast, \epsilon^\ast]$ is exponentially small in $N$.
+\end{proof}
+
+\section{Phase transitions}
+Looking at the thermodynamic limit $\lim_{N \to \infty}$and then taking $\lim_{\delta \to 0}$, 
+we get to exponential order that
+\EQ{
+Z_N(\beta) \stackrel{\cdot}{=} \int_{-\epsilon^\ast}^{\epsilon^\ast}e^{N(s_a(\epsilon)-\beta\epsilon)}d\epsilon.
+}
+By analogy with our discussion in Chapter 2 about the concentration around the saddle
+point in the thermodynamic limit, (but noting that there is an additional difficulty because the energy levels are now themselves fluctuating), we get
+\EQ{
+\phi(\beta)=\lim_{N\to\infty}\frac{1}{N}\ln Z_N(\beta) = \max_{\epsilon \in [-\epsilon^\ast, \epsilon^\ast]} [s_a(\epsilon) -\beta\epsilon] = 
+\begin{cases}
+\frac{\beta^2}{4}+\ln 2, & \beta \le \beta_c\\
+\beta\sqrt{\ln 2}, & \beta > \beta_c,
+\end{cases}
+}
+for $\beta_c = 2\sqrt{\ln2}$. 
+This point is a second-order phase transition, which in the language of disordered systems is also often called a `random first-order' transition (we will come back to the meaning of this label later). 
+This geometrical construction can be seen in Fig. 2.
+
+\subsubsection{Properties of two phases}
+\begin{itemize}
+\item In the high-temperature phase, i.e., $\beta \le \beta_c, u(\beta) = -\beta/2$ and $s(\beta) = \ln2- \beta^2/4$, 
+hence the Boltzmann measure is dominated by configurations with an energy $E_i \approx -N\beta/2$, 
+and the model tends to random spins as $\beta \to 0$. 
+
+\item In the low-temperature phase, i.e., $\beta > \beta_c, u(\beta) = \epsilon^\ast$ and $s(\beta) = 0$, hence the Boltzmann measure is dominated by a set of levels of constant energy, whose number grows sub-exponentially with $N$. 
+\end{itemize}
+\end{document}
+ sa(?) 0.8
+0.6 0.4 0.2
+-0.2 -0.4
+0.5
+-0.5 ? -1.0 -1.5
+0.5 1.0
+1.5 2.0
+T
+                                                                               -1.0 -0.5
 0.5
 1.0
-??? -0.5 0.0 0.5 1.0 -0.5 0.0 0.5 1.0
-FIG. 1: Result from counting the states in realization with N=10, 19, and 28 states, compared with the analytical result for N ? ?, from Eq. 11.
-where ?X is a positive constant that may depend on the thermodynamic potential. Because this is the case for the REM, E(XN ) is often a good estimate, even for systems with finite N.
+             s(T) f(T) e(T)
+      FIG. 2: (left) Solving for the entropy. (right) Summary of the various thermodynamics functions.
+B. Phase transition
 
+C. Condensation Phenomenon
+In order to measure the degree of concentration of the measure, we define the participation ratio function
+2N ?? e?2?Ej ??2j
+Z N2 ( ? )
+In general, in the limit ? ? 0, the participation is distributed evenly over all the 2N levels,
+hence we get YN (0) = 1/2N . If we take the low-temperature setup used in Chapter 2, we would get instead YN(? ? ?) = 1/|?0|. In other words, very few states meaningfully contribute to the partition function.
+?
+? For the high-temperature phase of the REM, i.e., for ? ? ?c = 2 ln 2, we have
+YN(?)?
+= ZN(2?)
+5
+ j=1
+??(j)=???? ??E ??2 (22) je j
+(23)
+  . eN(ln2+4?2/4) ?N(ln2??2/2) EYN(? < ?c) = e2N(ln2+?2/4) = e ,
+(24) which decays exponentially with N. The measure is therefore broadly distributed at
+ high temperatures, i.e., limN?? YN(? < ?c) = 0. ? At low temperatures, a naive calculation gives
+EYN(? > ?c) = 1, (25)
+which is inaccurate ? although a single (ground) state is indeed in control when ? ? ?. The problem is due to the fact that the subexponential terms in N should be taken into account in the calculation. Because they have been neglected in the calculation of ZN (?), they do not appear here. In reality, YN (?) is finite and fluctuates a lot from sample to sample (as suggested by the above calculation). It is shown in Appendix A that in the thermodynamic limit, we instead get
+?
+EY (?) = ? 0 ? < ?c . (26)
+?1??c ???c ?
+ 
+6 Hence, we see that condensation begins at ?c, and that the measure becomes increas-
+ingly concentrated until the ground state dominates, as T ? 0. D. Annealed vs. Quenched
+When the free energy density is self-averaging, the value of ?N is roughly the same for all samples and can be calculated through the quenched average
+1
+?N,q = NElnZN, (27)
+but in general it can be quite difficult to compute this quantity. The annealed average
+?N,a = 1 lnEZN, (28) N
+allows the energy levels themselves to thermalize and gives here
+2N ???2 2
+EZN = E??e??Ei = 2NEe??E = 2N i=1
+which means that
+By chance, for this model the result is the same as the high-temperature result, but it completely misses the phase transition and gives a negative entropy below ?c. This negative entropy is a clear signal of failure of the calculation.
+The reason for the failure is as follows. For a given sample with a free energy density fN (?), the partition function behaves as
+ZN = exp[??NfN(?)] (31)
+Self-averaging means that fN(?) has small sample-to-sample fluctuations. These fluctua- tions, however, do exist and their impact is amplified by the factor of N in the exponent. The partition function can thus be dominated by some very rare samples, i.e., those with an anomalously low value of fN (?).
+Consider, for instance, the low-temperature limit. We know that in almost all samples the configuration with the lower energy density is found at Ei ? N??. There exist, however, exceptional samples, where one configuration has an energy smaller Ei = ?N? with ? > ??. Because these samples are exponentially rare (with probability =. 2Ne?N?2, they are irrelevant for the quenched average, but they dominate the annealed average.
+  dEe?E /Ne??E = 2NeN? /4, (29) ?N,a =?2/4+ln2. (30)
+??
+
+Using the identity
+we get (for M = 2N )
+1???
+te?tZdt, ?????M??
+EYN (?) = E
+= ME
+= ME ???
+(A1)
+dt (A2) (A3)
+dt (A4) (A5)
+(A6)
+(A7)
+Appendix A: REM Condensation
+= M
+where we have separated the averaging over E1 and E?=1 as
+Z2 =
+te?t ??Mj=1 e??Ej ?? e?2?Ej
+te?2?E1?t??j=1 e j dt
+??? ??E??M??Ej
+0
+0
+te?2?E1?te 1 e?t ta(t)[1 ? b(t)]M?1dt
+j=2 e
+?? ?2?E?te??E
+a(t) ? e dP(E)
+???? te??E??
+b(t) ? 1 ? e dP(E).
+In order to get information about the scaling of P(E) at low temperatures, we need to expand around the function around the ground state energy. The strategy below is to identify its first sub-extensive correction. We thus consider a regime where for a system of 2N states the probability of having a state of energy ?N?0 is high, hence we get
+N 2N ?N?2
+2 P(?N?0)=? e 0 ?1, (A8)
+?N
+which corresponds to an estimate of the ground state in a finite N system. Taking the log
+7
+ 0
+j=1 M ??E
+??? 0
+0
+  on both sides and solving for ?0 gives in the large N limit ??1?
+?0= ln2?Nln ?N
+? 1 ? ?2 = ln2? ? ln ?N+O(N )
+N2 ln2 ?
+????1ln ?N, 2?? N
+(A9) (A10)
+(A11)
+          which includes the asymptotic correction to the ground state energy ?? = ?ln 2.2 2 Note the missing N in Eq. (5.22) ? see book errata.
+ Because we expect the energy in the low-temperature phase to be concentrated around its ground
+ 
+state ?0, we make an expansion around it by writing3 E = ?N? + u
+t = ze?N??0
+We then get that in the large N limit lnP(E)=?ln ?N?
+(A12) (A13)
+(A14)
+(A15) (A16)
+(A17)
+(A18) (A19)
+(A20) (A21)
+?
+=?N?2? +2??u+?(1/N)
+(N?0 +u)2 N
+8
+  ?
+where ?c = 2
+? ln ??2?N e?cu??
+ln 2, and hence we get that in the low energy limit
+P(E)? 1e?cu. M
+  We thus obtain (note that large u corrections quickly vanish)
+1 ?? ?
+??u e2N??0
+= M? z?c/??2?(2 ? ?c/?)
+due?cu?2?u?ze
+1??? ?? ??u?? 1
+a(t) ? M e2N??0
+  EY (?) = ??(2 ? ?c/?) = 1 ? ?c/?
+dzz?c/??1e? ?(??c/?)z
+??
+due??cu 1?e?ze =?M?z?c/??(??c/?)
++ ?(N?1)
+b(t)? M
+Noting that [1 ? b(t)]M?1 =. e?Mb(t) and after doing the proper change of variables, one
+  ??
+obtains in the low T limit
+1 ??? 1 ?c/?
+  in the large N limit and low T limit.
 \end{document}
