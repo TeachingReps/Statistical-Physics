@@ -13,12 +13,12 @@ Magnetic moments of different molecules interact with each other.
 In many materials, the energy is lower when the moments align. 
 
 A simple mathematical model for considering a number of particles with interacting moments is the Ising model, which describes the magnetic moments by Ising spins localized at the vertices of a certain region of a $d$-dimensional cubic lattice $\L$. 
-The cubic lattice $\L$ is determined by the vertices $[L]^d$ and the edges $((i,j) \in [L]^d \times [L]^d: \sum_{k=1}^d\abs{i_k-j_k} = 1)$ between the nearest neighbors.  
+The cubic lattice $\L$ is determined by the vertices $[L]^d$ and the edges $F \triangleq ((i,j) \in [L]^d \times [L]^d: \sum_{k=1}^d\abs{i_k-j_k} = 1)$ between the nearest neighbors.  
 At each coordinate $i \in [L]^d$, the configuration of a particle is an Ising spin $\sigma_i \in \sX = \{-1,1\}$. 
 We have shown an example configuration of Ising spins for $L=5$ and $d=2$ in Figure~\ref{figure:IsingSpins}. 
 
 %\red{Insert figure here}
-\begin{figure}
+\begin{figure}[hhh]
 \centering
 \input{./Figures/IsingSpins}
 \caption{A configuration of a two-dimensional Ising model with L = 5. There is an Ising spin $\sigma_i$ on each vertex $i$, shown by an arrow pointing up if $\sigma_i = 1$ and pointing down if $\sigma_i = -1$.
@@ -35,7 +35,7 @@ The space of configuration is $\sX^N = \{-1,1\}^N$.
 The energy of an $N$ particle configuration $\sigma$ is given by
 \EQN{
 \label{eqn:EnergyOfNparticleConfig}
-E(\sigma) = - \sum_{(i,j)} \sigma_i \sigma_j - B \sum_{i \in [L]^d} \sigma_i.
+E(\sigma) = - \sum_{(i,j) \in F} \sigma_i \sigma_j - B \sum_{i \in [L]^d} \sigma_i.
 }
 where the sum over $(i,j)$ runs over all the unordered pairs of sites $i,j \in [L]^d$ which are nearest neighbors and $B$ is the applied external magnetic field. 
 
@@ -63,19 +63,29 @@ The ground state is $\sigma_+$ if $B>0$ and the ground state is $\sigma_-$ if $B
 %
 %\subsection{}
 %In an earlier discussion on Ising model, some of its qualitative properties were studied. The energy in the two limiting cases - infinite temperature ($\beta \to 0$) and zero temperature ($\beta \to \infty$) - were briefly discussed. It was learnt that temperature impacts the energy of the system, and thereby the spins. In the high-temperature limit there were no spin patterns, and the configurations were uniformly random. However, in the low-temperature limit the response of the system - configurations with all spins pointing up and/or down - was determined by the presence or absence of an external magnetic field ($B$). 
-To analyse this behavior upon the application of a magnetic field, 
+To analyze this behavior upon the application of a magnetic field, 
 We define a \textit{rescaled} magnetic field $x=\beta B$, with $\beta \to 0$ or $\beta \to \infty$, keeping $x$ fixed. 
 With this, we will subsequently study some of the qualitative properties of the resultant model.
 
-\begin{defn}[Expected Spin] Consider a ferromagnetic Ising model whose energy function is given by,
-$$E(\underline{\sigma}) = -\sum_{(ij)}\sigma_{i}\sigma_{j} - B \sum_{i\in \mathbb{L}}\sigma_{i}.$$
+\begin{defn}[Expected spin] 
+ For any particle $i \in [L]^d$, the expected spin with respect to the Boltzmann distribution is given by 
+ \EQ{
+ \inner{\sigma_i} = \sum_{\sigma \in \sX^N}\mu_\beta(\sigma)\sigma_i.
+ }
+ \end{defn}
+ We can write the scaled energy function for the ferromagnetic Ising model as
+\EQ{
+-\beta E(\sigma) = \beta \sum_{(i, j) \in F}\sigma_{i}\sigma_{j} + x \sum_{i\in [L]^d}\sigma_{i}. 
+}
+When $\beta \to 0$ with $x$ fixed, we would have $-\beta E(\sigma) = x \sum_{i\in [L]^d}\sigma_{i}$, 
+corresponding to non-interacting systems, 
 Let us assume that the spins are non-interacting, then, the total energy of the system due to all possible configurations is given by,
 \begin{equation}
-E(\underline{\sigma}) = - B \sum_{i\in \mathbb{L}}\sigma_{i}.
+E(\sigma) = - B \sum_{i\in \mathbb{L}}\sigma_{i}.
 \end{equation}
 The corresponding partition function is
 \begin{align}
-Z(\beta) &= \sum_{\underline{\sigma}}\exp(-\beta E(\underline{\sigma})),\nonumber\\  
+Z(\beta) &= \sum_{\sigma}\exp(-\beta E(\sigma)),\nonumber\\  
 Z(\beta) &= \sum_{\sigma_{1}=\sigma_{2}=\ldots=\sigma_{N} = \pm 1}\exp(\beta B \sum_{i\in \mathbb{L}}\sigma_{i}).
 \end{align}
 The partition function for a single spin with energy            $E(\sigma_{i}) = -B\sigma_{i}$ is therefore,
@@ -105,11 +115,10 @@ From Fig. 1, it can be observed that at low temperatures ($\beta \to \infty$) al
 	\tanh(x), & \quad \text{for } \beta \to 0 \\
 	\tanh(Nx), & \quad \text{for } \beta \to \infty
 	\end{cases}	\]
-\end{defn}
+
 \begin{defn}[Average Magnetization] The extent of alignment in a region due to an external magnetic field ($B$) is given by average magnetization,
 	$$M_{N}(\beta,B)=\frac{1}{N}\sum_{i\in \mathbb{L}}\langle\sigma_{i}\rangle$$
 $M_{N}(\beta,B)$ is an odd function of $B$ due to the symmetry between up and down directions, as a consequence, $M_{N}(\beta,0) = 0$. 
-
 \end{defn}
 
 \begin{defn}[Spontaneous Magnetization] The alignment in a region due to an external magnetic field can be analysed using spontaneous magnetization,
@@ -131,8 +140,8 @@ A few remarks about spontaneous magnetization,
 \includegraphics[width=\textwidth]{Figures/oned.png}
 \caption{Illustration of an one-dimensional model with sites and their respective spins (arrows)}
 \end{figure}
-Consider a one-dimensional system ($d=1$) of $N$ spins, with energy ($E(\underline{\sigma})$)
-$$E(\underline{\sigma})=-\sum_{i=1}^{N-1}\sigma_{i}\sigma_{i+1}-B\sum_{i=1}^{N}\sigma_{i}.$$
+Consider a one-dimensional system ($d=1$) of $N$ spins, with energy ($E(\sigma)$)
+$$E(\sigma)=-\sum_{i=1}^{N-1}\sigma_{i}\sigma_{i+1}-B\sum_{i=1}^{N}\sigma_{i}.$$
 The partial partition function where the configurations of all spins $\sigma_{1},\cdots,\sigma_{p}$ have been summed over, at fixed $\sigma_{p+1}$:
 \begin{equation}
 z_{p}(\beta,B,\sigma_{p+1})=\sum_{\sigma_{1},\hdots,\sigma_{p}}\exp\bigg[\beta\sum_{i=1}^{p}\sigma_{i}\sigma_{i+1}+\beta B \sum_{i=1}^{p}\sigma_{i}\bigg].
@@ -246,9 +255,9 @@ This makes it evident that a large susceptibility must correspond to a large cor
 The exact solution of the one-dimensional model, lead Ising to think that there couldn’t be a phase transition in any dimension. This was debunked by a qualitative theory of ferromagnetism which was put forward by Pierre Curie. It assumed the existence of a phase transition at non-zero temperature $T_{c}$ (Curie point) and a non-vanishing spontaneous magnetization for $T<T_{c}$. The dilemma was eventually solved by Onsager solution of the two-dimensional model. 
 
 Consider $N$ Ising spins $\sigma_{i}\in \{\pm 1\}$ and a configuration $\sigma = (\sigma_{1},\hdots,\sigma_{N})$. Unlike the Ising model, the spins are not a part of a $d-$dimensional lattice, instead, they all interact in pairs. The absence of any finite-dimensional geometrical structure makes the Curie-Weiss model one among the mean-field models. The energy function, in the presence of a magnetic field $B$, is given by:
-$$E(\underline{\sigma}) = -\frac{1}{N}\sum_{(ij)}\sigma_{i}\sigma_{j}-B\sum_{i=1}^{N}\sigma_{i}.$$ 
+$$E(\sigma) = -\frac{1}{N}\sum_{(ij)}\sigma_{i}\sigma_{j}-B\sum_{i=1}^{N}\sigma_{i}.$$ 
 It needs to be mentioned that the summation over $(ij)$ involves $O(N^{2})$ terms of order $O(1)$. Therefore, the energy function is scaled by $^1/_N$ to obtain a non-trivial free-energy density in the thermodynamic limit. The instantaneous magnetization which is a function of the configuration:
-$$m(\underline{\sigma}) = \frac{1}{N}\sum_{i=1}^{N}\sigma_{i}.$$
+$$m(\sigma) = \frac{1}{N}\sum_{i=1}^{N}\sigma_{i}.$$
 
 
 \end{document}
