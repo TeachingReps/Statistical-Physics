@@ -1,0 +1,52 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-16: Mixing times}
+
+
+\begin{document}
+\maketitle
+
+
+
+There are a number of real-life systems for which disorder is frozen in, or quenched, as a result of the material preparation. 
+A typical example is an alloy with substitution disorder. 
+Although in that case we would be interested in a single realization of that disorder (a real material), it may still be useful to consider the average over all possible realizations of such disorder. 
+The properties of the different realizations are indeed typically equivalent in the thermodynamic limit. 
+We discuss these concepts below in more details.
+
+\section{Definition}
+The simplest disordered model is the Random Energy Model (REM), which was introduced by Derrida in 1980. The position of its M = 2N energy levels is quenched, i.e., frozen or fixed,
+\EQ{
+P(E)=\sqrt{1}{\sqrt{\pi N}}e^{-E^2/N},
+}
+and their occupancy is set by a Boltzmann probability
+\EQ{
+\mu_\beta(j)= \frac{1}{Z_N(\beta)}e^{-\beta E_j}, Z_N(\beta) = \sum_{j=1}^{2^N}e^{- \beta E_j}.
+}
+Studying the REM thus consists of examining a probabilistic object over levels that are them- selves probabilistically distributed. Each realization of disorder is a sample, but calculating the properties of a specific sample with finite N is typically very difficult?it corresponds to finding an optimal distribution of a particular instance of a problem. We will instead average over these samples, which we denote E(·), and is typically a much easier calculation to perform. Because a lot of systems have thermodynamic potentials X that self-average, i.e., ?concentrate? as N increases, i.e., for any tolerance ? > 0
+?? ???? X N ?? X N ?? ???? ??
+lim P ?? ?E ???? =0, (3)
+this calculation is also meaningful for large systems. Because the concentration is also often exponential in N,
+     N????N N??
+??????XN ??XN?????? ??.?N?
+P??N?E N ????=e X, (4) ????
+  
+sa(?) & ln(?(?,?+?))/10 0.7
+0.6 0.5 0.4 0.3 0.2 0.1
+sa(?) & ln(?(?,?+?))/19 0.7
+0.6 0.5 0.4 0.3 0.2 0.1
+sa(?) & ln(?(?,?+?))/28 0.7
+0.6 0.5 0.4 0.3 0.2 0.1
+2
+                     -0.5
+0.0
+0.5
+1.0
+??? -0.5 0.0 0.5 1.0 -0.5 0.0 0.5 1.0
+FIG. 1: Result from counting the states in realization with N=10, 19, and 28 states, compared with the analytical result for N ? ?, from Eq. 11.
+where ?X is a positive constant that may depend on the thermodynamic potential. Because this is the case for the REM, E(XN ) is often a good estimate, even for systems with finite N.
+
+\end{document}
