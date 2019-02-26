@@ -77,33 +77,45 @@ With this, we will subsequently study some of the qualitative properties of the 
 \EQ{
 -\beta E(\sigma) = \beta \sum_{(i, j) \in F}\sigma_{i}\sigma_{j} + x \sum_{i\in [L]^d}\sigma_{i}. 
 }
-When $\beta \to 0$ with $x$ fixed, we would have $-\beta E(\sigma) = x \sum_{i\in [L]^d}\sigma_{i}$, 
-corresponding to non-interacting systems, 
-Let us assume that the spins are non-interacting, then, the total energy of the system due to all possible configurations is given by,
-\begin{equation}
-E(\sigma) = - B \sum_{i\in \mathbb{L}}\sigma_{i}.
-\end{equation}
-The corresponding partition function is
-\begin{align}
-Z(\beta) &= \sum_{\sigma}\exp(-\beta E(\sigma)),\nonumber\\  
-Z(\beta) &= \sum_{\sigma_{1}=\sigma_{2}=\ldots=\sigma_{N} = \pm 1}\exp(\beta B \sum_{i\in \mathbb{L}}\sigma_{i}).
-\end{align}
-The partition function for a single spin with energy            $E(\sigma_{i}) = -B\sigma_{i}$ is therefore,
-\begin{align}
-Z_{i}(\beta) &= \sum_{\sigma_{i} = \pm 1}\exp(-\beta E(\sigma_{i})),\nonumber\\  
-Z_{i}(\beta) &= e^{\beta B}+ e^{-\beta B},\nonumber\\
-Z_{i}(\beta) &= 2\cosh(\beta B).
-\end{align}
-At each site, the probability of an up spin or a down spin is given by Boltzmann's distribution,
-\begin{align}
-P(\sigma_{i}) &= \frac{\exp(-\beta E(\sigma_{i}))}{Z_{i}(\beta)}.
-\end{align}
-Therefore, the average value of a single spin in a region $\mathbb{L}$ is
-\begin{align}
-\langle\sigma_{i}\rangle &= \sum_{\sigma_{i}=\pm 1}P(\sigma_{i})\sigma_{i},\nonumber\\
-\langle\sigma_{i}\rangle &= \frac{e^{\beta B}-e^{-\beta B}}{Z_{i}(\beta)},\nonumber\\
- \langle\sigma_{i}\rangle &= \tanh(\beta B).
-\end{align}
+\begin{itemize}
+\item When $\beta \to 0$ with $x$ fixed, we would have $\lim_{\beta \to 0}-\beta E(\sigma) = x \sum_{i}\sigma_{i}$, 
+corresponding to non-interacting systems, and hence 
+\EQ{
+\mu_\beta(\sigma) = \prod_{i}\mu_\beta(\sigma_i), \text { where } \mu_\beta(\sigma_i) = \frac{e^{x\sigma_i}}{e^{x}+e^{-x}}. 
+}
+Therefore, we can write $\inner{\sigma_i} = \sum_{\sigma_i = \pm 1}\sigma_i\mu_\beta(\sigma_i) = \tanh(x)$. 
+\item Contrastingly, when $\beta \to \infty$ with fixed $x$, the ground state is given by $\sigma_i = \sign(x)$ for all $i \in \L$. 
+Therefore, we can write the scaled energy function as $-\beta E(x) = \beta \sign(x)\abs{F}+ xN$. 
+Since $\abs{F} \approx Nd$, we get $-\beta E(x) = xN(\beta d+ 1)$. 
+\EQ{
+\inner{\sigma_i} = 
+}
+\end{itemize}
+%Let us assume that the spins are non-interacting, then, the total energy of the system due to all possible configurations is given by,
+%\begin{equation}
+%E(\sigma) = - B \sum_{i\in \mathbb{L}}\sigma_{i}.
+%\end{equation}
+%The corresponding partition function is
+%\begin{align}
+%Z(\beta) &= \sum_{\sigma}\exp(-\beta E(\sigma)),\nonumber\\  
+%Z(\beta) &= \sum_{\sigma_{1}=\sigma_{2}=\ldots=\sigma_{N} = \pm 1}\exp(\beta B \sum_{i\in \mathbb{L}}\sigma_{i}).
+%\end{align}
+%The partition function for a single spin with energy            $E(\sigma_{i}) = -B\sigma_{i}$ is therefore,
+%\begin{align}
+%Z_{i}(\beta) &= \sum_{\sigma_{i} = \pm 1}\exp(-\beta E(\sigma_{i})),\nonumber\\  
+%Z_{i}(\beta) &= e^{\beta B}+ e^{-\beta B},\nonumber\\
+%Z_{i}(\beta) &= 2\cosh(\beta B).
+%\end{align}
+%At each site, the probability of an up spin or a down spin is given by Boltzmann's distribution,
+%\begin{align}
+%P(\sigma_{i}) &= \frac{\exp(-\beta E(\sigma_{i}))}{Z_{i}(\beta)}.
+%\end{align}
+%Therefore, the average value of a single spin in a region $\mathbb{L}$ is
+%\begin{align}
+%\langle\sigma_{i}\rangle &= \sum_{\sigma_{i}=\pm 1}P(\sigma_{i})\sigma_{i},\nonumber\\
+%\langle\sigma_{i}\rangle &= \frac{e^{\beta B}-e^{-\beta B}}{Z_{i}(\beta)},\nonumber\\
+% \langle\sigma_{i}\rangle &= \tanh(\beta B).
+%\end{align}
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{Figures/tanh.png}
