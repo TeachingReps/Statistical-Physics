@@ -102,7 +102,7 @@ P\set{\cN(\epsilon, \epsilon+\delta)> 0} \le \E\cN(\epsilon, \epsilon+\delta) \l
 That is, the probability of having an energy level in a fixed interval outside of $[-\epsilon^\ast, \epsilon^\ast]$ is exponentially small in $N$.
 \end{proof}
 
-\section{Phase transitions}
+\subsection{Phase transitions}
 Looking at the thermodynamic limit $\lim_{N \to \infty}$and then taking $\lim_{\delta \to 0}$, 
 we get to exponential order that
 \EQ{
@@ -127,151 +127,136 @@ This geometrical construction can be seen in Fig. 2.
 
 \subsubsection{Properties of two phases}
 \begin{itemize}
-\item In the high-temperature phase, i.e., $\beta \le \beta_c, u(\beta) = -\beta/2$ and $s(\beta) = \ln2- \beta^2/4$, 
-hence the Boltzmann measure is dominated by configurations with an energy $E_i \approx -N\beta/2$, 
+\item In the high-temperature phase, i.e., $\beta \le \beta_c$, the internal energy $u(\beta) = -\pd{\phi(\beta)}{\beta} = -\frac{\beta}{2}$ and the canonical entropy $s(\beta) = \beta u(\beta) +\phi(\beta) = \ln2- \frac{\beta^2}{4}$, 
+hence the Boltzmann measure is dominated by configurations with an energy $E_i \approx -\frac{N\beta}{2}$, 
 and the model tends to random spins as $\beta \to 0$. 
 
-\item In the low-temperature phase, i.e., $\beta > \beta_c, u(\beta) = \epsilon^\ast$ and $s(\beta) = 0$, hence the Boltzmann measure is dominated by a set of levels of constant energy, whose number grows sub-exponentially with $N$. 
+\item In the low-temperature phase, i.e., $\beta > \beta_c$, the internal energy $u(\beta) = -\sqrt{\ln2} = -\epsilon^\ast$ and $s(\beta) = 0$, hence the Boltzmann measure is dominated by a set of levels of constant energy, whose number grows sub-exponentially with $N$. 
 \end{itemize}
-\end{document}
- sa(?) 0.8
-0.6 0.4 0.2
--0.2 -0.4
-0.5
--0.5 ? -1.0 -1.5
-0.5 1.0
-1.5 2.0
-T
-                                                                               -1.0 -0.5
-0.5
-1.0
-             s(T) f(T) e(T)
-      FIG. 2: (left) Solving for the entropy. (right) Summary of the various thermodynamics functions.
-B. Phase transition
-
-C. Condensation Phenomenon
-In order to measure the degree of concentration of the measure, we define the participation ratio function
-2N ?? e?2?Ej ??2j
-Z N2 ( ? )
-In general, in the limit ? ? 0, the participation is distributed evenly over all the 2N levels,
-hence we get YN (0) = 1/2N . If we take the low-temperature setup used in Chapter 2, we would get instead YN(? ? ?) = 1/|?0|. In other words, very few states meaningfully contribute to the partition function.
-?
-? For the high-temperature phase of the REM, i.e., for ? ? ?c = 2 ln 2, we have
-YN(?)?
-= ZN(2?)
-5
- j=1
-??(j)=???? ??E ??2 (22) je j
-(23)
-  . eN(ln2+4?2/4) ?N(ln2??2/2) EYN(? < ?c) = e2N(ln2+?2/4) = e ,
-(24) which decays exponentially with N. The measure is therefore broadly distributed at
- high temperatures, i.e., limN?? YN(? < ?c) = 0. ? At low temperatures, a naive calculation gives
-EYN(? > ?c) = 1, (25)
-which is inaccurate ? although a single (ground) state is indeed in control when ? ? ?. The problem is due to the fact that the subexponential terms in N should be taken into account in the calculation. Because they have been neglected in the calculation of ZN (?), they do not appear here. In reality, YN (?) is finite and fluctuates a lot from sample to sample (as suggested by the above calculation). It is shown in Appendix A that in the thermodynamic limit, we instead get
-?
-EY (?) = ? 0 ? < ?c . (26)
-?1??c ???c ?
+\subsection{Condensation Phenomenon}
+In order to measure the degree of concentration of the measure, we define the \textbf{participation ratio function}
+\EQ{
+Y_N(\beta) \triangleq \sum_{j=1}^{2^N}\mu_\beta(j) = \frac{\sum_{j=1}^{2^N}e^{-2\beta E_j}}{\left(\sum_{j=1}^{2^N}e^{-\beta E_j}\right)^2} = \frac{Z_N(2\beta)}{Z_N(\beta)^2}. 
+}
+In general, in the high temperature limit $\beta \to 0$, the participation is distributed evenly over all the $2^N$ levels,
+hence we get $Y_N (0) = 2^{-N}$. 
+If we take the low-temperature setup used in Chapter 2, we would get instead $\lim_{\beta \to \infty}Y_N(\beta) = \frac{1}{\abs{\sX_0}}$. 
+In other words, very few states meaningfully contribute to the partition function.
+\begin{itemize}
+\item For the high-temperature phase of the REM, i.e., for $\beta \le \beta_c = 2\sqrt{\ln2}$, we have
+\EQ{
+\E Y_N(\beta)\indicator{\beta \le \beta_c} \stackrel{\cdot}{=} \frac{e^{N\phi(2\beta)}}{e^{2N\phi(\beta)}} = \frac{e^{N(\ln2 + \beta^2)}}{e^{2N(\ln 2+ \frac{\beta^2}{4})}} = e^{-N(\ln2 - \frac{\beta^2}{2})}, 
+}
+which decays exponentially with $N$ for $\beta $. 
+The measure is therefore broadly distributed at high temperatures, i.e., $\lim_{N \to \infty}\E Y_N(\beta)\indicator{\beta  < \frac{\beta_c}{\sqrt{2}}} = 0$. 
  
-6 Hence, we see that condensation begins at ?c, and that the measure becomes increas-
-ingly concentrated until the ground state dominates, as T ? 0. D. Annealed vs. Quenched
-When the free energy density is self-averaging, the value of ?N is roughly the same for all samples and can be calculated through the quenched average
-1
-?N,q = NElnZN, (27)
-but in general it can be quite difficult to compute this quantity. The annealed average
-?N,a = 1 lnEZN, (28) N
+ \item At low temperatures, a naive calculation gives
+ \EQ{
+ \E Y_N(\beta)\indicator{\beta > \beta_c} = 1,
+ }
+which is inaccurate -- although a single (ground) state is indeed in control when $\beta \to \infty$. 
+The problem is due to the fact that the sub-exponential terms in $N$ should be taken into account in the calculation. 
+Because they have been neglected in the calculation of $Z_N(\beta)$, they do not appear here. 
+In reality, $Y_N (\beta)$ is finite and fluctuates a lot from sample to sample (as suggested by the above calculation). 
+It is shown in Appendix~\ref{appendix:Condensation} that in the thermodynamic limit, we instead get
+\EQ{
+\E Y(\beta) = \begin{cases}
+0, & \beta < \beta_c\\
+1- \frac{\beta_c}{\beta}, & \beta \ge \beta_c.
+\end{cases}
+}
+Hence, we see that condensation begins at $\beta_c$, and that the measure becomes increasingly concentrated until the ground state dominates, as $T \to 0$.  
+\end{itemize}
+
+\subsection{Annealed vs. Quenched}
+When the free energy density is self-averaging, the value of $\phi_N$ is roughly the same for all samples and can be calculated through the quenched average
+\EQ{
+\phi_{N,q} \triangleq \frac{1}{N}\E\ln Z_N, 
+}
+but in general it can be quite difficult to compute this quantity. 
+The annealed average
+\EQ{
+\phi_{N,a} \triangleq \frac{1}{N}\ln \E Z_N, 
+}
 allows the energy levels themselves to thermalize and gives here
-2N ???2 2
-EZN = E??e??Ei = 2NEe??E = 2N i=1
-which means that
-By chance, for this model the result is the same as the high-temperature result, but it completely misses the phase transition and gives a negative entropy below ?c. This negative entropy is a clear signal of failure of the calculation.
-The reason for the failure is as follows. For a given sample with a free energy density fN (?), the partition function behaves as
-ZN = exp[??NfN(?)] (31)
-Self-averaging means that fN(?) has small sample-to-sample fluctuations. These fluctua- tions, however, do exist and their impact is amplified by the factor of N in the exponent. The partition function can thus be dominated by some very rare samples, i.e., those with an anomalously low value of fN (?).
-Consider, for instance, the low-temperature limit. We know that in almost all samples the configuration with the lower energy density is found at Ei ? N??. There exist, however, exceptional samples, where one configuration has an energy smaller Ei = ?N? with ? > ??. Because these samples are exponentially rare (with probability =. 2Ne?N?2, they are irrelevant for the quenched average, but they dominate the annealed average.
-  dEe?E /Ne??E = 2NeN? /4, (29) ?N,a =?2/4+ln2. (30)
-??
+\EQ{
+\E Z_N =\E\sum_{i=1}^{2^N}e^{-\beta E_i} =  2^N\E e^{-\beta E_i} = 2^N\frac{1}{\sqrt{\pi N}}\int_{E \in \R}e^{-\beta E-\frac{E^2}{N}} = e^{N(\ln2+\frac{\beta^2}{4})},
+}
+which means that $\phi_{N,a} = \frac{\beta^2}{4}+\ln2$. 
+By chance, for this model the result is the same as the high-temperature result, but it completely misses the phase transition and gives a negative entropy $s(\beta) = \ln2-\frac{\beta^2}{4}$ for temperatures below $\frac{1}{\beta_c}$.  
+This negative entropy is a clear signal of failure of the calculation. 
+The reason for the failure is as follows. 
+For a given sample with a free energy density $f_N (\beta)$, the partition function behaves as 
+\EQ{
+Z_N = \exp[-\beta N f_N(\beta)].
+}
+Self-averaging means that $f_N(\beta)$ has small sample-to-sample fluctuations. 
+These fluctuations, however, do exist and their impact is amplified by the factor of $N$ in the exponent. The partition function can thus be dominated by some very rare samples, i.e., those with an anomalously low value of $f_N(\beta)$. 
 
-Using the identity
-we get (for M = 2N )
-1???
-te?tZdt, ?????M??
-EYN (?) = E
-= ME
-= ME ???
-(A1)
-dt (A2) (A3)
-dt (A4) (A5)
-(A6)
-(A7)
-Appendix A: REM Condensation
-= M
-where we have separated the averaging over E1 and E?=1 as
-Z2 =
-te?t ??Mj=1 e??Ej ?? e?2?Ej
-te?2?E1?t??j=1 e j dt
-??? ??E??M??Ej
-0
-0
-te?2?E1?te 1 e?t ta(t)[1 ? b(t)]M?1dt
-j=2 e
-?? ?2?E?te??E
-a(t) ? e dP(E)
-???? te??E??
-b(t) ? 1 ? e dP(E).
-In order to get information about the scaling of P(E) at low temperatures, we need to expand around the function around the ground state energy. The strategy below is to identify its first sub-extensive correction. We thus consider a regime where for a system of 2N states the probability of having a state of energy ?N?0 is high, hence we get
-N 2N ?N?2
-2 P(?N?0)=? e 0 ?1, (A8)
-?N
-which corresponds to an estimate of the ground state in a finite N system. Taking the log
-7
- 0
-j=1 M ??E
-??? 0
-0
-  on both sides and solving for ?0 gives in the large N limit ??1?
-?0= ln2?Nln ?N
-? 1 ? ?2 = ln2? ? ln ?N+O(N )
-N2 ln2 ?
-????1ln ?N, 2?? N
-(A9) (A10)
-(A11)
-          which includes the asymptotic correction to the ground state energy ?? = ?ln 2.2 2 Note the missing N in Eq. (5.22) ? see book errata.
- Because we expect the energy in the low-temperature phase to be concentrated around its ground
- 
-state ?0, we make an expansion around it by writing3 E = ?N? + u
-t = ze?N??0
-We then get that in the large N limit lnP(E)=?ln ?N?
-(A12) (A13)
-(A14)
-(A15) (A16)
-(A17)
-(A18) (A19)
-(A20) (A21)
-?
-=?N?2? +2??u+?(1/N)
-(N?0 +u)2 N
-8
-  ?
-where ?c = 2
-? ln ??2?N e?cu??
-ln 2, and hence we get that in the low energy limit
-P(E)? 1e?cu. M
-  We thus obtain (note that large u corrections quickly vanish)
-1 ?? ?
-??u e2N??0
-= M? z?c/??2?(2 ? ?c/?)
-due?cu?2?u?ze
-1??? ?? ??u?? 1
-a(t) ? M e2N??0
-  EY (?) = ??(2 ? ?c/?) = 1 ? ?c/?
-dzz?c/??1e? ?(??c/?)z
-??
-due??cu 1?e?ze =?M?z?c/??(??c/?)
-+ ?(N?1)
-b(t)? M
-Noting that [1 ? b(t)]M?1 =. e?Mb(t) and after doing the proper change of variables, one
-  ??
-obtains in the low T limit
-1 ??? 1 ?c/?
-  in the large N limit and low T limit.
+Consider, for instance, the low-temperature limit. 
+We know that in almost all samples the configuration with the lower energy density is found at $E_i \approx N\epsilon^\ast$. 
+There exist, however, exceptional samples, where one configuration has an energy smaller $E_i = -N\epsilon$ with $\epsilon > \epsilon^\ast$. 
+Because these samples are exponentially rare (with probability $\stackrel{\cdot}{=}2^Ne^{-N\epsilon^2}$, they are irrelevant for the quenched average, but they dominate the annealed average.
+%\begin{appendices}
+\appendix
+\section{REM Condensation}
+\label{appendix:Condensation}
+Using the identity 
+\EQ{
+\frac{1}{Z^2} = \int_{0}^{\infty}te^{-tZ}dt, 
+}
+we get $for M = 2^N$
+\eq{
+\E Y_N(\beta) &=\E \frac{Z_N(2\beta)}{Z_N(\beta)^2} = \E \int_{0}^\infty Z_N(\beta)e^{-tZ_N(\beta)}dt\\
+&= \E\int_{0}^\infty \left(\sum_{j=1}^Me^{-2\beta E_j}\right) t e^{-t\sum_{j=1}^Me^{-\beta E_j}} dt 
+= M \E\int_{0}^\infty t e^{-2\beta E_1-t\sum_{j=1}^Me^{-\beta E_j}} dt\\
+&= M \E\int_{0}^\infty t e^{-2\beta E_1-te^{-\beta E_1} -\sum_{j=2}^Me^{-\beta E_j}} dt = M\int_0^\infty ta(t)[1-b(t)]^{M-1}dt, 
+}
+where we have separated the averaging over $E_1$ and $E_{i \neq1}$ as 
+\meq{2}{
+&a(t)\triangleq \E e^{-2\beta E-te^{-\beta E}}, &&b(t)\triangleq \E\left(1- e^{-te^{-\beta E}}\right). 
+}
+In order to get information about the scaling of $P(E)$ at low temperatures, 
+we need to expand around the function around the ground state energy. 
+The strategy below is to identify its first sub-extensive correction. 
+We thus consider a regime where for a system of $2^N$ states the probability of having a state of energy $-N\epsilon_0$ is high, hence we get 
+\EQ{
+2^NP_N(-N\epsilon_0) = \frac{ 2^N}{\sqrt{\pi N}}e^{-N\epsilon^2} \approx 1, 
+}
+which corresponds to an estimate of the ground state in a finite $N$ system. 
+Taking the log on both sides and solving for $\epsilon_0$ gives in the large $N$ limit 
+\EQ{
+\epsilon_0  = \sqrt{\ln2 - \frac{1}{N}\ln\sqrt{\pi N}} 
+= \sqrt{\ln2} - \frac{\ln\sqrt{\pi N}}{N2\sqrt{\ln2}}  + O(N^{-2}) 
+\approx \epsilon^\ast - \frac{1}{2\epsilon^\ast}\frac{\ln\sqrt{\pi N}}{N},
+}
+ which includes the asymptotic correction to the ground state energy $\epsilon^\ast = \sqrt{\ln 2}$. 
+ %Note the missing N in Eq. (5.22) ? see book errata.
+Because we expect the energy in the low-temperature phase to be concentrated around its ground
+state $\epsilon_0$, we make an expansion around it by writing 
+\meq{2}{
+&E = -N\epsilon + u, &&t = ze^{-N\beta\epsilon_0}.
+}
+We then get that in the large $N$ limit 
+\EQ{
+\ln P(E)=-\ln\sqrt{\pi N} - \frac{(N\epsilon_0+u)^2}{N}
+=-N\epsilon_\ast^2+2\epsilon_\ast u + \Theta(1/N) \approx \ln\left(2^{-N}e^{\beta_cu}\right),
+}
+where $\beta_c = 2\sqrt{\ln2}$, and hence we get that in the low energy limit 
+\EQ{
+P(E) \approx \frac{1}{M}e^{\beta_cu}.
+}
+We thus obtain (note that large $u$ corrections quickly vanish) 
+\eq{
+a(t) &\simeq \frac{1}{M}e^{2N\beta\epsilon_0}\int_{-\infty}^\infty du e^{\beta_cu-2\beta u-ze^{-\beta u}} 
+= \frac{e^{2N\beta\epsilon_0}}{M\beta}z^{\frac{\beta_c}{\beta-2}}\Gamma(2-\frac{\beta_c}{\beta})\\
+b(t) &\simeq \frac{1}{M}\int_{-\infty}^{\infty}du e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) 
+= -\frac{1}{M\beta}z^{\frac{\beta_c}{\beta}}\Gamma\left(-\frac{\beta_c}{\beta}\right).
+}
+Noting that $[1 - b(t)]^{M-1} \stackrel{\cdot}{=}  e^{-Mb(t)}$ and after doing the proper change of variables, one obtains in the low temperature limit
+\EQ{
+\E Y(\beta) = \frac{1}{\beta}\Gamma(2-\frac{\beta_c}{\beta})\int_0^\infty z^{\frac{\beta_c}{\beta}-1}e^{\frac{1}{\beta}\Gamma(-\frac{\beta_c}{\beta})z^{\frac{\beta_c}{\beta}}} + \Theta(N^{-1}) = 1 - \frac{\beta_c}{\beta}, 
+}
+in the large $N$ limit and low temperature limit. 
+%\end{appendices}
 \end{document}
