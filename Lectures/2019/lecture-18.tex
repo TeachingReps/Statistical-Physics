@@ -10,14 +10,15 @@
 \maketitle
 
 
-\subsection{Condensation Phenomenon}
+\section{Condensation Phenomenon}
+In the low temperature phase, a sub-exponential number of configurations dominate the Boltzmann measure. We call this phenomenon a \textit{condensation} of the measure onto this set of configurations.
 In order to measure the degree of concentration of the measure, we define the \textbf{participation ratio function}
 \EQ{
-Y_N(\beta) \triangleq \sum_{j=1}^{2^N}\mu_\beta(j) = \frac{\sum_{j=1}^{2^N}e^{-2\beta E_j}}{\left(\sum_{j=1}^{2^N}e^{-\beta E_j}\right)^2} = \frac{Z_N(2\beta)}{Z_N(\beta)^2}. 
+Y_N(\beta) \triangleq \sum_{j=1}^{2^N}\mu_\beta(j)^2 = \frac{\sum_{j=1}^{2^N}e^{-2\beta E_j}}{\left(\sum_{j=1}^{2^N}e^{-\beta E_j}\right)^2} = \frac{Z_N(2\beta)}{Z_N(\beta)^2}. 
 }
-In general, in the high temperature limit $\beta \to 0$, the participation is distributed evenly over all the $2^N$ levels,
-hence we get $Y_N (0) = 2^{-N}$. 
-If we take the low-temperature setup used in Chapter 2, we would get instead $\lim_{\beta \to \infty}Y_N(\beta) = \frac{1}{\abs{\sX_0}}$. 
+In general, in the high temperature phase i.e. $\beta \leq \beta_c$, the partition function $Z_N(\beta) \doteq exp[N(\ln2 + \beta^2/4)]$. Taking the infinite temperature limit $(\beta \to 0)$, we have $\lim_{\beta \to 0}Y_N(\beta) = \frac{1}{2^{N}}$. This indicates that the participation is distributed evenly over all the $2^N$ levels,
+hence we get $Y_N (0) = 2^{-N}$.\\ 
+Similarly if we consider the low-temperature setup used in Chapter 2, we would get instead $\lim_{\beta \to \infty}Y_N(\beta) = \frac{1}{\abs{\sX_0}}$. 
 In other words, very few states meaningfully contribute to the partition function.
 \begin{itemize}
 \item For the high-temperature phase of the REM, i.e., for $\beta \le \beta_c = 2\sqrt{\ln2}$, we have
@@ -45,7 +46,7 @@ It is shown in Appendix~\ref{appendix:Condensation} that in the thermodynamic li
 Hence, we see that condensation begins at $\beta_c$, and that the measure becomes increasingly concentrated until the ground state dominates, as $T \to 0$.  
 \end{itemize}
 
-\subsection{Annealed vs. Quenched}
+\section{Annealed vs. Quenched}
 When the free energy density is self-averaging, the value of $\phi_N$ is roughly the same for all samples and can be calculated through the quenched average
 \EQ{
 \phi_{N,q} \triangleq \frac{1}{N}\E\ln Z_N, 
@@ -80,21 +81,21 @@ Because these samples are exponentially rare (with probability $\stackrel{\cdot}
 \label{appendix:Condensation}
 Using the identity 
 \EQ{
-\frac{1}{Z^2} = \int_{0}^{\infty}te^{-tZ}dt, 
+\frac{1}{Z^2} = \int_{0}^{\infty}te^{-tZ}dt 
 }
-we get $for M = 2^N$
+Since the energies $\{E_i\}$ in the REM  are i.i.d random variables we get for $M = 2^N$,
 \eq{
-\E Y_N(\beta) &=\E \frac{Z_N(2\beta)}{Z_N(\beta)^2} = \E \int_{0}^\infty Z_N(\beta)e^{-tZ_N(\beta)}dt\\
+\E Y_N(\beta) &=\E \frac{Z_N(2\beta)}{Z_N(\beta)^2} = \E \int_{0}^\infty Z_N(2\beta)e^{-tZ_N(\beta)}dt\\
 &= \E\int_{0}^\infty \left(\sum_{j=1}^Me^{-2\beta E_j}\right) t e^{-t\sum_{j=1}^Me^{-\beta E_j}} dt 
 = M \E\int_{0}^\infty t e^{-2\beta E_1-t\sum_{j=1}^Me^{-\beta E_j}} dt\\
-&= M \E\int_{0}^\infty t e^{-2\beta E_1-te^{-\beta E_1} -\sum_{j=2}^Me^{-\beta E_j}} dt = M\int_0^\infty ta(t)[1-b(t)]^{M-1}dt, 
+&= M \E\int_{0}^\infty t e^{-2\beta E_1-te^{-\beta E_1} -t\sum_{j=2}^Me^{-\beta E_j}} dt = M\int_0^\infty ta(t)[1-b(t)]^{M-1}dt, 
 }
 where we have separated the averaging over $E_1$ and $E_{i \neq1}$ as 
 \meq{2}{
 &a(t)\triangleq \E e^{-2\beta E-te^{-\beta E}}, &&b(t)\triangleq \E\left(1- e^{-te^{-\beta E}}\right). 
 }
 In order to get information about the scaling of $P(E)$ at low temperatures, 
-we need to expand around the function around the ground state energy. 
+we need to expand the function around the ground state energy. 
 The strategy below is to identify its first sub-extensive correction. 
 We thus consider a regime where for a system of $2^N$ states the probability of having a state of energy $-N\epsilon_0$ is high, hence we get 
 \EQ{
@@ -110,9 +111,9 @@ Taking the log on both sides and solving for $\epsilon_0$ gives in the large $N$
  which includes the asymptotic correction to the ground state energy $\epsilon^\ast = \sqrt{\ln 2}$. 
  %Note the missing N in Eq. (5.22) ? see book errata.
 Because we expect the energy in the low-temperature phase to be concentrated around its ground
-state $\epsilon_0$, we make an expansion around it by writing 
+state $\epsilon_0$, we make an expansion around it by change of variables 
 \meq{2}{
-&E = -N\epsilon + u, &&t = ze^{-N\beta\epsilon_0}.
+&E = -N\epsilon_0 + u, &&t = ze^{-N\beta\epsilon_0}.
 }
 We then get that in the large $N$ limit 
 \EQ{
@@ -125,15 +126,29 @@ P(E) \approx \frac{1}{M}e^{\beta_cu}.
 }
 We thus obtain (note that large $u$ corrections quickly vanish) 
 \eq{
-a(t) &\simeq \frac{1}{M}e^{2N\beta\epsilon_0}\int_{-\infty}^\infty du e^{\beta_cu-2\beta u-ze^{-\beta u}} 
-= \frac{e^{2N\beta\epsilon_0}}{M\beta}z^{\frac{\beta_c}{\beta-2}}\Gamma(2-\frac{\beta_c}{\beta})\\
-b(t) &\simeq \frac{1}{M}\int_{-\infty}^{\infty}du e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) 
+a(t) &\equiv \int exp[-2\beta E -te^{-\beta E}]dP(E)\\
+&\simeq \frac{1}{M}e^{2N\beta\epsilon_0}\int_{-\infty}^\infty  e^{\beta_cu-2\beta u-ze^{-\beta u}} du = \frac{e^{2N\beta\epsilon_0}}{M\beta}z^{(\frac{\beta_c}{\beta}-2)} \Gamma(2-\frac{\beta_c}{\beta})\\
+}
+Solution to the above integral:\\
+Using change of variables, let $e^{e^{-\beta u}} = p$ and $2 - \frac{\beta_c}{\beta}= r$. We then have $u = \frac{-\ln(\ln(p))}{\beta}$ and $du = \frac{- dp}{\beta p \ln p}$. Ignoring the multiplicative constant,\\
+
+\eq{
+\int_{-\infty}^\infty  e^{(\beta_c-2\beta) u-ze^{-\beta u}} du &= \int_{\infty}^0 \frac{(\ln p)^{(2 - \frac{\beta_c}{\beta})} p^{-z}}{-\beta p \ln p} dp = \frac{-1}{\beta} \int_{\infty}^0 (\ln p)^{r-1} p^{-(z+1)}dp
+= \frac{1}{\beta} \int_0^{\infty} t^{r-1} e^{-zt} dt \text{ \Big[ Setting }\ln p = t \Big]\\
+&= \frac{1}{\beta} \int_0^{\infty} x^{r-1} \frac{e^{-x}}{z^r} dx \text{ \Big[change of variables with }zt= x \Big] = \frac{z^{(\frac{\beta_c}{\beta}-2)}}{\beta}\Gamma(2-\frac{\beta_c}{\beta})
+}
+\eq{
+b(t) &\equiv \int [1 - exp[-te^{-\beta E}]dP(E)\\
+&\simeq \frac{1}{M}\int_{-\infty}^{\infty}du e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) 
 = -\frac{1}{M\beta}z^{\frac{\beta_c}{\beta}}\Gamma\left(-\frac{\beta_c}{\beta}\right).
 }
-Noting that $[1 - b(t)]^{M-1} \stackrel{\cdot}{=}  e^{-Mb(t)}$ and after doing the proper change of variables, one obtains in the low temperature limit
+Noting that for large N, from the limit definition of exponential function $exp(x) = \lim_{n \to \infty}(1 + \frac{x}{n})^n$ the expression $[1 - b(t)]^{M-1} $ in $\E Y_N(\beta)$ can be approximated by $e^{-Mb(t)}$.\\
+\\
+After doing the proper change of variables, one obtains in the low temperature limit
 \EQ{
-\E Y(\beta) = \frac{1}{\beta}\Gamma(2-\frac{\beta_c}{\beta})\int_0^\infty z^{\frac{\beta_c}{\beta}-1}e^{\frac{1}{\beta}\Gamma(-\frac{\beta_c}{\beta})z^{\frac{\beta_c}{\beta}}} + \Theta(N^{-1}) = 1 - \frac{\beta_c}{\beta}, 
+\E Y(\beta) = M\int_0^\infty ta(t)e^{-Mb(t)}dt 
+= \frac{1}{\beta}\Gamma(2-\frac{\beta_c}{\beta})\int_0^\infty z^{\frac{\beta_c}{\beta}-1}e^{\frac{1}{\beta}\Gamma(-\frac{\beta_c}{\beta})z^{\frac{\beta_c}{\beta}}} + \Theta(N^{-1}) = 1 - \frac{\beta_c}{\beta}, 
 }
-in the large $N$ limit and low temperature limit. 
+%in the large $N$ limit and low temperature limit. 
 %\end{appendices}
 \end{document}
