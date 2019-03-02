@@ -128,23 +128,32 @@ We thus obtain (note that large $u$ corrections quickly vanish)
 \eq{
 a(t) &\equiv \int exp[-2\beta E -te^{-\beta E}]dP(E)\\
 &\simeq \frac{1}{M}e^{2N\beta\epsilon_0}\int_{-\infty}^\infty  e^{\beta_cu-2\beta u-ze^{-\beta u}} du = \frac{e^{2N\beta\epsilon_0}}{M\beta}z^{(\frac{\beta_c}{\beta}-2)} \Gamma(2-\frac{\beta_c}{\beta})\\
-}
-Solution to the above integral:\\
-Using change of variables, let $e^{e^{-\beta u}} = p$ and $2 - \frac{\beta_c}{\beta}= r$. We then have $u = \frac{-\ln(\ln(p))}{\beta}$ and $du = \frac{- dp}{\beta p \ln p}$. Ignoring the multiplicative constant,\\
-
-\eq{
-\int_{-\infty}^\infty  e^{(\beta_c-2\beta) u-ze^{-\beta u}} du &= \int_{\infty}^0 \frac{(\ln p)^{(2 - \frac{\beta_c}{\beta})} p^{-z}}{-\beta p \ln p} dp = \frac{-1}{\beta} \int_{\infty}^0 (\ln p)^{r-1} p^{-(z+1)}dp
-= \frac{1}{\beta} \int_0^{\infty} t^{r-1} e^{-zt} dt \text{ \Big[ Setting }\ln p = t \Big]\\
-&= \frac{1}{\beta} \int_0^{\infty} x^{r-1} \frac{e^{-x}}{z^r} dx \text{ \Big[change of variables with }zt= x \Big] = \frac{z^{(\frac{\beta_c}{\beta}-2)}}{\beta}\Gamma(2-\frac{\beta_c}{\beta})
-}
-\eq{
 b(t) &\equiv \int [1 - exp[-te^{-\beta E}]dP(E)\\
 &\simeq \frac{1}{M}\int_{-\infty}^{\infty}du e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) 
 = -\frac{1}{M\beta}z^{\frac{\beta_c}{\beta}}\Gamma\left(-\frac{\beta_c}{\beta}\right).
 }
+\begin{exerc}
+$\int_{-\infty}^\infty  e^{(\beta_c-2\beta) u-ze^{-\beta u}} du = \frac{z^{(\frac{\beta_c}{\beta}-2)}}{\beta}\Gamma(2-\frac{\beta_c}{\beta})$\\
+Using change of variables, let $e^{e^{-\beta u}} = p$ and $2 - \frac{\beta_c}{\beta}= r$. We then have $u = \frac{-\ln(\ln(p))}{\beta}$ and $du = \frac{- dp}{\beta p \ln p}$.\\
+\eq{
+\int_{-\infty}^\infty  e^{(\beta_c-2\beta) u-ze^{-\beta u}} du &= \int_{\infty}^0 \frac{(\ln p)^{(2 - \frac{\beta_c}{\beta})} p^{-z}}{-\beta p \ln p} dp = \frac{-1}{\beta} \int_{\infty}^0 (\ln p)^{r-1} p^{-(z+1)}dp
+= \frac{1}{\beta} \int_0^{\infty} t^{r-1} e^{-zt} dt \text{ \Big[ setting }\ln p = t \Big]\\
+&= \frac{1}{\beta} \int_0^{\infty} x^{r-1} \frac{e^{-x}}{z^r} dx \text{ \Big[change of variables with }zt= x \Big] = \frac{z^{(\frac{\beta_c}{\beta}-2)}}{\beta}\Gamma(2-\frac{\beta_c}{\beta})
+}
+\end{exerc}
+\begin{exerc}
+$\int_{-\infty}^{\infty} e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) du 
+= -\frac{1}{\beta}z^{\frac{\beta_c}{\beta}}\Gamma\left(-\frac{\beta_c}{\beta}\right)$\\
+Using change of variables, let $e^{e^{-\beta u}} = p$ and $- \frac{\beta_c}{\beta}= r$. We then have $u = \frac{-\ln(\ln(p))}{\beta}$ and $du = \frac{- dp}{\beta p \ln p}$.\\
+\eq{
+\int_{-\infty}^{\infty} e^{-\beta_cu}\left(1 -  e^{-ze^{-\beta u}}\right) du &= \int_{\infty}^0 \frac{(\ln p)^r [1-p^{-z}]}{-\beta p \ln p} dp = \frac{1}{\beta} \int_0^{\infty} (\ln p)^{r-1} [1 -p^{-z}]dp/p = \frac{1}{\beta} \int_0^{\infty} t^{r-1} [1-e^{-zt}] dt \text{ \Big[ set }\ln p = t \Big]\\
+&= \frac{z^{-r}}{\beta} \int_0^{\infty} x^{r-1} [1-e^{-x}] dx \text{ \Big[set }zt= x \Big] = \frac{z^{-r}}{\beta} \int_0^{\infty} x^{r-1} e^{-x} [e^x - 1] dx = - \frac{z^{-r}}{\beta}\Gamma(r)    
+}
+The last equality follows from integration by parts.\\
+\end{exerc}
 Noting that for large N, from the limit definition of exponential function $exp(x) = \lim_{n \to \infty}(1 + \frac{x}{n})^n$ the expression $[1 - b(t)]^{M-1} $ in $\E Y_N(\beta)$ can be approximated by $e^{-Mb(t)}$.\\
 \\
-After doing the proper change of variables, one obtains in the low temperature limit
+Using the above approximation and after doing the proper change of variables, one obtains in the low temperature limit
 \EQ{
 \E Y(\beta) = M\int_0^\infty ta(t)e^{-Mb(t)}dt 
 = \frac{1}{\beta}\Gamma(2-\frac{\beta_c}{\beta})\int_0^\infty z^{\frac{\beta_c}{\beta}-1}e^{\frac{1}{\beta}\Gamma(-\frac{\beta_c}{\beta})z^{\frac{\beta_c}{\beta}}} + \Theta(N^{-1}) = 1 - \frac{\beta_c}{\beta}, 
