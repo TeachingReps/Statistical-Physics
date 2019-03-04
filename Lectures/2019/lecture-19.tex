@@ -1,0 +1,189 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-19: The Random Code Ensemble}
+
+
+\begin{document}
+\maketitle
+
+\section{Code ensembles}
+An error-correcting code is defined as a pair of an encoding and a decoding map. 
+The encoding map is applied to the information sequence to get an encoded message which is transmitted through the channel. 
+The decoding map is applied to the (noisy) channel output. 
+For the sake of simplicity, we shall assume throughout this chapter that the message to be encoded is given as a sequence of $M$ bits and that encoding produces a redundant sequence of $N > M$ bits. 
+%In Chapter 1, we saw a brief introduction to information theory and the channel coding problem. 
+%The basic idea is that one can protect an $M$-bit message against noise by encoding it into an $N$-bit codeword ($N > M$) before transmission. 
+If the set of codewords is chosen well (e.g., the minimum distance between any two codewords is $\delta N$ for some $\delta > 0$) and the noise is not too large (e.g., the channel introduces fewer than $\delta  N/2$ errors), then one can uniquely decode the transmitted codeword.
+
+The primary difficulty is that the deterministic design of ``good'' codes is a challenging combinatorial optimization problem. 
+One reason for this is that, even if someone gives you a ``good'' code, it may computationally intractable to verify that the code is good. 
+On the other hand, a set of random codewords, chosen from an appropriate distribution, is a much easier to analyze. 
+Thus, the stochastic design of codes is, in some sense, an easier problem. 
+This is the approach that was taken by Claude Shannon in his seminal work, ``A Mathematical Theory of Communication''. 
+
+The possible codewords (i.e. the $2^M$ points in the space $\set{0, 1}^N$ which are all possible outputs of the encoding map) form the codebook $\fC_N$ . 
+We denote by $\sY$ the output alphabet of the communication channel.
+In this lecture, a code $\fC$ is a multiset $\fC \subset \set{0,1}^N$ of size $2^M$ that can be equivalently defined as the range of an encoder function
+\EQ{
+x : \set{0,1}^M \to \set{0,1}^N.
+}
+Such a function can be visualized as a matrix with $2^M$ rows and $N$ columns. 
+The rows are indexed by the message $m \in \set{0,1}^M$ and the codeword associated with message $m$ is given by
+\EQ{
+x^{(m)} = (x_1^{(m)}, x_2^{(m)}, \dots, x_N^{(m)}).
+}
+Abusing notation, the messages will also be indexed by integers $\set{0, 1, \dots, 2^M-1}$ in some cases. 
+We consider a channel which takes as input a binary string of length $N$ and outputs an $\sY$-valued $N$-length string. 
+Consequently, the decoding map is denoted by 
+\EQ{
+x^d: \sY^N \to \set{0,1}^N.
+}
+Here we consider only the difficult part of the decoding procedure, namely how to reconstruct from the received message the codeword which was sent. 
+To complete the decoding as defined in Section 1.6, one needs to get back the original message by knowing the codeword, but this is assumed to be an easier task (encoding is assumed to be injective). 
+
+The stochastic design of good codes typically starts by considering a probability distribution over the set of encoding functions. 
+Such a distribution defines a \textbf{code ensemble}. 
+The customary recipe for designing a code ensemble is the following. 
+\begin{enumerate}[(i)]
+\item Define a subset of the space of encoding maps. 
+\item Endow this set with a probability distribution. 
+\item Finally, for each encoding map in the ensemble, define the associated decoding map. 
+\end{enumerate}
+In practice, this last step is accomplished by declaring that one of a few general `decoding strategies' is adopted. 
+We shall introduce two such strategies below.
+The advantage of working with code ensembles is that analyzing the average behavior of an ensemble is often much simpler than analyzing a particular code. 
+Moreover, the behavior of a randomly chosen code often concentrates around the ensemble average. 
+
+The \textbf{Shannon Random Code Ensemble (RCE)} denotes a uniform distribution over all
+possible functions from $\set{0,1}^M \to \set{0,1}^N$. 
+Note that there exist $2^{N2^M}$ possible encoding maps of the type $x: \set{0,1}^M \to \set{0,1}^N$. 
+One must specify $N$ bits for each of the $2^M$ codewords. 
+In the RCE, any of these encoding maps is picked with uniform probability. 
+%We use capital letters to distinguish random variables from their realizations. 
+%For example, we let $X_i(m)$ denote a random entry in the codebook and $x_i^{(m)}$ denote a particular realization of this codebook. 
+
+The code is therefore constructed as follows. 
+For each of the possible information messages $m \in \set{0, 1}^M$, 
+we obtain the corresponding codeword $X^{(m)} = (X_1^{(m)}, X_2^{(m)}, \dots, X_N^{(m)})$ by tossing an unbiased coin $N$ times, wth the $i$th outcome assigned to the $i$th coordinate $X_i^{(m)}$ .
+Thus, the RCE is defined by letting $X_i^{(m)} \in \set{0,1}$ to be a matrix of independent and equiprobable random variables for all $m \in \set{0,1}^M$ and $i \in [N]$.  
+%Exercise 6.1 notes that 
+There is a positive probability that two messages are mapped to the same codeword. 
+Let us call a message $m$ bad if there is another message $m'$ that is mapped to the same codeword. Using the union bound, the probability that message $m$ is
+bad is upper bounded by
+\EQ{
+P\set{m \text{ is bad }} \le \sum_{m' \in \set{0,1}^M \setminus m}P\set{X(m') = X(m)} \le 2^{M-N}.
+}
+If we let $M = \lfloor RN\rfloor$ for $R \in (0,1)$, then this probability vanishes as $N \to \infty$.
+
+\section{The binary erasure channel}
+The binary erasure channel (BEC) with erasure probability $\epsilon$ is denoted by BEC($\epsilon$).  
+This channel replaces the transmitted bit by an erasure $?$ with probability $\epsilon$  and conveys the bit correctly with probability $1-\epsilon$. 
+A codeword is said to \textbf{agree} with the received sequence if it is equal to the received sequence on all unerased positions. 
+If all codewords are transmitted with equal probability, then the posterior distribution of the transmitted codeword given the received sequence is uniform over the multiset of codewords that agree with the received sequence. 
+Of course, the correct codeword will always agree with the received sequence. 
+Thus, decoding is successful if and only if no other codewords agree with the received sequence. 
+\begin{shaded*}
+\begin{exmp}
+Suppose we have the code $\fC = \set{000, 110, 011, 101}$ and the sequence $0?1$ is received. 
+Then, the only codeword that agrees with the received sequence is $011$. 
+On the other hand, the received sequence $0??$ agrees with codewords $000$ and $011$. 
+\end{exmp}
+\end{shaded*}
+For the RCE, let  $X = X^{(0)}$ be the transmitted codeword and $Y$ be the received sequence. 
+We can analyze this by assuming that exactly $E$ erasures have occurred and letting the random variable  $T$ denote the number of incorrect codewords that agree with the received sequence. 
+In this case, we have 
+\EQ{
+P\set{T \ge 1} \le \E T = \sum_{m' \in \set{0,1}^N \setminus 0} P\set{X(m') \text{ agrees with }Y} 
+= (2^M -1)2^{E-N} \le 2^{M+E-N}. 
+}
+For the asymptotic case where $M = \lfloor RN\rfloor$ with $R \in (0,1)$ and $E = \lfloor \epsilon N\rfloor$ with $\epsilon \in (0,1)$, this gives
+\EQ{
+P\set{T \ge 1} \le 2^{N(R+\epsilon?1)}.
+}
+Thus, decoding succeeds w.h.p. as long as $\epsilon < 1 - R$. 
+For the BEC($\epsilon$) channel, $E$ is binomial and tightly concentrated around its mean $\epsilon N$. 
+Therefore, decoding again succeeds w.h.p. as long as $\epsilon < 1 - R$. 
+This condition can also be rewritten as $R < C_{BEC}(\epsilon) = 1 - \epsilon$ where $C_{BEC}(\epsilon)$ denotes the Shannon capacity of the BEC($\epsilon$). 
+Thus, we have verified that the RCE achieves capacity on the BEC. 
+
+\section{Decoding}
+Let $\sY$ be output alphabet of a memoryless channel with transition probability $Q(y|x)$ defined for binary input $x \in \set{0,1}$ and $y \in  \sY$. 
+If the vector $x \in \set{0,1}^N$ is transmitted over the channel, 
+then the probability of the channel output is given by 
+\EQ{
+Q(y|x) \triangleq\prod_{i=1}^NQ(y_i|x_i).
+}
+
+We assume that the codeword $x$ is chosen with probability $\mu_0(x) \triangleq P\set{X = x}$ 
+and transmitted over this channel. 
+Then, the distribution of the output vector is given by 
+\EQ{
+Z(y) \triangleq P\set{Y =y} = \sum_{x \in \set{0,1}^N}P\set{X=x}Q(y|x), 
+}
+and the posterior distribution of the codeword given the observation $y$ is given by 
+\EQ{
+\mu_y(x) \triangleq P\set{X=x|Y=y} = \frac{P\set{X=x,Y=y}}{P\set{Y=y}} = \frac{P\set{X = x}Q(y|x)}{\sum_{x' \in \set{0,1}^N} P\set{X = x'}Q(y|x')} = \frac{1}{Z(y)} \mu_0(x)Q(y|x).
+}
+
+A codeword decoding function is a mapping $x^d : \sY^N \to \set{0,1}^N$. 
+Alternatively, one could define a message decoding function that maps 
+$\sY^N$ to the message vector in $\set{0,1}^M$ but this is less convenient for the analysis in this chapter. Recall that one minimizes the probability of error in hypothesis testing by selecting the hypothesis with the maximum a posteriori (MAP) probability. 
+Thus, if one wants to minimize the probability that the decoded codeword is not equal to the transmitted codeword, then one uses Word-MAP decoding whose decoding function is given by 
+\EQ{
+x^w(y) \triangleq \arg\max_{x \in \fC} \mu_y(x). 
+}
+In the case of ties, one can choose the maximizer arbitrarily.
+To decode a single bit, we denote the posterior probability of the $i$th bit by
+?(i)(x)???? (x), yiy
+x\i
+where x\i denotes the vector x without the i-th coordinate. Thus, the MAP decision for the
+i-th bit is given by
+xb(y) ? argmax ?(i)(x ) iyi
+xi ?{0,1}
+and the vector output of the Bit-MAP decoder is given by
+xb(y) ? ??xb1(y),...,xbN(y))??.
+For a decoding function xd : YN ? {0,1}N , the probability of block error is
+PB =P??xd(Y?=X??. Similarly, the probability of bit error is
+1 ??N
+4
+                   P ?? x di ( Y )? = X i ?? .
+In general, we will assume that the codewords are transmitted with equal probability so that
+P b = N
+P(X=x)= 1I(x?C).
+|C|
+PB = 1 ?? ?? Q(y|x)I??xd(y)?= x?? |C| x?C y?YN
+  i=1
+    In this case, we can write
+        
+and
+1???? ??N
+I ?? x di ( y )? = x i ?? .
+they treat x as deterministic but assume y is drawn conditionally given x.
+\section{Goemetry}
+The relevant geometry for binary error-correcting codes is that of Hamming space. The N-dimensional binary Hamming space is the metric space defined by the set {0,1}N and the Hamming metric
+N d(x,z)???I(xi?=zi).
+i=1
+Let us define the distance enumerator of a code C, relative to the codeword z, to be
+Nz(h) ? |{x ? C|d(x,z) = h}|
+for h = 1,2,...,N. For z = x(m), this quantity is closely related to the conditional proba- bility of decoding error given that x(m) is sent.
+For the RCE, the quantity NX(0)(h) is a random variable and we can easily determine its expected value. In particular, we have
+Q ( y | x )
+We note that equations (6.9) and (6.10) in the book use rather poor notation. In particular,
+P b = N | C |
+x?C y?YN
+i=1
+5
+                    EN (0)(h) = E ?? X
+I??d(X(0),X(m)) = h??
+   m?{0,1}M
+= I(h = 0) + ??
+m?{0,1}M \0 ??
+P ??d(X(0), X(m)) = h??
+??N??
+for h ? 1. For a non-negative integer random variable Z, one has P(Z ? 1) ? EZ. This implies that
+?? ?? ??N??
+P N (0)(h)?1 ?2M?N X
+\end{document}
