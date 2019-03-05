@@ -68,7 +68,7 @@ In the RCE, any of these encoding maps is picked with uniform probability.
 The code is therefore constructed as follows. 
 For each of the possible information messages $m \in \set{0, 1}^M$, 
 we obtain the corresponding codeword $X^{(m)} = (X_1^{(m)}, X_2^{(m)}, \dots, X_N^{(m)})$ by tossing an unbiased coin $N$ times, wth the $i$th outcome assigned to the $i$th coordinate $X_i^{(m)}$ .
-Thus, the RCE is defined by letting $X_i^{(m)} \in \set{0,1}$ to be a matrix of independent and equiprobable random variables for all $m \in \set{0,1}^M$ and $i \in [N]$.  
+Thus, the RCE is defined by letting $X \in \set{0,1}^{2^M \times N}$ to be a matrix of independent and equiprobable random variables for all $m \in \set{0,1}^M$ and $i \in [N]$.  
 %Exercise 6.1 notes that 
 There is a positive probability that two messages are mapped to the same codeword. 
 Let us call a message $m$ bad if there is another message $m'$ that is mapped to the same codeword. Using the union bound, the probability that message $m$ is
@@ -101,7 +101,7 @@ P\set{T \ge 1} \le \E T = \sum_{m' \in \set{0,1}^N \setminus 0} P\set{X(m') \tex
 }
 For the asymptotic case where $M = \lfloor RN\rfloor$ with $R \in (0,1)$ and $E = \lfloor \epsilon N\rfloor$ with $\epsilon \in (0,1)$, this gives
 \EQ{
-P\set{T \ge 1} \le 2^{N(R+\epsilon?1)}.
+P\set{T \ge 1} \le 2^{N(R+\epsilon-1)}.
 }
 Thus, decoding succeeds w.h.p. as long as $\epsilon < 1 - R$. 
 For the BEC($\epsilon$) channel, $E$ is binomial and tightly concentrated around its mean $\epsilon N$. 
@@ -129,61 +129,66 @@ and the posterior distribution of the codeword given the observation $y$ is give
 }
 
 A codeword decoding function is a mapping $x^d : \sY^N \to \set{0,1}^N$. 
-Alternatively, one could define a message decoding function that maps 
-$\sY^N$ to the message vector in $\set{0,1}^M$ but this is less convenient for the analysis in this chapter. Recall that one minimizes the probability of error in hypothesis testing by selecting the hypothesis with the maximum a posteriori (MAP) probability. 
+Alternatively, one could define a message decoding function that maps $\sY^N$ to the message vector in $\set{0,1}^M$ but this is less convenient for the analysis in this chapter. 
+Recall that one minimizes the probability of error in hypothesis testing by selecting the hypothesis with the maximum a posteriori (MAP) probability. 
 Thus, if one wants to minimize the probability that the decoded codeword is not equal to the transmitted codeword, then one uses Word-MAP decoding whose decoding function is given by 
 \EQ{
 x^w(y) \triangleq \arg\max_{x \in \fC} \mu_y(x). 
 }
 In the case of ties, one can choose the maximizer arbitrarily.
 To decode a single bit, we denote the posterior probability of the $i$th bit by
-?(i)(x)???? (x), yiy
-x\i
-where x\i denotes the vector x without the i-th coordinate. Thus, the MAP decision for the
-i-th bit is given by
-xb(y) ? argmax ?(i)(x ) iyi
-xi ?{0,1}
+\EQ{
+\mu_y^{(i)}(x_i) = \sum_{x_{\setminus i}}\mu_y(x),
+}
+where $x_{\setminus i}$ denotes the vector $x$ without the $i$th coordinate. 
+Thus, the MAP decision for the $i$th bit is given by
+\EQ{
+x_i^b(y) \triangleq \arg\max_{x_i \in \set{0,1}}\mu_y^{(i)}(x_i), 
+}
 and the vector output of the Bit-MAP decoder is given by
-xb(y) ? ??xb1(y),...,xbN(y))??.
-For a decoding function xd : YN ? {0,1}N , the probability of block error is
-PB =P??xd(Y?=X??. Similarly, the probability of bit error is
-1 ??N
-4
-                   P ?? x di ( Y )? = X i ?? .
+\EQ{
+x^b(y) \triangleq (x^b_1(y), \dots, x^b_N(y)).
+}
+For a decoding function $x^d : \sY^N \to \set{0,1}^N$, the \textbf{probability of block error} is 
+\EQ{
+P_B =P\set{x^d(Y)\neq X}. 
+}
+Similarly, the \textbf{probability of bit error} is
+\EQ{
+P_b = \frac{1}{N}\sum_{i=1}^NP\set{x^d_i(Y) \neq X_i}.
+}
 In general, we will assume that the codewords are transmitted with equal probability so that
-P b = N
-P(X=x)= 1I(x?C).
-|C|
-PB = 1 ?? ?? Q(y|x)I??xd(y)?= x?? |C| x?C y?YN
-  i=1
-    In this case, we can write
-        
-and
-1???? ??N
-I ?? x di ( y )? = x i ?? .
-they treat x as deterministic but assume y is drawn conditionally given x.
+\EQ{
+P\set{X=x} = \frac{1}{\fC}\indicator{x \in \fC}. 
+}
+In this case, we can write 
+\meq{2}{
+&P_B = \frac{1}{\abs{\fC}}\sum_{x \in \fC}\sum_{y \in \sY^N}Q(y|x)\indicator{x^d(y) \neq x}, && P_b = \frac{1}{N\abs{\fC}}\sum_{x \in \fC}\sum_{y \in \sY^N}Q(y|x)\sum_{i=1}^N\indicator{x_i^d(y) \neq x_i}.
+}
+
 \section{Goemetry}
-The relevant geometry for binary error-correcting codes is that of Hamming space. The N-dimensional binary Hamming space is the metric space defined by the set {0,1}N and the Hamming metric
-N d(x,z)???I(xi?=zi).
-i=1
-Let us define the distance enumerator of a code C, relative to the codeword z, to be
-Nz(h) ? |{x ? C|d(x,z) = h}|
-for h = 1,2,...,N. For z = x(m), this quantity is closely related to the conditional proba- bility of decoding error given that x(m) is sent.
-For the RCE, the quantity NX(0)(h) is a random variable and we can easily determine its expected value. In particular, we have
-Q ( y | x )
-We note that equations (6.9) and (6.10) in the book use rather poor notation. In particular,
-P b = N | C |
-x?C y?YN
-i=1
-5
-                    EN (0)(h) = E ?? X
-I??d(X(0),X(m)) = h??
-   m?{0,1}M
-= I(h = 0) + ??
-m?{0,1}M \0 ??
-P ??d(X(0), X(m)) = h??
-??N??
-for h ? 1. For a non-negative integer random variable Z, one has P(Z ? 1) ? EZ. This implies that
-?? ?? ??N??
-P N (0)(h)?1 ?2M?N X
+
+The relevant geometry for binary error-correcting codes is that of \textbf{Hamming space}. 
+The $N$-dimensional binary Hamming space is the metric space defined by the set  $\set{0,1}^N$ and the Hamming metric
+\EQ{
+d(x,z) \triangleq \sum_{i=1}^N\indicator{x_i \neq z_i}.
+}
+Let us define the distance enumerator of a code $\fC$, relative to the codeword $z$, to be
+\EQ{
+\cN_z(h) \triangleq \abs{x \in \fC: d(x,z) = h},~ h \in [N].
+}
+For$ z = x^{(m)}$, this quantity is closely related to the conditional probability of decoding error given that $x^{(m)}$ is sent.
+For the RCE, the quantity $\cN_{X^{(0)}}(h)$ is a random variable and we can easily determine its expected value. 
+In particular, we have 
+\eq{
+\E \cN_{X^{(0)}}(h) &= \E\sum_{m \in \set{0,1}^M}\indicator{d(X^{(0)}, X^{(m)}) = h} = \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}P\set{d(X^{(0)}, X^{(m)}) = h}\\
+&= \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}2^{-N}\binom{N}{h} 
+=  \indicator{h=0} + (2^M-1)2^{-N}\binom{N}{h} \le 2^{M-N}\binom{N}{h}
+}
+for $h  \ge 1$. 
+For a non-negative integer random variable $Z$, one has $P\set{Z \ge 1} \le \E Z$. 
+This implies that
+\EQ{
+P\set{\cN_{X^{0}}(h) \ge 1} \le 2^{M-N}\binom{N}{h}.
+}
 \end{document}
