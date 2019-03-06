@@ -1,0 +1,37 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-19: The Random Code Ensemble}
+
+
+\begin{document}
+\maketitle
+
+\section{Goemetry}
+
+The relevant geometry for binary error-correcting codes is that of \textbf{Hamming space}. 
+The $N$-dimensional binary Hamming space is the metric space defined by the set  $\set{0,1}^N$ and the Hamming metric
+\EQ{
+d(x,z) \triangleq \sum_{i=1}^N\indicator{x_i \neq z_i}.
+}
+Let us define the distance enumerator of a code $\fC$, relative to the codeword $z$, to be
+\EQ{
+\cN_z(h) \triangleq \abs{x \in \fC: d(x,z) = h},~ h \in [N].
+}
+For$ z = x^{(m)}$, this quantity is closely related to the conditional probability of decoding error given that $x^{(m)}$ is sent.
+For the RCE, the quantity $\cN_{X^{(0)}}(h)$ is a random variable and we can easily determine its expected value. 
+In particular, we have 
+\eq{
+\E \cN_{X^{(0)}}(h) &= \E\sum_{m \in \set{0,1}^M}\indicator{d(X^{(0)}, X^{(m)}) = h} = \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}P\set{d(X^{(0)}, X^{(m)}) = h}\\
+&= \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}2^{-N}\binom{N}{h} 
+=  \indicator{h=0} + (2^M-1)2^{-N}\binom{N}{h} \le 2^{M-N}\binom{N}{h}
+}
+for $h  \ge 1$. 
+For a non-negative integer random variable $Z$, one has $P\set{Z \ge 1} \le \E Z$. 
+This implies that
+\EQ{
+P\set{\cN_{X^{0}}(h) \ge 1} \le 2^{M-N}\binom{N}{h}.
+}
+\end{document}
