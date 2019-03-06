@@ -70,11 +70,13 @@ For each of the possible information messages $m \in \set{0, 1}^M$,
 we obtain the corresponding codeword $X^{(m)} = (X_1^{(m)}, X_2^{(m)}, \dots, X_N^{(m)})$ by tossing an unbiased coin $N$ times, wth the $i$th outcome assigned to the $i$th coordinate $X_i^{(m)}$ .
 Thus, the RCE is defined by letting $X \in \set{0,1}^{2^M \times N}$ to be a matrix of independent and equiprobable random variables for all $m \in \set{0,1}^M$ and $i \in [N]$.  
 %Exercise 6.1 notes that 
+But this scheme do not ensure a one-to-one mapping between each message and codeword.
 There is a positive probability that two messages are mapped to the same codeword. 
+Next we see that for a large $N$ this probability is very small. 
 Let us call a message $m$ bad if there is another message $m'$ that is mapped to the same codeword. Using the union bound, the probability that message $m$ is
 bad is upper bounded by
 \EQ{
-P\set{m \text{ is bad }} \le \sum_{m' \in \set{0,1}^M \setminus m}P\set{X(m') = X(m)} \le 2^{M-N}.
+P\set{m \text{ is bad }} \le \sum_{m' \in \set{0,1}^M \setminus m}P\set{X(m') = X(m)} = 2^{M-1}2^{-N}\le 2^{M-N}.
 }
 If we let $M = \lfloor RN\rfloor$ for $R \in (0,1)$, then this probability vanishes as $N \to \infty$.
 
@@ -94,9 +96,10 @@ On the other hand, the received sequence $0??$ agrees with codewords $000$ and $
 \end{shaded*}
 For the RCE, let  $X = X^{(0)}$ be the transmitted codeword and $Y$ be the received sequence. 
 We can analyze this by assuming that exactly $E$ erasures have occurred and letting the random variable  $T$ denote the number of incorrect codewords that agree with the received sequence. 
-In this case, we have 
-\EQ{
-P\set{T \ge 1} \le \E T = \sum_{m' \in \set{0,1}^N \setminus 0} P\set{X(m') \text{ agrees with }Y} 
+In this case,using Markovs inequality, we have 
+\eq{
+P\set{T \ge 1} \le \E T = & \E \Big[\sum_{m' \in \set{0,1}^N \setminus 0} \indicator{X(m') \text{ agrees with }Y}\Big]\\
+&=\sum_{m' \in \set{0,1}^N \setminus 0} P\set{X(m') \text{ agrees with }Y} 
 = (2^M -1)2^{E-N} \le 2^{M+E-N}. 
 }
 For the asymptotic case where $M = \lfloor RN\rfloor$ with $R \in (0,1)$ and $E = \lfloor \epsilon N\rfloor$ with $\epsilon \in (0,1)$, this gives
