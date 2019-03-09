@@ -1,0 +1,142 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-20: The Random Code Ensemble cntd...}
+
+
+\begin{document}
+\maketitle
+
+\section{Geometry}
+
+The relevant geometry for binary error-correcting codes is that of \textbf{Hamming space}. 
+The $N$-dimensional binary Hamming space is the metric space defined by the set  $\set{0,1}^N$ and the Hamming metric
+\EQ{
+d(x,z) \triangleq \sum_{i=1}^N\indicator{x_i \neq z_i}.
+}
+Let us define the distance enumerator of a code $\fC$, relative to the codeword $z$, to be
+\EQ{
+\cN_z(h) \triangleq \abs{\set{x \in \fC: d(x,z) = h}},~ h \in [N].
+}
+For $ z = x^{(m)}$, this quantity is closely related to the conditional probability of decoding error given that $x^{(m)}$ is sent.
+For the RCE, the quantity $\cN_{X^{(0)}}(h)$ is a random variable and we can easily determine its expected value. 
+In particular, we have 
+\eq{
+\E \cN_{X^{(0)}}(h) &= \E\sum_{m \in \set{0,1}^M}\indicator{d(X^{(0)}, X^{(m)}) = h} = \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}P\set{d(X^{(0)}, X^{(m)}) = h}\\
+&= \indicator{h=0} + \sum_{m \in \set{0,1}^M\setminus 0}2^{-N}\binom{N}{h} 
+=  \indicator{h=0} + (2^M-1)2^{-N}\binom{N}{h} \le 2^{M-N}\binom{N}{h}
+}
+for $h  \ge 1$. 
+For a non-negative integer random variable $Z$, one has $P\set{Z \ge 1} \le \E Z$ (Markov's inequality). 
+This implies that
+\EQ{
+P\set{\cN_{X^{0}}(h) \ge 1} \le 2^{M-N}\binom{N}{h},~~h \ge 1.
+}
+Since $d(X^{(0)},X^{(m)})$ is invariant under translation, 
+the uniform distribution of $X^{(m)}$ for $m \neq 0$ implies that this result is completely independent of $X^{(0)}$
+To analyze the asymptotics, we choose $M=\lfloor RN\rfloor$ with $R \in (0,1)$ and $h = \lfloor\delta N\rfloor$ with
+$\delta \in (0,1)$. 
+The quantity $\delta$ is called the \textbf{normalized} distance or weight of the codeword. 
+In this case, 
+\EQ{
+\binom{N}{\lfloor{\delta N\rfloor}} \stackrel{\cdot}{=} 2^{N\cH(\delta)}. 
+}
+implies that 
+\EQ{
+P\set{\cN_{X^{(0)}}(\lfloor \delta N\rfloor) \ge 1} \le \E\cN_{X^{(0)}}(\lfloor \delta N\rfloor) \stackrel{\cdot}{=} 2^{N(R-1+\cH(\delta))}. 
+}
+If $R-1+\cH(\delta) < 0$, then the probability that a random codeword has another codeword closer than distance $\delta N$ is decreasing exponentially fast to $0$. 
+Thus, the typical minimum distance, which is called the \textbf{Gilbert-Varshamov distance} and denoted by $\delta_{GV}(R)$ is given by the smallest root of $R-1+\cH(\delta)$. 
+For example, $\delta_{GV}(1/2) = 0.11$. 
+
+The quantity $r_N(\delta) = \frac{1}{N}\log_2\cN_{X^{(0)}}(\lfloor\delta N\rfloor)$ is also important in the analysis of code ensembles. 
+It is often called the \textbf{exponential growth rate} or \textbf{spectral shape} of the ensemble. 
+For the RCE, one can also show that $r_N(\delta)$ is concentrated around its asymptotic expectation $r(\delta) \triangleq ?? R-1+\cH(\delta)$ for all $\delta$ such that $r(\delta) > 0$. 
+In particular, for any $\epsilon > 0$ and all $\delta \in (\delta_{GV}(R), 1 - \delta_{GV}(R))$, we have
+\EQ{
+\lim_{N\to\infty}P\set{\abs{\frac{1}{N}\log_2\cN_{X^{(0)}}(\lfloor \delta N\rfloor) - r(\delta)}>\epsilon} = 0.
+}
+\section{The binary symmetric channel}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{Lectures/2019/Figures/bscp.png}
+    \caption{Representation of BSC(p)}
+    \label{fig:my_label}
+\end{figure}
+\flushleft The binary symmetric channel (BSC) with error probability $p$ is denoted by BSC($p$). 
+This channel flips an input bit with probability $p$ and leaves it unchanged with probability $1 - p$. 
+This implies that 
+\EQ{
+Q(y|x) = \begin{cases}
+1-p, & x = y,\\
+p, & x \neq y.
+\end{cases}
+}
+\subsection{Word-MAP decoding}
+For the BSC($p$) channel, we can rewrite the posterior probability distribution of input $x$ given observation $y$ as 
+\EQ{
+\mu_y(x)= \frac{1}{Z(y)}p^{d(x,y)}(1-p)^{N-d(x,y)}\frac{1}{\abs{\fC}}\indicator{x \in \fC} \propto \left(\frac{p}{1-p}\right)^{d(x,y)}\indicator{x \in \fC}.
+}
+Thus, if $p < 1/2$, the MAP codeword is precisely the codeword $x$ that minimizes the Hamming distance $d(x, y)$ (i.e., the closest codeword to the received sequence). 
+Based on the geometry of the RCE, we know that w.h.p. the transmitted codeword is the unique codeword in a ball of radius $\delta_{GV}(R)N$ around the transmitted codeword. 
+This also implies that, if we consider balls of radius $\delta_{GV}(R)N/2$ around each codeword, then only a vanishing fraction of these balls intersect each other. 
+Thus, one can expurgate (i.e., delete) a vanishing fraction of codewords to make all of these balls are disjoint.\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{Lectures/2019/Figures/RCE2.png}
+    \caption{No codewords in $\delta_{GV}$ distance but exponentially many outside the hamming ball of radius $\delta_{GV}$ }
+    \label{fig:my_label}
+\end{figure}  
+This expurgated code will correct all error patterns with fewer than $\delta_{GV}(R)N/2$ errors.
+It turns out that one can actually handle twice as many errors. 
+
+
+To see this, we observe two things. \\
+First, the Hamming distance from the transmitted codeword to the received codeword $d(X^{(0)},Y)$ is a sum of i.i.d. Bernoulli-$p$ random variables and it satisfies the law of large numbers, 
+\EQ{
+\lim_{N\to\infty}P\set{\abs{\frac{1}{N}d(X^{(0)},Y) -p}>\epsilon}= 0.
+}
+Second, for any $\delta < \delta_{GV}(R)$, it holds that 
+\EQ{
+\lim_{N\to\infty}P\set{\frac{1}{N}\min_{m \in \set{0,1}^M\setminus 0}d(X^{(m)},Y)<\delta}= 0.
+}
+Since the analysis in the previous Section is independent of the distribution of $X^{(0)}$, 
+this follows directly from analyzing the minimum distance of a code where $X^{(0)}$ is replaced by $Y$. 
+Putting these together, we see that $p < \delta_{GV}(R)$ is sufficient w.h.p. for the correct codeword to be the closest codeword to the received vector. 
+Applying $1 - \cH(\cdot)$ to both sides, 
+this can be rewritten as $R < C_{BSC}(p) = 1- \cH(p)$ where $C_{BSC}(p)$ is the capacity of the BSC($p$). 
+Thus, we have verified that the RCE achieves capacity on the BSC under Word-MAP decoding.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{Lectures/2019/Figures/RCE.png}
+    \caption{Growth rate of the distance enumerator for the random code ensemble
+with rate R = 1/2 as a function of the Hamming distance $d = N\delta$.}
+    \label{fig:my_label}
+\end{figure}
+
+\section{Connections with statistical physics}
+\subsection{The Random Energy Model}
+The random energy model (REM) assumes the binary vectors ${0,1}^M$ are randomly associated with $2^M$ i.i.d. random variables drawn from a well-behaved distribution whose variance grows linearly with M (e.g., a Gaussian distribution with variance M/2).
+For the BSC(p) channel with transmitted codeword $x = X^{(0)}$ and received vector y, the Hamming distances to incorrect codewords, 
+\EQ{E_m= d(y,X^{(m)})\quad \text{for m} \neq 0,}
+ are independent random variables with the binomial distribution
+\EQ{P(E_m =k)= {\frac{1}{2}}^N \binom{N}{k}}
+Thus, the distance between the received vector and the closest incorrect codeword is given by
+\EQ{\min_{m'\in \set{0,1}^M}E_m' }     
+This quantity is exactly the ground state energy of the  Random Energy Model with the binomial energy dis- tribution. When normalized by 1/N, this energy concentrates around the value $\delta_{GV}(R)$. Similarly, the distance between the received vector and the correct codeword, when normalized by 1/N, concentrates around the value p. Thus, \textbf{decoding will be successful if and only if} 
+\EQ{p < \delta_{GV}(R)}.
+\subsection{The Boltzmann Distribution}
+Suppose we think about the decoding problem as a spin system where the energy of configuration x is given by
+\EQ{
+E(x) = \begin{cases}
+-ln(Q(y/x)), & x \in \fC,\\
+\infty, & otherwise.
+\end{cases}
+}
+In this case, the Boltzmann distribution for inverse temperature is given by
+\EQ{\mu_{\beta}(x)=\frac{1}{z(\beta)}e^{-\beta E(x)}=\frac{{Q(y/x)}^\beta}{z(\beta)}
+}
+
+\end{document}
+
