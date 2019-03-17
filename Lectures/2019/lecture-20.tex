@@ -3,13 +3,13 @@
 \documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
 
-\title{Lecture-19: The Random Code Ensemble}
+\title{Lecture-20: The Random Code Ensemble}
 
 
 \begin{document}
 \maketitle
 
-\section{Goemetry}
+\section{Geometry}
 
 The relevant geometry for binary error-correcting codes is that of \textbf{Hamming space}. 
 The $N$-dimensional binary Hamming space is the metric space defined by the set  $\set{0,1}^N$ and the Hamming metric
@@ -29,7 +29,7 @@ In particular, we have
 =  \indicator{h=0} + (2^M-1)2^{-N}\binom{N}{h} \le 2^{M-N}\binom{N}{h}
 }
 for $h  \ge 1$. 
-For a non-negative integer random variable $Z$, one has $P\set{Z \ge 1} \le \E Z$. 
+For a non-negative integer random variable $Z$, one has $P\set{Z \ge 1} \le \E Z$ (Markov's inequality). 
 This implies that
 \EQ{
 P\set{\cN_{X^{0}}(h) \ge 1} \le 2^{M-N}\binom{N}{h},~~h \ge 1.
@@ -59,7 +59,13 @@ In particular, for any $\epsilon > 0$ and all $\delta \in (\delta_{GV}(R), 1 - \
 \lim_{N\to\infty}P\set{\abs{\frac{1}{N}\log_2\cN_{X^{(0)}}(\lfloor \delta N\rfloor) - r(\delta)}>\epsilon} = 0.
 }
 \section{The binary symmetric channel}
-The binary symmetric channel (BSC) with error probability $p$ is denoted by BSC($p$). 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{Figures/bscp.png}
+    \caption{Representation of BSC(p)}
+    \label{fig:my_label}
+\end{figure}
+\flushleft The binary symmetric channel (BSC) with error probability $p$ is denoted by BSC($p$). 
 This channel flips an input bit with probability $p$ and leaves it unchanged with probability $1 - p$. 
 This implies that 
 \EQ{
@@ -76,7 +82,12 @@ For the BSC($p$) channel, we can rewrite the posterior probability distribution 
 Thus, if $p < 1/2$, the MAP codeword is precisely the codeword $x$ that minimizes the Hamming distance $d(x, y)$ (i.e., the closest codeword to the received sequence). 
 Based on the geometry of the RCE, we know that w.h.p. the transmitted codeword is the unique codeword in a ball of radius $\delta_{GV}(R)N$ around the transmitted codeword. 
 This also implies that, if we consider balls of radius $\delta_{GV}(R)N/2$ around each codeword, then only a vanishing fraction of these balls intersect each other. 
-Thus, one can expurgate (i.e., delete) a vanishing fraction of codewords to make all of these balls are disjoint. 
+Thus, one can expurgate (i.e., delete) a vanishing fraction of codewords to make all of these balls are disjoint.\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{Figures/RCE2.png}
+    \caption{No codewords in $\delta_{GV}$ distance but exponentially many outside the hamming ball of radius $\delta_{GV}$ }
+    \label{fig:my_label}
+\end{figure}  
 This expurgated code will correct all error patterns with fewer than $\delta_{GV}(R)N/2$ errors.
 It turns out that one can actually handle twice as many errors. 
 To see this, we observe two things. 
@@ -84,7 +95,7 @@ First, the Hamming distance from the transmitted codeword to the received codewo
 \EQ{
 \lim_{N\to\infty}P\set{\abs{\frac{1}{N}d(X^{(0)},Y) -p}>\epsilon}= 0.
 }
-??Second, for any $\delta < \delta_{GV}(R)$, it holds that 
+Second, for any $\delta < \delta_{GV}(R)$, it holds that 
 \EQ{
 \lim_{N\to\infty}P\set{\frac{1}{N}\min_{m \in \set{0,1}^M\setminus 0}d(X^{(m)},Y)<\delta}= 0.
 }
@@ -94,6 +105,39 @@ Putting these together, we see that $p < \delta_{GV}(R)$ is sufficient w.h.p. fo
 Applying $1 - \cH(\cdot)$ to both sides, 
 this can be rewritten as $R < C_{BSC}(p) = 1- \cH(p)$ where $C_{BSC}(p)$ is the capacity of the BSC($p$). 
 Thus, we have verified that the RCE achieves capacity on the BSC under Word-MAP decoding.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{Figures/RCE.png}
+    \caption{Growth rate of the distance enumerator for the random code ensemble
+with rate R = 1/2 as a function of the Hamming distance $d = N\delta$.}
+    \label{fig:my_label}
+\end{figure}
+
+\section{Connections with statistical physics}
+\subsection{The Random Energy Model}
+The random energy model (REM) assumes the binary vectors ${0,1}^M$ are randomly associated with $2^M$ i.i.d. random variables drawn from a well-behaved distribution whose variance grows linearly with M (e.g., a Gaussian distribution with variance M/2).
+For the BSC(p) channel with transmitted codeword $x = X^{(0)}$ and received vector y, the Hamming distances to incorrect codewords, 
+\EQ{E_m= d(y,X^{(m)})\quad \text{for m} \neq 0,}
+ are independent random variables with the binomial distribution
+\EQ{P(E_m =k)= {\frac{1}{2}}^N \binom{N}{k}}
+Thus, the distance between the received vector and the closest incorrect codeword is given by
+\EQ{\min_{m'\in \set{0,1}^M}E_m' }     
+This quantity is exactly the ground state energy of the  Random Energy Model with the binomial energy dis- tribution. When normalized by 1/N, this energy concentrates around the value $\delta_{GV}(R)$. Similarly, the distance between the received vector and the correct codeword, when normalized by 1/N, concentrates around the value p. Thus, \textbf{decoding will be successful if and only if} 
+\EQ{p < \delta_{GV}(R)}.
+\subsection{The Boltzmann Distribution}
+Suppose we think about the decoding problem as a spin system where the energy of configuration x is given by
+\EQ{
+E(x) = \begin{cases}
+-ln(Q(y/x)), & x \in \fC,\\
+\infty, & otherwise.
+\end{cases}
+}
+In this case, the Boltzmann distribution for inverse temperature is given by
+\EQ{\mu_{\beta}(x)=\frac{1}{z(\beta)}e^{-\beta E(x)}=\frac{{Q(y/x)}^\beta}{z(\beta)}
+}
+
+\end{document}
+
 
 \subsection{An Intuitive approach for general channels}
 Another interpretation of the above analysis is that each output sequence within normalized distance $\delta < \delta_{GV}(R)$ of a codeword has w.h.p. no other codewords within normalized distance $\delta$. 
@@ -197,13 +241,13 @@ ordered
 0.1 0.2
 glassy
       where
-Figà 6à5 Phase diagram for the rate- 2 random code ensemble over a binary symmetric channel, using Þnite temperature decodingà Word MAP and bit MAP decoding correspond to  ? = à and  ? = , respectivelyà Note that the phase boundary of the error-free ordered phase is vertical in this interval of temperatureà
+FigÃ  6Ã 5 Phase diagram for the rate- 2 random code ensemble over a binary symmetric channel, using Ãžnite temperature decodingÃ  Word MAP and bit MAP decoding correspond to  ? = Ã  and  ? = , respectivelyÃ  Note that the phase boundary of the error-free ordered phase is vertical in this interval of temperatureÃ 
 to 1 as N ? ?. The measure ?y,?(x) is dominated by the codewords closest to the received message y (which are distinct from the correct codeword, since p > ?GV(R)). Its Shannon entropy H(?y,?) is sublinear in N. This situation is closely related to the ?measure condensation? phenomenon that occurs in the low-temperature phase of the random energy model.
 0
 0.3 0.4 0.5
 p
 Z(?) = ?? e??E(x). (3) 3. An ?entropy-dominated? (paramagnetic) phase at high temperature (small enough
- ?). The bit and block error rates behave as in the glassy phase, and ?y,?(x à ) = x?{0,1}N
+ ?). The bit and block error rates behave as in the glassy phase, and ?y,?(x Ã  ) = x?{0,1}N
 exp{??(N)}. However, the measure ?y,?(x) is now dominated by codewords whose distance d ? N?? from the received message is larger than the minimal
  If ? = 1, then ??(x) is edixstancet:l?y
 ? = 0. In the first case we recover the result already obtained for symbol MAP
