@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+
+\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+\tikzset{edge/.style = {->,> = latex'}}
+% vertices
+\node[vertex] (a0) at  (0,0) {$0$};
+\node[vertex] (a4) at  (2,0) {$4$};
+\node[vertex] (a5) at  (4,0) {$5$};
+\node[vertex] (a6) at  (6,0) {$6$};
+\node[vertex] (a10) at (8,0) {$10$};
+\node[vertex] (a1) at (3,2) {$1$};
+\node[vertex] (a2) at (5,2) {$2$};
+\node[vertex] (a3) at (7,2) {$3$};
+\node[vertex] (a7) at (3,-2) {$7$};
+\node[vertex] (a8) at (5,-2) {$8$};
+\node[vertex] (a9) at (7,-2) {$9$};
+
+%edges
+\draw[edge] (a0) to (a4);
+\draw[edge] (a4) to (a5);
+\draw[edge] (a5) to (a6);
+\draw[edge] (a6) to (a10);
+\draw[edge] (a0) to (a1);
+\draw[edge] (a0) to (a7);
+\draw[edge] (a1) to (a2);
+\draw[edge] (a2) to (a3);
+\draw[edge] (a3) to (a10);
+\draw[edge] (a7) to (a8);
+\draw[edge] (a8) to (a9);
+\draw[edge] (a9) to (a10);
+
+\draw[dotted] (a1) to (a5);
+\draw[dotted] (a5) to (a9);
+\draw[dotted] (a1) to (a9);
+\draw[dotted] (a2) to (a4);
+\draw[dotted] (a4) to (a8);
+\draw[dotted] (a8) to (a2);
+\draw[dotted] (a3) to (a6);
+\draw[dotted] (a6) to (a7);
+\draw[dotted] (a7) to (a3);
+\end{tikzpicture}
+
