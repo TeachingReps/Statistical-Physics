@@ -1,191 +1,481 @@
 % !TEX spellcheck = en_US
 % !TEX spellcheck = LaTeX
 \documentclass[letterpaper,english,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+\title{lecture 23}
+
 \input{../../header}
-
-\title{Simulated Annealing}
-
+%\include{header}
 \begin{document}
 \maketitle
 
-\section{Jobshop scheduling}
-The jobshop scheduling problem is one of the hardest combinatorial optimization problem and can be described as follows.
-We are given a set of jobs and a set of machines. 
-Each job consists of a chain of operations. 
-Each operation requires to be processed by some machine for a finite time without interruption. 
-Also, the given machines cannot process more than one operation at any given time.
-Therefore, the operations has to be allocated to time intervals on different machines. This is also known as \emph{scheduling}.
-The problem is to find a schedule of minimum length.\\
+\section{Derivation Of Boltzmann Distribution}
 
-Now we define the problem formally.
-We have a set of $n$ jobs, denoted by $\sJ = \set{j_1,j_2,\cdots,j_n}$ and a set of $m$ machines, denoted by $\sM = \set{M_1,M_2,\cdots,M_m}$.
-We also assume a set of $p$ operations, denoted by $\sO = \set{1,2,\cdots,p}$.
-For any operation $x \in \sO$, there is a job $j_x$ to which it belongs and a machine $M_x$ on which it is processed. 
-Define a binary relation $\rightarrow$ such that $x \rightarrow y$ then $j_x = j_y$ and there is no $o_z \not\in \set{x,y}$ such that $x \rightarrow z$ and $z \rightarrow y$.
-Also define a start time $s_x$ for each operation $x \in \sO$ and its processing time is denoted by $t_x$.
-Then, the optimization problem maybe stated as follows.
-\EQN{
-\max_{x \in \sO} (s_x + t_x)
-} 
-is minimized subject to 
-\eq{
-&s_v \geq 0 ~\forall~ v \in \sO\\
-& s_w - s_v \geq t_v ,~ v \rightarrow w , ~\forall~v,w \in \sO\\
-& s_w - s_v \geq t_v \wedge  s_v - s_w \geq t_w ~if~ M_v = M_w ,~\forall~v,w \in \sO.
-}
-\subsection{Disjunctive graph model}
-The disjunctive graph (G,A,E) is defined as follows.
-\begin{itemize}
-\item The vertex set , $V = \sO \cup \set{0,N+1}$ where $0$ and$N+1$ are two fictitious operations with zero processing time. The weight of each vertex $o_x$ is $t_x$, the processing time of the operation.
-\item The edges are established between operations run on the same machine.
-That is, $E = \set{(v,w):M_v = M_w}$.
-\item The set $A$ consists of arcs between operatiions of the same job, and from $0$ to the first operation of each job and from last operation of each job to $N+1$. That is, $A = \set{(v,w): v \rightarrow w } \cup \set{(0,v): \nexists~ y ~\ni~ y \rightarrow v} \cup \set{(w,N+1) :\nexists~ y ~\ni~ w \rightarrow o_y}$.
-\end{itemize}
-\begin{figure}[t]
-  \begin{center}
-  \scalebox{0.75}{\input{Figures/JobshopExample}}
-  \end{center}
-  \caption{The disjunctive graph G of a 3-job 3-machine instance. Operations 1,5 and 9 are processed by machine 1. Operations 2, 4 and 8 by machine 2 and operations 3, 6 and 7 by machine 3. 0 and 10 are the fictitious initial and final operations respectively. Thick arrows denote arcs in A, dotted lines edges in E.}
-  \label{figure:Instance}
-\end{figure}
-Thus, now we have a directed graph in which the longest path actually represent the objective function of the above given optimization problem. 
-For any pair of operations $v,w \in \sO$with $v \rightarrow w$ , the second constraint is represented by an arc $(v,w) \in A$.
-Similarly, for any pair of operations $v,w \in \sO$ with $M_v = M_w$, the third constraint is represented by an edge $(v,w) \in E$.
-The two ways of settling the disjuction is given by the two possible orientation of the edge. 
-So, there is a one-to-one correspondence between the feasible solutions with respect to the third constraint and the orientations of the edges such that resulting graph is acyclic. 
-Thus, the order or permutations of the operations to be processed by each machine will get fixed by these choice of orientations.
-Now the problem can be rephrased as finding a set of machine permutations that minimizes the maximum length path in the given digraph.
-
-\section{Simulated Annealing}
-Simulated Annealing can be viewed as a generalization of the well known iterative improvement approach to combinatorial optimization problems. Generally, a combinatorial optimization problem is a tuple $(\c{R},C)$, where $\c{R}$ is the set of configurations or solutions of the problem and $C:  \c{R} \rightarrow \R $ is the cost function. To be able to use iterative improvement we need a neighborhood structure $\c{N}: \c{R} \rightarrow 2^{\c{R}}$; thus, for each configuration $i$, $\c{N}(i)$ is a subset of configurations called the $\textbf{neighborhood}$ of $i$.\\ 
-
-At each iteration, the general iterative improvement algorithm typically starts with an initial configuration $i$ and a configuration $j \in \mathcal{N}(i)$ is generated. If $C(j) < C(i)$, the start configuration in the next iteration is $j$, otherwise it is $i$. However, this causes the algorithm to terminate in a local minimum which may differ considerably in cost from the global minimum.
-On the contrary, simulated annealing attempts to find near optimal local minima by allowing the acceptance of cost increasing transitions. More precisely, if $i$ and $j \in \cN(i)$ then the algorithm continues with configuration $j$ with a probability given by $min\{1, exp(-(C(j) -C(i))/c\}$, where $c$ is the temperature.
-
-\subsection{Markov structure}
-For a fixed value of the temperature parameter $c$, the configurations that are consecutively visited by the SA algorithm can be viewed as a markov chain with transition matrix $P = P(c)$ given by,
-
-\eq{
-P_{ij}(c) =
-\begin{cases}
-G_{ij}A_{ij}(c) \when j \neq i \\
-1 - \sum\limits_{k =1,k \neq i}^{|\c{R}|} G_{ik}A_{ik}(c) \when j = i
-\end{cases} 
-}
-where the generation and acceptance probabilites $G_{ij}$, $A_{ij}$ respectively are given by,
-\eq{
-G_{ij}(c) &=
-\begin{cases}
-|\c{N}(i)|^{-1} \when j \in \c{N} \\
-0 \otherwise
-\end{cases}
-\\
-A_{ij}(c) &= min\{1, exp(-(C(j) -C(i))/c\}
-}
-\\
-The stationary distribution of this Markov chain is given by $q_i(c) = \frac{|\c{N}(i)|A_{i_oi}(c)}{\sum_{j \in \c{R}}|\c{N}(j)|A_{i_oj}(c)}$ for some $i_o \in \c{R}_{opt}$, where $\c{R}_{opt}$ is the set of global minimal configurations provided the neighborhoods are such that for each pair of configurations $(i,j)$ there is a finite sequence of transitions leading from $i$ to $j$.\\
-\\
-Equivalently, the latter condition implies the matrix G being irreducible. It can be shown that 
-\eq{
-\lim_{c \downarrow 0} q_i(c) =
-\begin{cases}
-|\c{R}_{opt}|^{-1} \when i \in \c{R}_{opt}\\
-0 \otherwise
-\end{cases}
-}
-\\
-Unfortunately, the neighborhood structure chosen for job shop scheduling in Section 3 is such that the corresponding matrix $G$ is not irreducible. But, we can still prove asymptotic convergence provided the neighborhoods are such that for each configuration $i$ there is a finite sequence of transitions leading from $i$ to some configuration $i_o \in \c{R}_{opt}$.\\
-\\
-We use the fact that every chain can be decomposed in such a way that the recurrent configurations can be divided uniquely into irreducible ergodic sets $X_1 \ldots X_T$ and a set X of transient configurations from which configurations in the ergodic sets can be reached (but not the other way around). If the neighborhoods satisfy the aforementioned condition, then each $X_t$ contains at least one globally minimal configuration.\\
-\\
-The interpretation for the above is as follows, if the Markov chain starts in any one of the ergodic set $X_t$, we have a case similar to $G$ being irreducible and convergence can be argued as before. Else, starting from a transient configuration the Markov chain will eventually land in some ergodic set $X_t$ though it is not a priori known which one, once again we use the same argument.   
-
-\subsection{Practical Considerations}
-For asymptotic convergence, to attain stationary distribution the infinite length of Markov chains cannot be met in practice. In any finite time implementation we have to make choice with respect to each of the following parameters.
-
-\begin{itemize}
-\item the length of the Markov chains
-\item initial and final values of the temperature parameter $c$
-\item the decrement rule of the temperature parameter $c$
-\end{itemize}
-Such a choice is referred to as \textit{cooling schedule} or \textit{annealing schedule}. We choose the length of each Markov chain to be the size of the largest neighborhood and the following decrement rule for jobshop in Section 3.\\
-\eq{
-L_k &= \underset{{ i \in \c{R}} }{\text{max}} | \c{N}(i)| \quad k = 1, 2, \ldots \\
-c_{k+1} &= \frac{c_k}{1 + [ c_k \cdot ln(1 + \delta) / 3\sigma_k]}
-}
-where $c_k$ is the temperature parameter for the $k$th markov chain and $\sigma_k$ is the standard deviation of the cost values of the configurations obtained by generating the $k$th markov chain.
-
-\section{Simulated annealing for jobshop scheduling}
-In this section we see how simulated annealing is applied to for solving the jobshop scheduling problem. 
-For this we need a precise definition of configurations, a cost function and a neighbourhood structure. 
-We must show that for any arbitrary configuration $i$ there exists at least one globally minimal configuration $i_0 \in \R_{opt}$ such that it can be reached from $i$ in finite number of transitions.
-\subsection{Configurations}
-In the jobshop scheduling problem, we consider the sets of machine permutations as discussed in first section. In order to solve the problem, we must find the longest path in the directed graph for such a set of permutations. This graph results from the edges in the disjunctive graph and orientations are determined by the permutations.
-Define a configuration $i$ of the problem as a set,
+The probability that a system is found in a particular state is given by the celebrated Boltzmann distribution.This section gives a formal derivation to this definition.\\\\
+Let $p_i$ be the probability that a particle or a subsystem is in state i. This will imply that the enrtopy of the system is,
 \EQ{
-\Pi_i = \set{\pi_{i1},\pi_{i2},\cdots, \pi_{im}}.
+H(p)=- \sum_i p_i \log p_i
 }
-If for operation $v \in \sO$, is processed on a machine $M_v = k$, then $\pi_{ik}(v)$  denotes the operation following $v$ on machine $k$. Thus, $\pi_{ik}$ denotes the order in which operations on machine $k$ are processed. Say $m_k$ is the number of operations to be processed by machine $k$. Then, the number of configurations is given by $\prod_{k=1}^{m}m_k!$.
-\subsection{Cost function}
-Say $\bar{D}_i$ is the directed grapah obtained from the disjunctive graph using the edges in $E$ and its orientations set according to $\Pi$. That is , 
-\eq{
-&\bar{D}_i = (V,A\cup\bar{E}_i), where\\
-& \bar{E}_i = \set{(v,w)|\set{v,w} \in E~and~ \pi_{ik}^l(v) = w ~for~ \ in \sM , 1 \leq l \leq m_k-1 }
-}
-Construct the digraph $D_i$ from $\bar{D}_i$ by taking the arcs from $\bar{E}_i$ that connect operations on the same machine. Thus, the longest paths in $D_i$ and $\bar{D}_i$ will have equal length. Therefore, the cost of a configuration $i$ is found by determining the length of the longest path from $0$ to $N+1$ in $D_i$. 
-\subsection{Neighbourhood structure}
-To generate a transition, choose vertices $v$ and $w$ such that :
- \begin{itemize}
- \item $v$ and $w$ are successive operations on some machine $k$.
- \item $(v,w) \in E_i$ is a critical arc meaning $(v,w)$ is on a longest path in $D_i$.
- \end{itemize}
- and reverse the order in which $v$ and $w$ were processed on machine $k$. 
-Next  result show that reversing a critial arc in  $D_i$ can never lead to a cyclic digraph $D_j$.
-\begin{lem}
-Suppose that $e = (v,w) \in E_i$ is a critical arc of an acyclic digraph $D_i$. Let $D_j$ be the digraph obtained from $D_i$ by reversing the arc $e$ in $E_i$. Then, $D_j$ is also acyclic.  
-\end{lem}
-$Proof:$
-Suppose $D_j$ is cyclic. Then, $(w,v)$ is part of a cycle in $D_j$. Consequently, there is a path $(v,x,y,\cdots,w)$ in $D_j$. But this path is there in $D_i$ and is clearly a longer path from $v$ to $w$ than $(v,w)$. This contradicts the assumption that $(v,w)$ is on a longest path in $D_i$. Hence, $D_j$ is acyclic.
-Also, if reversal of a noncritical arc in $D_i$ leads to an acyclic graph $D_j$, a longest path $q$ in $D_j$ cannot be shortest than a longest path $p$ in $D_i$.
-Thus, the transitions are chosen such that there are no non-costdecreasing transitions and no transition will result in a cyclic graph. So, the neighbourhood structure is such that the algorithm visits only digraphs corresponding to feasible solutions.
-\subsection{Asymptotic convergence}
-\begin{lem}
-Consider an arbitrary configuration $i$ and an arbitrary global minimum $i_0 \notin \sR_{opt}$, then the set 
-$\sK_i(i_0)$ defined by,
+Now for this system there are two constraints.The first one is the universal constraint which is basic probability constraint given by,
 \EQ{
-K_i(i_0) = \set{e = (v,w) \in E_i | i ~is~critical \wedge (w,v) \in \bar{E}_{i_0}}
+ \sum_i p_i = 1 
 }
-is not empty.
-\end{lem} 
-$Proof:$First we show that $E_i$ always contain critical arcs, unless $i \in \sR_{opt}$. 
-Next we show that there are always critical arcs in $E_i$ that do not belong to $\bar{E}_{i0}$ unless  $i \in \sR_{opt}$.
-To prove the first part, suppose that $E_i$ contains no critical arcs. This implies that all critical arcs belong to $A$. This simply means that the length of the longest path equals the processing time of some job. This is the lower bound to the length of a longest path in any digraph $D_j$. Hence, $i \in \sR_{opt}$.
-Now, we prove the second part.\\ 
-Suppose for all critical arcs $e \in E_i$, we have $e \in E_{i0}$. We know that any longest path $p$ in $D_i$ is also path $q$ in $\bar{D}_{i0}$. 
-Now assume that longest path in $\bar{D}_{i0}$ is $r$. As $i_0$ is an optimal configuration,
+The second constraint is the average energy constraint where the average energy of the particles is a constant.Thus the second constraint translate formally to,
 \EQ{
-length(r) \leq length(q) = length(p)
+ \sum_i p_i E_i= E
 }
-But we know that $q$ is a path in $\bar{D}_{i0}$. Therefore, $length(r) \geq length(q)$. Thus, we see that, $length(r) = length(p)$. This is possible only if $i$ is an optimal configuration. Hence, the proof.
-Next theorem gaurantees asymptotic convergence in probability to a globally minimal configuration.
-Before that we define two sets for an arbitrary configuration $i$,
-\eq{
-&M_i(i_0) = \set{e = (v,w)\in E_i|(w,v) \in \bar{E}_{i_0}}\\
-& \bar M_i(i_0) = \set{e = (v,w)\in \bar E_i|(w,v) \in \bar{E}_{i_0}}
-}
-where $i_0 \in \sR_{opt}$.
-\begin{thm}
-For each configuration $i \notin \sR_{opt}$ it is possible to construct a finite sequence of transitions leading from $i$ to a globally minimal configuration.`
-\end{thm}
-$Proof:$ Choose an arbitrary configuration $i_0 \in \sR_{opt}$ and construct a sequence of configurations $\set{\lambda_0, \lambda_1,\cdots}$ as follows.
+where $E_i$ is the energy of the $i^{th}$ subsystem and E is the average energy.\\\\
+According to the \textbf{principle of maximum entropy} , if nothing is known about
+distribution except that it belongs to a certain class (usually defined in terms of specified
+properties or measures), then the distribution with the largest entropy should be chosen as
+the least-informative default. The motivation is two fold
 \begin{enumerate}
-\item $\lambda_0 = i$.
-\item $\lambda_{k+1}$ is obtained from $\lambda_k$ by reversing an arc $e \in K_{\lambda_k}(i_0)$ in $E_{\lambda_k}$. We already saw that this can be done without creating a cycle in $D_{\lambda_{k+1}}$.
+    \item Maximizing entropy minimizes the amount of prior information built into the distribution.
+    \item Many physical systems tend to move towards maximal entropy configurations over time.
 \end{enumerate}
-If $|\bar M_{\lambda_k}(i_0)| > 0$, then
+Now in-order to derive the probability distribution of the system we maximize the entropy for
+the reasons mentioned above given the two constraints.Maximizing $H(p)$ is same as minimizing
+$F(p)=-H(p)$. So the minimizing problem can be formulated as:
 \EQ{
-|\bar M_{\lambda_{k+1}}(i_0)| = |\bar M_{\lambda_k}(i_0)| - 1.
+\min_{pi}F(p)\quad  
+\text{subject to:}\quad 1.\sum_i p_i = 1 \quad  2.\sum_i p_i E_i= E
 }
-Then, if $|\bar M_{\lambda_0}(i_0)| = k$, then $|\bar M_{\lambda_k}(i_0)| = 0$. 
-We know that $K_i{i_0} \subset M_i{i_0} \subset \bar M_i{i_0}$. So, if $|\bar M_{\lambda_0}(i_0)| = k$, then  $K_{\lambda_k}(i_0)= \phi$. From lemma 3.2, this implies that $\lambda_k \in \sR_{opt}$.
+For solving the above problem we use the method of Legrange multipliers.Taking $\alpha$ and
+$\beta$ as the two constant multipliers we write:
+\EQ{
+F(p) + \alpha (\sum_i p_i - 1) + \beta(\sum_i p_i E_i - E) = F'(p)
+}
+Taking derivative of the above function with respect to $p_i$ (PS: minimizing is done with
+respect to $p_i$), we get,
+\EQ{
+\frac{\partial{F'(p)}}{\partial {p_i}} = \log{p_i} + 1 + \alpha + \beta E_i = 0
+}
+\EQ{
+p_i = e^{-(1+\alpha)}e^{-\beta E_i}.
+}
+Taking $Z = e^{(1+\alpha)}$ we get,
+\EQ{
+p_i = \frac{1}{Z}e^{-\beta E_i}
+}
+For completing the derivation of the distribution we are required to find the value of $\beta$ as well as $Z$.By applying the first constraint, $\sum_i p_i = 1$ we get, 
+\EQ{
+Z(\beta) = \sum_i{e^{-\beta E_i}}
+}
+This $Z(\beta)$ is known as the \textbf{partition function}.Now the only remaining task is to evaluate the constant $\beta$.For this we take a look at the \textbf{definition of temperature} in thermodynamics. In thermodynamics temperature is defined as the \textbf{rate of change of energy with unit change in entropy}. 
+\EQ{
+T = \frac{\partial E}{\partial H}
+}
+For finding temperature we need to evaluate E and H. For this we make use of the second constraint $\sum_i p_i E_i= E$. From this we get ,
+\EQ{
+\sum_i \frac{1}{Z}e^{-\beta E_i} E_i = E
+}
+Using the observation, 
+\EQ{
+\frac{\partial Z}{\partial \beta} = - \sum_i e^{-\beta E_i} E_i
+}
+we get,
+\EQ{
+E = - \sum_i \frac{1}{Z}e^{-\beta E_i} E_i =- \frac{\partial \log{Z(\beta}}{\partial \beta}
+}
+Now, entropy H has to be evaluated for the derived $p_i$. 
+\EQ{
+H(p)= - \sum_i p_i \log p_i = \sum_i \frac{1}{Z}e^{-\beta E_i} [\beta E_i + \log Z]
+}
+On expanding we get,
+ \EQ{
+H(p) = \beta E + \log{Z} 
+ }
+For finding $\beta$ we find temperature$ T = \frac{\partial E}{\partial H} $
+\EQ{
+\partial H = \beta \partial E + E \partial \beta + \frac{\partial \log{Z(\beta)}}{\partial \beta} \partial \beta
+}
+Therefore temperature,
+\EQ{
+T = \frac{\partial E}{\partial H} = \frac{1}{\beta}
+}
+Thus we have evaluated the value of $\beta$. Hence the result, 
+
+\EQ{
+p_i = \frac{1}{Z}e^{-\beta E_i} ,\quad \text{where} \quad Z(\beta) = \sum_i{e^{-\beta E_i}} ,\quad  \beta = \frac{1}{T}
+}
+
+\section{CDMA in a nutshell}
+
+CDMA stands for Code Division Multiple Access.As the name suggests it is a channel access method which makes use of "codes". Multiple users occupy the same band by having different codes. The information sequence generated by a user is modulated with a spreading code before sending it to the channel.The spreading code design is one of the major tasks in CDMA system design.The ideal characteristics of the spreading codes are as follows:
+\begin{enumerate}
+    \item Spreading code of each user should be orthogonal to other users' spreading code.
+    \item The auto-correlation of the spreading code (with respect to its shifted versions) should be 0.
+\end{enumerate}
+There are two types of CDMA techniques namely Frequency-hopping spread spectrum and Direct sequence spread spectrum. The idea behind frequency hopping is to transmit data across a broad spectrum where the frequency can be rapidly switched from one to another.For rapid switching the system makes use of pseudo random sequence generators. The former technique is the one described in the beginning of this section.\\
+The main application of CDMA is in the GPS systems.It is also employed in 3G,4G systems.
+
+\section{System Model}
+Consider a fully synchronous K-user CDMA system. The received signal corresponding to a spreading sequence is given by,
+\EQ{
+r^\mu = \frac{1}{\sqrt{N}}\sum_{k=1}^{K}s_k^\mu x_k + \sigma_0n^\mu 
+}
+where, $x_k \in \{-1,1\}$ is the information bit of $k^{th}$ user, $\{s_k^\mu$ ; $\mu = 1,2,...,N\}$ is the spreading sequence of $k^{th}$ user and $N$ is the number of spreading sequences.\\\\
+Assume AWGN channel : $n^\mu \sim \mathcal{N}(0,1)$. $\sigma_0$ is the amplitude of the noise and $\frac{1}{\sqrt{N}}$ is the normalization factor.\\\\
+Assume a random spreading model where $\{s_k^\mu$ ; $\mu = 1,...,N$ ; $k=1,...,K\}$ are iid random variables. For representing the communication model, consider the following definitions.
+
+\begin{align*}
+\mathbf{r} \:\equiv& \;[\;r^1,\;.\;.\;.\;,\;r^N\;]^T \\  \mathbf{s_k}\; \equiv&\; [\;s_k^1,\;.\;.\;.\;,\;s_k^N\;]^T,\qquad k=1,\;.\;.\;.\;,\;K\\ \mathbf{n}\; \equiv&\; [\;n^1,\;.\;.\;.\;,\;n^N\;]^T\\\mathbf{x} \;\equiv&\; [\;x_1,\;.\;.\;.\;,\;x_K\;]^T
+\end{align*}   
+The communication model, hence can be represented as,
+\EQ{
+r = \frac{1}{\sqrt{N}}Sx +\sigma _0n
+}
+where $S \equiv [s_1,...,s_K]$\\\\
+The conditional distribution of the received data $r$, conditioned on the information bits $x$ for given spreading sequence $S$, is given by,
+\EQ{
+    p_0(r|x,\:S) = p_{\sigma _0n}(r-\frac{1}{\sqrt{N}}Sx)
+}
+Since $\sigma _0n \sim \mathcal{N}(0,\sigma_0^2)$,
+\EQ{
+    p_0(r|x,\:S) = (2\pi \sigma_0^2)^{-N/2}exp\big{(}-\frac{1}{2\sigma_0^2}\|r-N^{-1/2}S_x\|^2\big{)}
+}
+For large system limit, consider infinite number of users and spreading codes, ie. $K\rightarrow \infty$, $N\rightarrow \infty$, while
+\EQ{
+\frac{K}{N} = \beta \quad \text{,is kept constant}
+}
+Posterior distribution $(p(x|r,\:S))$ is the main quantity used for analyzing the multiuser detection problem.\\\\
+Assume that the true amplitude $\sigma_0$ remains unknown, $\sigma$ is used as the control parameter instead of $\sigma_0$. Therefore the posterior distribution is,
+\EQ
+{
+\begin{split}
+p(x|r,\:S) &= \frac{p(r|x,\:S).p(x)}{\sum_{x} p(r|x,\:S).p(x)} \qquad \text{(By Bayes theorem
+)}\\ &= \frac{p(x).exp\big{(}-\frac{1}{2\sigma^2}\|r-N^{-1/2}Sx\|^2\big{)}}{\sum_{x} p(x
+).exp\big(-\frac{1}{2\sigma^2}\|r-N^{-1/2}Sx\|^2\big)}
+\end{split}
+}
+Denote $Z(r,s) = \sum_{x}p(x).exp\big(-\frac{1}{2\sigma^2}\|r-N^{-1/2}Sx\|^2\big)$.\\\\
+$Z(r,s)$ is the normalizing coefficient and is called the partition function.
+\section{Multiuser Detectors}
+\subsection{Marginal Posterior Mode (MPM) detector}
+Here the estimate of the information bit for the $k^{th}$ user is given by,
+\EQ{
+\hat{x_k}^{(MPM)} = arg \max_{x_k} \sum_{x|x_k}p(x|r,S) \quad k=[K]
+}
+Here the summation is over all $x_j, j \neq k$ (marginalizing the posterior distribution over all $x_j, j \neq k$).The MPM detector is used when the control parameter $\sigma$ is unknown. 
+
+\subsection{Jointly Optimal (JO) multiuser detector}
+
+The estimate of the received \textbf{vector} is given by,
+\EQ{
+\hat{x}^{(JO)} = arg \max_{x} p(x|r,S) 
+}
+Here the maximal value of posterior probability is found for the vector as a whole.This kind of jointly optimal decoding is performed when the value of the control parameter $\sigma$ tends to 0.($\sigma \to 0$)
+
+\subsection{Individually Optimal (IO) multiuser detector}
+This detector is very similar to the MPM detector, but the difference here is that the control parameter $\sigma$ is known. Taking $\sigma$ as $\sigma_0$ we get the estimate of the data bit for the $k^{th}$ user as 
+\EQ{
+\hat{x_k}^{(MPM)} = arg \max_{x_k} \sum_{x|x_k}p(x|r,S)|_{\sigma=\sigma_0} \quad k=[K]
+}
+
+As a general observation we can see that the MPM detector is jsut a single parameter extension of JO and IO detectors. 
+\subsection{Performance Measure}
+The performance measure for multiuser detectors is done by calculating the bit error rate $P_b$.Let $x_0$ represent the true information-bit vector and $\hat{x}$ be the estimate output by the detector.Define:
+\EQ{
+d = \frac{1}{K}\sum_{k=1}^{K}x_{0k}\hat{x_k}=\frac{1}{K}x_0 \hat{x}
+}
+The quantity d is nothing but the \textit{correlation} of the detector output.\\\\
+\textbf{Claim: } The bit error rate $P_b$ = $\frac{1-d}{2}$
+ \begin{proof}
+\EQ{
+\begin{split}
+d &= \frac{1}{K}\sum_{k=1}^{K}x_{0k}\hat{x_k} \\&= \frac{1}{K}(\sum_k{\indicator{x_{0k}
+=\hat{x_k}}}-\sum_k{\indicator{x_{0k}\neq \hat{x_k}}})
+\end{split}
+}
+\EQ{
+\frac{1-d}{2} = \frac{1}{2}\Big[1-\frac{1}{K}(\sum_k{\indicator{x_{0k}=\hat{x_k}}}-\sum_k{\indicator{x_{0k}\neq \hat{x_k}}})\Big] = \frac{1}{2} \Big[\frac{K-\sum_k{\indicator{x_{0k}=\hat{x_k}}}+\sum_k{\indicator{x_{0k}\neq \hat{x_k}}}}{K}\Big]
+= \frac{1}{2}\Big[\frac{2\sum_k{\indicator{x_{0k}\neq \hat{x_k}}}}{K} \Big]
+}
+Therefore,
+\EQ{
+\frac{1-d}{2} =\Big[\frac{\sum_k{\indicator{x_{0k}\neq \hat{x_k}}}}{K} \Big]
+}
+The above equation is nothing but the fraction of bits that are wrongly decoded. Thus the claim,
+\EQ{
+P_b = \frac{1-d}{2}
+}
+\end{proof}
+
+\section{Large system CDMA}
+As mentioned before the large system analysis is done for very high number of users as well well large number of spreading codes i.e. the limit when K,N $\rightarrow$ $\infty$. The free energy per user is defined as:
+\EQ{
+F_K(r,S) = K^{-1} \log{Z(r,S)}
+}
+One basic assumption is that the above mentioned free energy per user is self averaging in the limit K tending to infinity (with respect to the randomness of the spreading code).The formal statement follows.\\
+ 
+\textbf{Assumption: } \textit{The limit $F \triangleq \lim_{K \to \infty} F_K(r,S)$ exists and it is equal to its average for almost all realizations of the spreading sequences and the noise.}\\
+We have,\\
+\EQ{
+F = \lim_{K \to \infty} K^{-1} \int_{R^{N}}\overline{p_0(r/S)\log{Z(r,S)}}dr \quad (dr = \prod_{\mu=1}^{N}dr^{\mu})
+}
+ 
+The over-bar represents the averaging with respect to the randomness of the spreading codes and $p_0(r/S)$ is the probability of observing r as the output of the true channel, for the given spreading sequences S. The true channel corresponds to the one where the value of the control parameter ($\sigma_0$) is known.Therefore we have,
+\EQ{
+p_0(r/S)=\sum_{x_0}p(x_0)p_0(r/x_0,S) \triangleq Z_0(r,S)/C 
+}
+where,
+\EQ{
+Z_0(r,S) = \sum_{x_0} p(x_0).exp\big{(}-\frac{1}{2{\sigma_0}^2}\|r-N^{-1/2}Sx_0\|^2\big{)}
+}
+and the normalization constant C is :
+\EQ{
+C = \int_{R^{N}} Z_0(r,S) dr = {(2\pi \sigma_0)}^{N/2}
+} 
+This constant C is independent of the spreading sequences.\\\\
+
+The free energy contains all the information about the statistics of the system. Therefor its necessary to evaluate the free enrgy.The free energy evaluation invloves highly complicated calculations such as finding the expectation of logarithm of functions. This would require the need of a very important analysis in statistical mechanics, namely \textit{replica analysis}  
+
+
+
+\section{Replica Method}
+
+Here, there is a problem for calculating the posterior average;
+\EQ{
+ a(\textbf{y,s}) \equiv  = \sum_{\textbf{x}}a(\textbf{x,y,s})p(x \mid \textbf{y,s}),
+}
+
+where $\textbf{x}$ is a random vector representing configurations of the underlying probability model, $\textbf{y}$ is another random vector representing observables, $\textbf{s}$ is a set of parameters, $a(\textbf{x,y,s})$ is a function of $\textbf{x, y}$ and $\textbf{s}$, and $p(\textbf{x}\mid\textbf{y,s})$ is an assumed posterior distribution of $\textbf{x}$ conditioned on the values of $\textbf{y}$ the observables and the parameters $\textbf{s}$. The posterior distribution is to be derived of from Bayes theorem, with an assumed prior distribution $p(\textbf{x})$ of $\textbf{x}$, and an assumed conditional distribution $p(\textbf{y} \mid \textbf{x,s})$ of $\textbf{y}$ on $\textbf{x}$ , parametrized by $\textbf{s}$, as
+
+\EQ{
+    p(\textbf{x} \mid \textbf{y,s}) = \frac{ p(\textbf{y} \mid \textbf{x,s})}{\sum_{x} p(\textbf{y} \mid \textbf{x,s})}
+}
+The posterior average $a(\textbf{y,s})$ depends on the observables $\textbf{y}$ and, quite often, they are also random variables. In such cases, over all possible the quantity of interest is the average of $a(\textbf{y,s})$ observed values, that is,
+\EQ{
+    E_{\textbf{y}}[a(\textbf{y,s})]
+}
+
+where $E_{\textbf{y}}[.]$ denotes expectation with respect to the true distribution of $\textbf{y}$, which may or may not be equal to the assumed one.
+
+We now consider the case in which the parameters $\textbf{s}$ are also random, and are assumed to be independent of $\textbf{x}$. This is actually the case for the CDMA multiuser detection problem under the
+random spreading assumption. Let  $\textbf{x,y}$, and $\textbf{s}$ be the information bit vector, the received signals, and the spreading sequences of all users, respectively. For every $\textbf{s}$, one can in principle calculate the average bit-error rate. One still has to average the result over the randomness of the spreading sequences to obtain the desired result. In general, we want to evaluate quantities like
+\EQ{
+    E_{\textbf{y,s}}[a(\textbf{y,s})]
+}
+
+In statistical-mechanics literature, the average over $\textbf{y}$, and $\textbf{s}$ is called the \textit{quenched average}. When one first takes the average with respect to the posterior distribution, one has to quench the values of $\textbf{y}$, and $\textbf{s}$ . The result is then averaged over $\textbf{y}$, and $\textbf{s}$ . Very often, one encounters difficulties in the evaluation of the quenched average. This becomes evident by rewriting the quenched average as
+
+\EQ{
+\begin{split}
+      E_{\textbf{y,s}}[a(\textbf{y,s})] &=   E_{\textbf{y,s}}[\sum_{\textbf{x}}a(\textbf{x,y,s})p(\textbf{x} \mid \textbf{y,s})] \\ &= E_{\textbf{y,s}}[\frac{\sum_{\textbf{x}}a(\textbf{x,y,s})p(\textbf{y} \mid \textbf{x,s})p(\textbf{x})}{\sum_{x} p(\textbf{y} \mid \textbf{x,s})p(\textbf{x})}]
+\end{split}
+}
+
+One now has to take the expectation of a ratio of random variables $\sum_{\textbf{x}}a(\textbf{x,y,s})p(\textbf{y} \mid \textbf{x,s})$ and $\sum_{x} p(\textbf{y} \mid \textbf{x,s})$ is in general difficult. A related quantity is the \textit{annealed average}, or the annealed approximation to the quenched average, which is given by taking the expectation for the denominator and the
+numerator separately, that is,
+
+\EQ{
+ \frac{E_{\textbf{y,s}}[\sum_{\textbf{x}}a(\textbf{x,y,s})p(\textbf{y} \mid \textbf{x,s})p(\textbf{x})]}{E_{\textbf{y,s}}[\sum_{x} p(\textbf{y} \mid \textbf{x,s})p(\textbf{x})]}
+}
+
+The calculation of the annealed average is usually much simpler than that of the quenched average, so that the annealed average is often used as an approximation to the quenched average, but the final results are in general different from each other.
+
+Let us define the moment generating function of $a(\textbf{x,y,s})$, or the partition function, of the (unnormalized) measure $p(\textbf{y} \mid \textbf{x,s})$ of $\textbf{x}$, given $\textbf{y}$ and $\textbf{s}$, as
+
+\EQ{
+Z(h;\textbf{y,s}) = \sum_{x} e^{h.a(\textbf{x,y,s})}p(\textbf{y} \mid \textbf{x,s})p(\textbf{x})
+}
+
+If we could evaluate the average
+
+\EQ{
+E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}]
+}
+
+we would obtain the desired quenched average by
+
+\EQ{
+E_{\textbf{y,s}}[a(\textbf{y,s})] = \frac{\partial}{\partial h}E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}] \mid _{h \to 0}
+}
+
+by exchanging the order of the expectation and the differentiation by \textit{h}. Of course, this simple manipulation does not help resolve the difficulty we are faced with. The difficulty we encounter here is that the evaluation of the average $E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}]$ is often hard. Now we have to average the \textit{logarithm} of a sum of random variables, which prevents us in most cases from evaluating it analytically. Also, it is usually computationally hard. The summation may be over a very large number of terms in large-sized problems. Again, it is generally far easier to evaluate the average instead
+
+\EQ{
+E_{\textbf{y,s}}[{Z(h;\textbf{y,s})}]
+}
+
+but the calculation
+\EQ{
+\frac{\partial}{\partial h}\log{E_{\textbf{y,s}}[{Z(h;\textbf{y,s})}]}_{h \to 0}
+}
+
+only yields the annealed average, which is, in general, the wrong answer.
+The replica method is a way to evaluate $E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}]$. It makes use of the identity
+
+\EQ{
+E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}] = \lim_{n \to 0} \frac{\partial}{\partial n}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]}
+}
+
+and replaces the evaluation of the average $E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}]$ with that of
+
+\EQ{
+E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]
+}
+
+It should be noted that the quantity $[Z(h;\textbf{y,s})]^n$ is well-defined for real \textit{n}. In applying the replica method, however, one
+usually evaluates $E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]$ for positive integer \textit{n} only, by regarding $[Z(h;\textbf{y,s})]^n$ as the partition function of the probability model consisting of \textit{n} independent and identical replicas of the original probability model for a given $\textbf{y}$ and $\textbf{s}$, that is,
+
+\EQ{
+[Z(h;\textbf{y,s})]^n = \sum_{x_1, ...... x_n} {e^{h.a(\textbf{x,y,s})}}\prod_{i=1}^{n}[p(\textbf{y} \mid \textbf{x}_{i},\textbf{s})p(\textbf{x}_{i})]
+}
+
+Since the replica method has been developed in statistical mechanics, it has been extensively applied to the analysis of models in the large-system (thermodynamic) limit. In such cases, the replica method is used in conjunction with the saddle-point method, or Varadhan’s theorem for asymptotics of integrals. Let \textit{K} be a parameter representing the size of a problem , and let us further assume that $a(\textbf{x,y,s})$
+scales with \textit{K} so that the actual quantity of interest is the asymptotic value of the quenched average of $K^{-1}a(\textbf{x,y,s})$ as $K \to \infty$. In this case, we have to evaluate the free energy defined as
+\EQ{
+\mathscr{F}\equiv \lim_{K \to \infty}{K^{-1} E_{\textbf{y,s}}[\log{Z(h;\textbf{y,s})}]}
+}
+    The replica method replaces the right-hand side of above equation as
+\EQ{
+  \mathscr{F} = \lim_{K \to \infty}{K^{-1} \lim_{n \to 0} \frac{\partial}{\partial n}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]}}
+}
+
+The approach of combining the replica method with the saddle point method is efficient if the following conditions are met.
+
+The two limits $\lim_{K \to \infty}$ and $\lim_{n \to 0}$ can be interchanged, so that the equality
+\EQ{
+  \mathscr{F} = \lim_{n \to 0} \frac{\partial}{\partial n}\lim_{K \to \infty}{K^{-1}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]}}
+}
+holds.
+
+Dependence on $\textbf{x}$ of the function
+\EQ{
+e^{h.a(\textbf{x,y,s})}\prod_{i=1}^{n}[p(\textbf{y} \mid \textbf{x}_{i},\textbf{s})]
+}
+
+is expressed in terms of a set of parameters $q = q\{\textbf{x}_{i}\}$ (which may be functionals) and the average of the function over $\textbf{y}$ and $\textbf{s}$ can be performed analytically \textit{for fixed} \{$\textbf{x}_{1}, ...., \textbf{x}_{n}$\}, yielding a result of the form $\exp[{Kg(q)}]$ where $g(q)$ is a continuous function of $\textit{q}$ whose supremum is finite.
+
+The probability measure $\mu_{K}(q)$ of the parameters $q = q\{\textbf{x}_{i}\}$, induced by the prior
+$\prod_{i =1}^{n} p({\textbf{x}_{i}})$, has a large deviation property with a rate function $\mathscr{I}(q) $ as $K \to \infty$. This enables us to evaluate ${K^{-1}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]}}$ asymptotically using Varadhan’s theorem, as
+
+\EQ{
+\begin{split}
+    K^{-1}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]} &= K^{-1}\log{E_{\textbf{y,s}}[\sum_{x_1, ...... x_n} {e^{h.a(\textbf{x,y,s})}}\prod_{i=1}^{n}\{p(\textbf{y} \mid \textbf{x}_{i},\textbf{s})p(\textbf{x}_{i})\}]}\\ &= K^{-1}\log \int {E_{\textbf{y,s}\mid q}e^{h.a(\textbf{x,y,s})}\prod_{i=1}^{n}\{p(\textbf{y} \mid \textbf{x}_{i},\textbf{s})\mu_{K}(q)dq}
+    \\ &= K^{-1}\log{\int{e^{Kg(q)}\mu_{K}(q)dq}}\\
+    & \to \sup_{q}[g(q) - \mathscr{I}(q)], K \to \infty
+\end{split}
+}
+
+\begin{shaded*}
+\begin{thm}
+In mathematics, \textbf{Varadhan's lemma} is a result from large deviations theory named after \textit{S. R. Srinivasa Varadhan}. The result gives information on the asymptotic distribution of a statistic $\phi(Z_\epsilon)$ of a family of random variables $Z_\epsilon$ as $\epsilon$ becomes small in terms of a rate function for the variables. 
+
+Let X be a regular topological space; let $(Z_\epsilon)_{\epsilon>0}$ be a family of random variables taking values in $X$; let $\mu_\epsilon$ be the law (probability measure) of $Z_\epsilon$. Suppose that $(\mu_\epsilon)_{\epsilon>0}$ satisfies the large deviation principle with good rate function $\mathscr{I} : X \to [0, +\infty]$. Let $\phi  : X \to  \mathbb{R}$ be any continuous function. Suppose that at least one of the following two conditions holds true: either the tail condition
+
+\EQ{
+\lim_{M \to \infty}\lim\sup_{\epsilon \to 0} (\epsilon \log{\mathbb{E}[\exp[\frac{\phi(Z_\epsilon)}{\epsilon}]\mathbb{1}(\phi(Z_\epsilon)\geq M)]}) = -\infty
+}
+
+
+where $\mathbb{1}(E)$ denotes the indicator function of the event $E$; or, for some $\gamma > 1$, the moment condition
+\EQ{
+\lim\sup_{\epsilon \to 0}(\epsilon \log{\mathbb{E}[\exp[\gamma\frac{\phi(Z_\epsilon)}{\epsilon}]]}) < \infty
+}
+
+Then
+
+\EQ{
+\lim_{\epsilon \to 0} \epsilon \log{\mathbb{E}[\exp[\frac{\phi(Z_\epsilon)}{\epsilon}]]} = \sup_{x \in X}(\phi(x) - \mathscr{I}(x))
+}
+\end{thm}
+\end{shaded*}
+
+Now we assume that $\textbf{x}$ has K components, and that $p(\textbf{x})$ implies that the components $x_k$ of $\textbf{x}$ are i.i.d. We furthermore assume that $q$ consists of empirical means of $K$ i.i.d. random variables, each of which depends on $\{x_{ik} \mid i = 1, ..... ,n\}$. Then, we can apply Cramér’s theorem to the measure $\mu_{K}(q)$ to prove its large deviation property, and it turns out that the rate function $\mathscr{I}(q)$ is given in terms of the Fenchel–Legendre transform as
+
+\EQ{
+\mathscr{I}(q) = \sup_{\tilde{q}}[\tilde{q}.q - \phi(\tilde{q})]
+}
+
+where
+\EQ{
+\phi(\tilde{q}) \equiv \log{\sum_{\textbf{x}_{1}, ...., \textbf{x}_{n}}}e^{\tilde{q}.q\{\textbf{x}_i\}}\prod_{i =1}^{n} p({\textbf{x}_{i}})
+}
+is the cumulant generating function of $q\{\textbf{x}_i\}$ with respect to the prior distribution of $\{\textbf{x}_i\}$.
+
+Now,
+\EQ{
+\lim_{K \to \infty} K^{-1}\log{E_{\textbf{y,s}}[\{Z(h;\textbf{y,s})\}^n]} = \sup_{q}\inf_{\tilde{q}}[g(q) - \tilde{q}.q - \phi(\tilde{q})]
+}
+Taking derivative with respect to and taking the limit we obtain the free energy .
+
+\section{Replica Analysis for MPM Detectors}
+In order to evaluate the free energy, we make use of the replica
+method, by which we have
+\EQ{
+\mathscr{F} = \lim_{K \to \infty} \Bigg(\lim_{n \to 0} \frac{\partial}{\partial n}K^{-1}\log{\Xi_n}\Bigg)
+}
+where
+
+\EQ{
+\Xi_n = C^{-1}\int_{\mathbb{R}^N}{\overline{Z_0(\textbf{r},S)[Z(\textbf{r},S)]^n}d\textbf{r}}
+}
+
+It should be noted that, for finite $K$ and $\Xi_n$, is well-defined for real $n$. It is straightforward to see that we can exchange the order of the averaging and the differentiation with respect to $n$.In the replica method, however, we will evaluate $\Xi_n$ only for positive integers $n$.
+
+\textit{Assumption 2}:$\Xi_n$ for real $n$ is given, at least in the vicinity of $n = 0$, by plugging the value of $n$ into the expression of $\Xi_n$ obtained by evaluating it only for positive integers $n$.
+
+Since $[Z(\textbf{r},S)]^n$ for integer $n$ is nothing but the normalizing coefficient for a system consisting of $n$ replicas of the posterior probability sharing the same $\textbf{r}$ and $S$, we can write down $\Xi$ as
+
+\EQ{
+\Xi_n = \sum_{\textbf{x}_0,...,\textbf{x}_n}\prod_{a = 0}^{n}p(\textbf{x}_a)\Bigg\{\frac{1}{\sqrt{2\pi{\sigma_0}^2}}\int_{\mathbb{R}}{\overline{\exp\Bigg[-\frac{1}{2{\sigma_0}^2}\Bigg(r-\frac{1}{\sqrt{N}}\sum_{k=1}^{K}s_kx_{0k}\Bigg)^2\Bigg]\prod_{a=1}^{n}\exp\Bigg[-\frac{1}{\sqrt{2{\sigma}^2}}\Bigg(r - \frac{1}{\sqrt{N}}\sum_{k=1}^{K}s_kx_{ak}\Bigg)^2\Bigg]}dr}\Bigg\}^N
+}
+
+where we have introduced replicated random variables 
+
+$$\textbf{x}_a \equiv[x_{a1}, x_{a2}, x_{a3}, .... , x_{aK}]^T \in \{-1,1\}^K, \qquad \qquad a=1,...,n$$\\
+to represent the random variables of the replicated posterior probabilities. The integrand depends on $\textbf{x}$ only through
+
+\EQ{
+v_0 = \frac{1}{\sqrt{K}}\sum_{k=1}^{K}s_kx_{0k} \qquad \qquad \qquad \qquad
+}
+
+and
+
+\EQ{
+v_1 = \frac{1}{\sqrt{K}}\sum_{k=1}^{K}s_kx_{ak},\qquad \qquad a = 1, .... ,n
+}
+
+Under mild additional conditions on the statistics of $S$, these quantities can be regarded, in the $K \to \infty$ limit, as joint Gaussian random variables with means $0$ and covariances $Q_{ab} \equiv \overline{v_av_b} = K^{-1}\textbf{x}_a\textbf{x}_b$. Based on this observation, we decompose the summation over $\{\textbf{x}_a\}$ into two steps. First we perform the summation over a single subshell of the form
+
+$$S\{Q\} \equiv \{\textbf{x}_0, . . . , \textbf{x}_n \mid \textbf{x}_a\textbf{x}_b = KQ_ab\}$$
+
+and then integrate the result over all subshells. Thus, we have
+
+\EQ{
+\Xi_n = \int_{[-1,1]^{\frac{n(n+1)}{2}}}{\exp[K\beta^{-1}\mathscr{G}\{Q\}]\mu_K\{Q\}\prod_{a<b}dQ_{ab}}
+}
+
+where
+
+\EQ{
+\mu_K\{Q\} = \sum_{\textbf{x}_0,...,\textbf{x}_n}\prod_{a=0}^{n}p(\textbf{x}_a)\prod_{a<b}\delta(\textbf{x}_a.\textbf{x}_b - KQ_{ab})
+}
+
+is the probability weight of the subshell $S\{Q\}$, and
+
+\EQ{
+e^{\mathscr{G}(Q)} = \frac{1}{\sqrt{2\pi{\sigma_0}^2}}\int_\mathbb{R}{\overline{\exp\Bigg[-\frac{\beta}{2{\sigma_0}^2}\Bigg(\frac{r}{\sqrt{\beta}}- v_0(Q)\Bigg)^2\Bigg]\prod_{a=1}^{n}\exp\Bigg[-\frac{\beta}{2{\sigma}^2}\Bigg(\frac{r}{\sqrt{\beta}}-v_a(Q)\Bigg)^2\Bigg]}dr}
+}
+
+\textit{Assumption 3}: The order of the two limits $K \to \infty$ and $n \to 0$ can be interchanged without affecting the final result.
+Based on the assumption, we have
+$$\mathscr{F} = \lim_{n \to 0}\frac{\partial}{\partial n}\Bigg(\lim_{K \to \infty}K^{-1}log \Xi_n\Bigg)$$
+
+From the theory of large deviations we know from Cramér’s theorem that the probability measure $\mu_K\{Q\}$ of the empirical means 
+
+$$Q_{ab} = K^{-1} \sum_{k=1}^{K}x_{ak}x_{bk}$$
+
+satisfies, as $K \to \infty$, the large deviation property with a rate $\mathscr{I}(Q)$. Then, applying Varadhan’s theorem yields
+\EQ{
+\lim_{K \to \infty}K^{-1}log \Xi_n = \sup_{Q}(\beta^{-1}\mathscr{G}(Q) - \mathscr{I}(Q))
+}
+
+Taking the derivative with respect to and then the limit we will obtain the final result.
+
+
+
 \end{document}
