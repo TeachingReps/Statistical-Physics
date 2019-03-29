@@ -1,406 +1,191 @@
-
-\documentclass[letterpaper,english,12pt]{article}
-
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
-\graphicspath{{./Figures/}}
-%\usepackage{witharrows}
 
-\usepackage{multirow}
- \usepackage{booktabs}
-%opening
-\title{Lecture-24: Game Theory,Statistical Mechanics,Income Inequality}
-\author{Vivek VP}
+\title{Simulated Annealing}
 
 \begin{document}
 \maketitle
-\section{Problem of income inequality}
-Income inequality has been a growing concern in recent years. For example as of 2010, the top 1\% of households in the US owned 35.4 \% of all privately held wealth. This was just 20\% in 1976. Taking a look at India's situation; as per 2016 statistics,India is the second most unequal country in the world. Top 1\% rich people of India holds 58.4\% of wealth. These statistics show how severe is the wealth inequality and income inequality. There are many causes for this including poor infrastructure in rural areas. These have serious impact on living conditions of poor people. Poor people is denied access to good health and education which in turn turns this inequality to a social level. All this happens despite India's GDP is increasing faster than many countries of comparable scenario.
 
-\section{Free market}
-In a free market laws of supply and demand is free from any external intervention like government agencies. This includes an employer can hire and fire employees and employees can take new offers from a different employer if there is a better utility. 
+\section{Jobshop scheduling}
+The jobshop scheduling problem is one of the hardest combinatorial optimization problem and can be described as follows.
+We are given a set of jobs and a set of machines. 
+Each job consists of a chain of operations. 
+Each operation requires to be processed by some machine for a finite time without interruption. 
+Also, the given machines cannot process more than one operation at any given time.
+Therefore, the operations has to be allocated to time intervals on different machines. This is also known as \emph{scheduling}.
+The problem is to find a schedule of minimum length.\\
 
-\section{Income inequality in pay distribution}
-Let us now focus on  the inequality in pay scale of employees in an organization. As of 2009 top 1\% of income earners received 17.2\% if income. Fundamental to solving this problem is understanding why this occurs. Clearly different employees make different contributions and this implies a certain amount of  inequality in income and wealth has to be expected. So we can ask the question what is a fair inequality? What kind of pay distribution will arise, under ideal conditions in a free market where employers are seeking profit maximization and employees are seeking utility maximization?
-
-\section{Connection between statistical physics and income inequality problem}
-There has been a lot of effort to model income and wealth distributions by applying statistical physics method. But appreciating those efforts there is still a conceptual gap between them. How will a theory of random particles with no intelligence be able to model a environment that consists of rational profit seeking agents? 
-
-\section{Game Theory}
-We will use theory of potential games as a tool for getting the equilibrium of income inequality problem. So lets take a brief introduction to game theory. \\
-Game theory is the study of mathematical models for strategic interaction between rational and intelligent agents. There are different types of games. Let us look at the one relevant to us which is strategic form games. Let us discuss a bit on what terms rational and intelligent means:
-
-\begin{defn}
-Strategic Form Game: A strategic form game $\Gamma$ is a tuple $\langle N, (S_i)_{i\in N}, (u_i)_{i \in N} \rangle$ , where 
+Now we define the problem formally.
+We have a set of $n$ jobs, denoted by $\sJ = \set{j_1,j_2,\cdots,j_n}$ and a set of $m$ machines, denoted by $\sM = \set{M_1,M_2,\cdots,M_m}$.
+We also assume a set of $p$ operations, denoted by $\sO = \set{1,2,\cdots,p}$.
+For any operation $x \in \sO$, there is a job $j_x$ to which it belongs and a machine $M_x$ on which it is processed. 
+Define a binary relation $\rightarrow$ such that $x \rightarrow y$ then $j_x = j_y$ and there is no $o_z \not\in \set{x,y}$ such that $x \rightarrow z$ and $z \rightarrow y$.
+Also define a start time $s_x$ for each operation $x \in \sO$ and its processing time is denoted by $t_x$.
+Then, the optimization problem maybe stated as follows.
+\EQN{
+\max_{x \in \sO} (s_x + t_x)
+} 
+is minimized subject to 
+\eq{
+&s_v \geq 0 ~\forall~ v \in \sO\\
+& s_w - s_v \geq t_v ,~ v \rightarrow w , ~\forall~v,w \in \sO\\
+& s_w - s_v \geq t_v \wedge  s_v - s_w \geq t_w ~if~ M_v = M_w ,~\forall~v,w \in \sO.
+}
+\subsection{Disjunctive graph model}
+The disjunctive graph (G,A,E) is defined as follows.
 \begin{itemize}
-\item $N = \lbrace 1,2,\dots ,n\rbrace$ is set of players;
-\item $S_1,S_2,\dots S_n$ are sets called the strategy sets of the players $1,\dots , n$ respectively; and
-\item Set of strategy profiles $S$ is the cartesian product of individual strategy sets $S=\lbrace s_1 \times s_2 \times s_N : s_1\in S_1, s_2 \in S_2 \dots s_N \in S_N  \rbrace $
-\item $u_i  : S \rightarrow \R$ for $i=1,2,\dots n$ are mappings called the utility functions or payoff functions.
-
+\item The vertex set , $V = \sO \cup \set{0,N+1}$ where $0$ and$N+1$ are two fictitious operations with zero processing time. The weight of each vertex $o_x$ is $t_x$, the processing time of the operation.
+\item The edges are established between operations run on the same machine.
+That is, $E = \set{(v,w):M_v = M_w}$.
+\item The set $A$ consists of arcs between operatiions of the same job, and from $0$ to the first operation of each job and from last operation of each job to $N+1$. That is, $A = \set{(v,w): v \rightarrow w } \cup \set{(0,v): \nexists~ y ~\ni~ y \rightarrow v} \cup \set{(w,N+1) :\nexists~ y ~\ni~ w \rightarrow o_y}$.
 \end{itemize}
- \end{defn}
-\begin{exmp}
-$ N=\lbrace 1,2 \rbrace ;S_1= S_2 = \lbrace A,B \rbrace ;$ \\ \\
-$u_1(A,A) = 10; u_1(A,B)=0; u_1(B,A) = 0 ; u_1(B.B) = 1;$ \\ \\
-$u_2(A,A) = 10; u_2(A,B)=0; u_2(B,A) = 0 ; u_2(B.B) = 1;$ \\ \\
-\end{exmp}
-Payoff functions of a player is not just dependent on his strategy but also on what strategies others are playing.
-Above example can be put in a tabular form
+\begin{figure}[t]
+  \begin{center}
+  \scalebox{0.75}{\input{Figures/JobshopExample}}
+  \end{center}
+  \caption{The disjunctive graph G of a 3-job 3-machine instance. Operations 1,5 and 9 are processed by machine 1. Operations 2, 4 and 8 by machine 2 and operations 3, 6 and 7 by machine 3. 0 and 10 are the fictitious initial and final operations respectively. Thick arrows denote arcs in A, dotted lines edges in E.}
+  \label{figure:Instance}
+\end{figure}
+Thus, now we have a directed graph in which the longest path actually represent the objective function of the above given optimization problem. 
+For any pair of operations $v,w \in \sO$with $v \rightarrow w$ , the second constraint is represented by an arc $(v,w) \in A$.
+Similarly, for any pair of operations $v,w \in \sO$ with $M_v = M_w$, the third constraint is represented by an edge $(v,w) \in E$.
+The two ways of settling the disjuction is given by the two possible orientation of the edge. 
+So, there is a one-to-one correspondence between the feasible solutions with respect to the third constraint and the orientations of the edges such that resulting graph is acyclic. 
+Thus, the order or permutations of the operations to be processed by each machine will get fixed by these choice of orientations.
+Now the problem can be rephrased as finding a set of machine permutations that minimizes the maximum length path in the given digraph.
 
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-\multirow{2}{*}{1} & \multicolumn{2}{c|}{2} \\ \cline{2-3} 
-                   & A           & B        \\ \hline
-A                  & 10,10       & 0,0      \\ \hline
-B                  & 0,0         & 1,1      \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
+\section{Simulated Annealing}
+Simulated Annealing can be viewed as a generalization of the well known iterative improvement approach to combinatorial optimization problems. Generally, a combinatorial optimization problem is a tuple $(\c{R},C)$, where $\c{R}$ is the set of configurations or solutions of the problem and $C:  \c{R} \rightarrow \R $ is the cost function. To be able to use iterative improvement we need a neighborhood structure $\c{N}: \c{R} \rightarrow 2^{\c{R}}$; thus, for each configuration $i$, $\c{N}(i)$ is a subset of configurations called the $\textbf{neighborhood}$ of $i$.\\ 
 
+At each iteration, the general iterative improvement algorithm typically starts with an initial configuration $i$ and a configuration $j \in \mathcal{N}(i)$ is generated. If $C(j) < C(i)$, the start configuration in the next iteration is $j$, otherwise it is $i$. However, this causes the algorithm to terminate in a local minimum which may differ considerably in cost from the global minimum.
+On the contrary, simulated annealing attempts to find near optimal local minima by allowing the acceptance of cost increasing transitions. More precisely, if $i$ and $j \in \cN(i)$ then the algorithm continues with configuration $j$ with a probability given by $min\{1, exp(-(C(j) -C(i))/c\}$, where $c$ is the temperature.
 
+\subsection{Markov structure}
+For a fixed value of the temperature parameter $c$, the configurations that are consecutively visited by the SA algorithm can be viewed as a markov chain with transition matrix $P = P(c)$ given by,
 
+\eq{
+P_{ij}(c) =
+\begin{cases}
+G_{ij}A_{ij}(c) \when j \neq i \\
+1 - \sum\limits_{k =1,k \neq i}^{|\c{R}|} G_{ik}A_{ik}(c) \when j = i
+\end{cases} 
+}
+where the generation and acceptance probabilites $G_{ij}$, $A_{ij}$ respectively are given by,
+\eq{
+G_{ij}(c) &=
+\begin{cases}
+|\c{N}(i)|^{-1} \when j \in \c{N} \\
+0 \otherwise
+\end{cases}
+\\
+A_{ij}(c) &= min\{1, exp(-(C(j) -C(i))/c\}
+}
+\\
+The stationary distribution of this Markov chain is given by $q_i(c) = \frac{|\c{N}(i)|A_{i_oi}(c)}{\sum_{j \in \c{R}}|\c{N}(j)|A_{i_oj}(c)}$ for some $i_o \in \c{R}_{opt}$, where $\c{R}_{opt}$ is the set of global minimal configurations provided the neighborhoods are such that for each pair of configurations $(i,j)$ there is a finite sequence of transitions leading from $i$ to $j$.\\
+\\
+Equivalently, the latter condition implies the matrix G being irreducible. It can be shown that 
+\eq{
+\lim_{c \downarrow 0} q_i(c) =
+\begin{cases}
+|\c{R}_{opt}|^{-1} \when i \in \c{R}_{opt}\\
+0 \otherwise
+\end{cases}
+}
+\\
+Unfortunately, the neighborhood structure chosen for job shop scheduling in Section 3 is such that the corresponding matrix $G$ is not irreducible. But, we can still prove asymptotic convergence provided the neighborhoods are such that for each configuration $i$ there is a finite sequence of transitions leading from $i$ to some configuration $i_o \in \c{R}_{opt}$.\\
+\\
+We use the fact that every chain can be decomposed in such a way that the recurrent configurations can be divided uniquely into irreducible ergodic sets $X_1 \ldots X_T$ and a set X of transient configurations from which configurations in the ergodic sets can be reached (but not the other way around). If the neighborhoods satisfy the aforementioned condition, then each $X_t$ contains at least one globally minimal configuration.\\
+\\
+The interpretation for the above is as follows, if the Markov chain starts in any one of the ergodic set $X_t$, we have a case similar to $G$ being irreducible and convergence can be argued as before. Else, starting from a transient configuration the Markov chain will eventually land in some ergodic set $X_t$ though it is not a priori known which one, once again we use the same argument.   
 
+\subsection{Practical Considerations}
+For asymptotic convergence, to attain stationary distribution the infinite length of Markov chains cannot be met in practice. In any finite time implementation we have to make choice with respect to each of the following parameters.
 
-
-
-Here first value in payoff cell stands for first player and second value stands for second player.
-\begin{defn}
-Potential Game: A strategic form game is a potential game if there exists a function $\phi:S \to R $ such that $\phi(S')-\phi(S'') = u_i(S') - u_i(S'')~~
-\forall~i , \forall S', S'' \in S $
-\end{defn}
-
-\section{Setting the payoff or utility}
-In general an employee feels they could be doing better given their talent and experience. Utility maximizing, fairness-seeking, teleological agents are always restless. Even though utility obtained by an employee is a complex aggregate, we formulate it as obtained from 3 major factors. 
 \begin{itemize}
-    \item Utility derived from salary.
-    \item Disutility from effort
-    \item Utility from fairness.
-    
+\item the length of the Markov chains
+\item initial and final values of the temperature parameter $c$
+\item the decrement rule of the temperature parameter $c$
 \end{itemize}
-\subsection{A note on fairness}
-Employees are looking for fair compensation for their abilities and contribution to the organization. This will depend on the education and other qualifications the possess. But an employee is looking for appreciation with respect to peers at his level. This means a clerk is not eyeing for the post of a CEO. Similarly a a vice president is not happy if he gets more salary than a clerk. But he expects to get utility on par with other vice presidents. So that means utility from fairness is a function only of number of employees at his level ($N_i$) . 
-\subsection{Functional form for utility terms}
-So we can write \\
-$h_i(S_i,E_i,N_i) = u(S_i) - v(E_i) + f(N_i)$
-$h_i$ : is the total utility of an employee earning a salary $S_i$ by expending an effort $E_i$ while competing with $(N_i -1) $ other agents. \\
+Such a choice is referred to as \textit{cooling schedule} or \textit{annealing schedule}. We choose the length of each Markov chain to be the size of the largest neighborhood and the following decrement rule for jobshop in Section 3.\\
+\eq{
+L_k &= \underset{{ i \in \c{R}} }{\text{max}} | \c{N}(i)| \quad k = 1, 2, \ldots \\
+c_{k+1} &= \frac{c_k}{1 + [ c_k \cdot ln(1 + \delta) / 3\sigma_k]}
+}
+where $c_k$ is the temperature parameter for the $k$th markov chain and $\sigma_k$ is the standard deviation of the cost values of the configurations obtained by generating the $k$th markov chain.
 
-Now we need to come up with functional form for each of the three terms $u,v,f$ \\
-Let us consider the following empirical and theoretical considerations from literature regarding effort $E$ and salary $S$.
-\begin{itemize}
-\item Salary
+\section{Simulated annealing for jobshop scheduling}
+In this section we see how simulated annealing is applied to for solving the jobshop scheduling problem. 
+For this we need a precise definition of configurations, a cost function and a neighbourhood structure. 
+We must show that for any arbitrary configuration $i$ there exists at least one globally minimal configuration $i_0 \in \R_{opt}$ such that it can be reached from $i$ in finite number of transitions.
+\subsection{Configurations}
+In the jobshop scheduling problem, we consider the sets of machine permutations as discussed in first section. In order to solve the problem, we must find the longest path in the directed graph for such a set of permutations. This graph results from the edges in the disjunctive graph and orientations are determined by the permutations.
+Define a configuration $i$ of the problem as a set,
+\EQ{
+\Pi_i = \set{\pi_{i1},\pi_{i2},\cdots, \pi_{im}}.
+}
+If for operation $v \in \sO$, is processed on a machine $M_v = k$, then $\pi_{ik}(v)$  denotes the operation following $v$ on machine $k$. Thus, $\pi_{ik}$ denotes the order in which operations on machine $k$ are processed. Say $m_k$ is the number of operations to be processed by machine $k$. Then, the number of configurations is given by $\prod_{k=1}^{m}m_k!$.
+\subsection{Cost function}
+Say $\bar{D}_i$ is the directed grapah obtained from the disjunctive graph using the edges in $E$ and its orientations set according to $\Pi$. That is , 
+\eq{
+&\bar{D}_i = (V,A\cup\bar{E}_i), where\\
+& \bar{E}_i = \set{(v,w)|\set{v,w} \in E~and~ \pi_{ik}^l(v) = w ~for~ \ in \sM , 1 \leq l \leq m_k-1 }
+}
+Construct the digraph $D_i$ from $\bar{D}_i$ by taking the arcs from $\bar{E}_i$ that connect operations on the same machine. Thus, the longest paths in $D_i$ and $\bar{D}_i$ will have equal length. Therefore, the cost of a configuration $i$ is found by determining the length of the longest path from $0$ to $N+1$ in $D_i$. 
+\subsection{Neighbourhood structure}
+To generate a transition, choose vertices $v$ and $w$ such that :
  \begin{itemize}
-    \item Logarithmic function is commonly used in literature for utility from salary. 
-       
-    \item This gives $u(S_i) = \alpha ln S_i$
-       
-   \end{itemize}
-\item Effort 
-   \begin{itemize}
-    \item  Work by Katz and Akerlof gives following conditions to be satisfied by effort $E$ as a function of salary $S$
-    \begin{itemize}
-        \item $dE/dS >0$
-        \item $E(0) \leq 0 $
-        \item the elasticity $S/E \times (dE/dS)$ should be decreasing.
-    \end{itemize}
-    \item Empirical evidence that supports effort $E$ correlates with $lnS$ ; $E= lnS$; given in Stratton and Lerman. This goes well with previous point because: \\
-     \begin{itemize}
-     \item $\frac{dE}{dS} = \frac{1}{S} >0$
-     \item $E(0) = -\inf < 0$
-     \item $S/E \times (\frac{dE}{dS}) = (\frac{S}{ln S}) \times \frac{1}{S} = \frac{1}{ln S} $ is decreasing.
-     \end{itemize}
-     \item Hence $v(E_i) = \beta (ln S_i)^2$
-   \end{itemize}
-   \item Fairness 
-        \begin{itemize}
-        \item We propose $f(N_i) = -\gamma~ ln N_i$
-        \item We note following observations are captured in this form
-           \begin{itemize}
-               \item As $N_i \to \inf $, $f_i \to -inf$; this captures the idea that when there are too many employees working with a person his appreciation is minimized.
-               \item When $N_i = 0, f_i \to \inf. $ This explains why employees are in constant search of their dream jobs. When $N_i=0$ , this is when utility from fairness is maximized mathematically; but this cannot be attained in reality because minimum value of $N_i$ is 1 in reality (at least  oneself should be there).
-           \end{itemize}
-        \end{itemize}
-   
-\end{itemize}
-Thus we have :
-\begin{equation}
-    u(S_i) = \alpha ln S_i
-\end{equation}
-\begin{equation}
-    v(E_i) = \beta (ln S_i)^2
-\end{equation}
-\begin{equation}
-f(N_i) = - \gamma ln N_i
-\end{equation}
-\begin{equation}\label{utility}
- h_i(S_i,E_i,N_i) = u(S_i) - v(E_i) + f(N_i)= \alpha ln S_i - \beta (ln S_i)^2 - \gamma ln N_i
- \end{equation}
-\section{Applying potential game theory}
-\begin{equation}
-    h_i(x) \equiv  \frac{\partial\phi(x)}{\partial x_i}
-\end{equation}
-\begin{equation} \label{potential}
-    \phi(x) = \sum_{i=1}^{n}\int{}{}h_i(x)dx_i
-\end{equation}
-\begin{equation}
-    \phi(x) = \phi_u + \phi_v + \phi_f + constant ; where
-\end{equation}
-\begin{equation}
-    \phi_u = \alpha \sum_{i=1}^{n}x_i lnS_i ;and
-\end{equation}
-\begin{equation}
-    \phi_v = -\beta \sum_{i=1}^{n} x_i(ln S_i)^2 ; and
-\end{equation}
-\begin{equation}
-    \phi_v = \gamma/N ln \frac{N!}{\prod_{j=1}^{n}(Nx_i)!}
-\end{equation}
-We can show that $\phi(x)$ is strictly concave: 
-\begin{equation}
-    \dfrac{\partial^2 \phi(x)}{\partial x_i^2}= \dfrac{-\gamma}{x_i}<0
-\end{equation}
-Therefore, a unique Nash equilbrium exists for this game; which is a maximizer for $\phi$ . \\
-To find maximizer $x_i$
-we use langrangian multiplier method with $L$ as langrangian and $\lambda$ as Langrange multiplier. Thus 
-\begin{equation}
-     L=\phi + \lambda(1-\sum_{i=1}{n}x_i)
-\end{equation}
-We solve system of equations given by
-\begin{equation}
-     \frac{\partial L}{\partial x_i} =0 ~ \forall i
- \end{equation}
- 
- We get 
- \begin{equation}
-    \alpha ln S_i-\beta (ln S_i)^2 - \gamma ln Nx_i - \lambda = 0
- \end{equation}
- giving
- \begin{equation}
-     x_i = e ^ {\alpha ln S_i - \beta (ln S_i)^2 - \gamma ln N -\lambda}
- \end{equation}
- which can be rearranged to get
- 
- \begin{equation}\label{fairpotential}
-     x_i = \dfrac{1}{S_i Z}exp(-\dfrac{(lnS_i - \dfrac{\alpha+\gamma}{2\beta})^2 }{\dfrac{\gamma}{\beta}})
- \end{equation}
- where 
- \begin{equation}
-     Z = N exp[\lambda/\gamma - \dfrac{(\alpha + \gamma)^2}{4\beta \gamma}]
- \end{equation}
- which is a \textbf{log-normal distribution}
- 
-
-\section{Deriving Boltzmann distribution using potential game theory}
-Let us define the payoff of particles in the thermodynamic game:
-
-\begin{equation}\label{thermogame}
-    h_i(E_i,N_i) = -\beta E_i - ln N_i
-\end{equation}
-where $E_i$ is the energy of a molecule in state $i$, $\beta=\frac{1}{kT}$, $k=1.3806488 \times 10^{-23} JK^{-1}$ is Boltzmann constant; and $T$ is temperature.
- Now from \ref{potential} we have 
- \begin{equation}
- \phi(x) = \frac{-\beta}{N}+ \frac{1}{N}ln\frac{N!}{\prod_{i=1}^{n}(Nx_i)!}
- \end{equation}
- We need to maximize $\phi(x)$ under constraint $\sum_{j=1}{k}x_j = 1$.
- Using Langrange multiplier method with L as Langrangian we have
- \begin{equation}
-     L=\phi + \lambda(1-\sum_{i=1}{n}x_i)
- \end{equation}
- For maximizing; we solve set of equations given by
- \begin{equation}
-     \frac{\partial L}{\partial x_i} =0 ~ \forall i
- \end{equation}
- We get 
- \begin{equation}
-     \beta E_i  - ln N - ln x_i -\lambda = 0 
- \end{equation}
- giving
- \begin{equation}
-     x_i = e ^ {\beta E_i  - ln N  -\lambda}
- \end{equation}
- Also $\sum_{j=1}^{k}x_j=1$; which gives
- \begin{equation}
-     x_i = \frac{x_i}{1} = \frac{x_i}{\sum_{j=1}^{k}x_j} = \frac{e ^ {\beta E_i  - ln N  -\lambda}}{\sum_{j=1}^{k}e ^ {\beta E_j  - ln N  -\lambda}}
- \end{equation}
- giving
- \begin{equation}
-     x_i = \frac{e^{-\beta E_i}}{\sum_{j=1}^{k}e^{-\beta E_i}}
- \end{equation}
- which is nothing but \textbf{Boltzmann Distribution}
- 
-\section{Replicator Dynamics}
-Consider the situation of people buying cars. We compare people buying an SUV and compact cars. Let us define the following payoff table constructed by considering the fact that when one SUV meets another SUV there is less space on road and less fuel efficiency. We consider  similar situation for an SUV and compact and compact and compact.
-
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-%\multirow{2}{*}{1} & \multicolumn{2}{c|}{2} \\ \cline{2-3} 
-                   & SUV           & Compact        \\ \hline
-SUV                 & 2,2       & 2,0      \\ \hline
-Compact                  & 0,2         & 3,3      \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
-As from the table it is observed that purchasing compact cars is better for users.But in reality number of SUVs are on rise. How do we explain this situation. But people are not purely rational. They have emotions and feelings as well.One thing they do out of emotions is to copy others. Also they are not completely out of rationality. So in  order to model this situation we use replicator dynamics.
-This is a simple model of evolution and prestige based learning in games. We explain this model through an example\\ 
-\subsection{Model Description through example}
-Consider a population of $N$ people divided into $k$ classes . Let $x_i(t)$ be the fraction of people belonging to class $i$ at time epoch $t$.  Tuple $(x_1(t),\dots x_k(t))$ define the state of the population at time epoch $t$. $\pi_i(t)$ is the expected payoff for a player when randomly matched with another player. This is clearly a function of payoff matrix and state of population. \\
-In the SUV and compact cars game if we have a population of $50\%$ SUVs and $50\%$ comapct cars, expected payoff for an compact car owner is \\
-\begin{equation}
-E=0.5\times U_c(C,C) + 0.5 \times U_s(C,S)
-\end{equation}
-$E=0.5\times U_c(C,C) + 0.5 \times U_s(C,S)$(C stands for compact and S stands for SUV) where $U_c$ is the utility function for compact.First term corresponds to $50\%$ chance of meeting an compact and similarly second term corresponds to $50\%$ chance of meeting an SUV. In the
-Also we have $\sum_{i=0}^{k}x_i(t) = 1 ~~ \forall t$
-Now we see the equation for evolution of population in replicator dynamics.
-\begin{equation}
-    x_i(t+1) = \frac{x_i(t)\pi_i(t)}{\sum_{j=i}^{k}x_j(t)\pi_j(t)}
-\end{equation}
-We calculate rate of change of $x_i$ i.e $x_i(t+1)-x_i(t)$  
-\begin{equation}
-    x_i(t+1) - x_i(t) =  \frac{x_i(t)\pi_i(t)}{\sum_{j=i}^{k}x_j(t)\pi_i(t)} -x_i(t)
-    = \frac{x_i(t)(\pi_i(t)-\sum_{j=i}^{k}x_j(t)\pi_i(t)}{\sum_{j=i}^{k}x_j(t)\pi_i(t)}
-\end{equation}
-Denote by $\overset{.}x_i = x_i(t+1) - x_i(t)$, rate of change of $x_i$; 
-We have
-\begin{equation}
-\overset{.}x_i \propto x_i(t)(\pi_i(t)-\sum_{j=i}^{k}x_j(t)\pi_j(t)) 
-\end{equation}
-We can interpret the term $\sum_{j=i}^{k}x_j(t)\pi_(t)$ as average payoff of the population. 
-
-Under equilibrium we have $\overset{.}x_i =0 $  \\
- i.e 
- \begin{equation}\label{rdeqm}
-    \pi_i(t)=\sum_{j=i}^{k}x_j(t)\pi_j(t)
- \end{equation} \\
- i.e payoff for a class is equal to average payoff under equilibrium.
- 
-
- \section{Deriving equilibrium income distribution using replicator dynamics}
- From \ref{utility} and \ref{rdeqm} we have 
- \begin{equation}
-     h_i = h^* ~\forall i ~\text{where $h^*$ is equilibrium payoff under replicator dynamics.} 
- \end{equation}
- \begin{equation}
-     \alpha ln S_i - \beta (ln S_i)^2 -\gamma ln N_i = h^* 
- \end{equation}
- 
- But $N_i = Nx_i$
- 
- \begin{equation}
-     \alpha ln S_i - \beta (ln S_i)^2 -\gamma ln Nx_i = h^* 
- \end{equation}
- 
- Solving for $x_i$
- 
- \begin{equation}
-     x_i = e^{\alpha ln S_i - \beta (ln S_i)^2 -\gamma ln N - h^*}
- \end{equation}
- which can be rearranged to get 
- \begin{equation}\label{fairrd}
-     x_i = \dfrac{1}{S_i Z}exp(-\dfrac{(lnS_i - \dfrac{\alpha+\gamma}{2\beta})^2 }{\dfrac{\gamma}{\beta}})
- \end{equation}
- where 
- \begin{equation}
-     Z = N exp[h^*/\gamma - \dfrac{(\alpha + \gamma)^2}{4\beta \gamma}]
- \end{equation}
- We recognize that \ref{fairrd} is a \textbf{log-normal distribution}.
- \section{Deriving Boltzmann distribution using replicator dynamics }
-     Under equilibrium ; from \ref{rdeqm} and \ref{thermogame} we have 
-     \begin{equation}
-         -\beta E_i -ln(Nx_i) = h^*
-     \end{equation}
-     Giving
-     \begin{equation}
-         x_i = e^{-\beta E_i -ln N -h^*}
-     \end{equation}
-     Also $\sum_{j=1}^{k}x_j=1$; which gives
-     \begin{equation}
-         x_i = \frac{e^{-\beta E_i -ln N -h^*}}{\sum_{j=1}^{k}x_j} = \frac{e^{-\beta E_i}}{\sum_{j=1}^{k}e^{-\beta E_j}}
-     \end{equation}
-     which is nothing but Boltzmann distribution
-  
- 
-
- 
- 
-%  $\bar{f}$
- 
-
- 
-
- 
-% \begin{itemize}
-
-% \item Use the environment definitions for lemma, theorem, definition, proof, example, and other such environments you may need, wherever necessary. Usage of {\bf Definition} for a definition is not acceptable. Different environments are listed in this document below.
-% \item Add the .tex file header in your latex file for the below commands to work (\textbackslash input\{header\}, second line of the source file sampleLecture.tex).
-% \item Make sure that there are no spelling mistakes in the scribed notes.
-% \item Use environments such as align, equation, eqnarray or gather to deal with multi-line equations, instead of newline characters. 
-% \item Use punctuation in all equations.
-% \item Always make sure that the lecture notes uploaded is complete.
-% \item Any math symbol in a line should be within math environment \$\$. For example, \$Y\$ is used to write a math symbol $Y$.
-% \item Revise your lectures before uploading, so that there no variations in the style in which the document is prepared.
-% \item If you are using figures in the tex file, put them in the Figures folder.
-% \item Please label and caption the figures.
-% \item Use full sentences for captions as well, and even when writing equations.
-% \item Motivate each section with a sentence or two, on why are we studying this?
-% \end{itemize}
-% \section{Examples usage of environments}
-% \begin{itemize}
-% \item Equation with multiple cases:
-% \begin{equation}
-% A = 
-% \begin{cases}
-% 1 &if~TRUE\\
-% 0 &if~FALSE.
-% \end{cases}
-% \end{equation}
-% \item Theorem:
-% \begin{thm}
-% Theorem goes here
-% \end{thm}
-% \item Corollary:
-% \begin{cor}
-% content...
-% \end{cor}
-% \item Proposition:
-% \begin{prop}
-% content...
-% \end{prop}
-% \item Lemma:
-% \begin{lem}
-% content...
-% \end{lem}
-% \item Definition:
-% \begin{defn}
-% Definition
-% \end{defn}
-% \item Conjecture:
-% \begin{conj}
-% Content...
-% \end{conj}
-% \item Example:
-% \begin{exmp}
-% Content...
-% \end{exmp}
-% \item Assumptions:
-% \begin{assum}
-% Content...
-% \end{assum}
-% \item Axiom:
-% \begin{axiom}
-% Content...
-% \end{axiom}
-% \item Remark:
-% \begin{rem}
-% Content...
-% \end{rem}
-% \item Note:
-% \begin{note}
-% This is a note.
-% \end{note}
-% \end{itemize}
-% \begin{note}
-% Scribed notes that does not follow the guidelines mentioned above attracts penalty.
-% \end{note}
+ \item $v$ and $w$ are successive operations on some machine $k$.
+ \item $(v,w) \in E_i$ is a critical arc meaning $(v,w)$ is on a longest path in $D_i$.
+ \end{itemize}
+ and reverse the order in which $v$ and $w$ were processed on machine $k$. 
+Next  result show that reversing a critial arc in  $D_i$ can never lead to a cyclic digraph $D_j$.
+\begin{lem}
+Suppose that $e = (v,w) \in E_i$ is a critical arc of an acyclic digraph $D_i$. Let $D_j$ be the digraph obtained from $D_i$ by reversing the arc $e$ in $E_i$. Then, $D_j$ is also acyclic.  
+\end{lem}
+$Proof:$
+Suppose $D_j$ is cyclic. Then, $(w,v)$ is part of a cycle in $D_j$. Consequently, there is a path $(v,x,y,\cdots,w)$ in $D_j$. But this path is there in $D_i$ and is clearly a longer path from $v$ to $w$ than $(v,w)$. This contradicts the assumption that $(v,w)$ is on a longest path in $D_i$. Hence, $D_j$ is acyclic.
+Also, if reversal of a noncritical arc in $D_i$ leads to an acyclic graph $D_j$, a longest path $q$ in $D_j$ cannot be shortest than a longest path $p$ in $D_i$.
+Thus, the transitions are chosen such that there are no non-costdecreasing transitions and no transition will result in a cyclic graph. So, the neighbourhood structure is such that the algorithm visits only digraphs corresponding to feasible solutions.
+\subsection{Asymptotic convergence}
+\begin{lem}
+Consider an arbitrary configuration $i$ and an arbitrary global minimum $i_0 \notin \sR_{opt}$, then the set 
+$\sK_i(i_0)$ defined by,
+\EQ{
+K_i(i_0) = \set{e = (v,w) \in E_i | i ~is~critical \wedge (w,v) \in \bar{E}_{i_0}}
+}
+is not empty.
+\end{lem} 
+$Proof:$First we show that $E_i$ always contain critical arcs, unless $i \in \sR_{opt}$. 
+Next we show that there are always critical arcs in $E_i$ that do not belong to $\bar{E}_{i0}$ unless  $i \in \sR_{opt}$.
+To prove the first part, suppose that $E_i$ contains no critical arcs. This implies that all critical arcs belong to $A$. This simply means that the length of the longest path equals the processing time of some job. This is the lower bound to the length of a longest path in any digraph $D_j$. Hence, $i \in \sR_{opt}$.
+Now, we prove the second part.\\ 
+Suppose for all critical arcs $e \in E_i$, we have $e \in E_{i0}$. We know that any longest path $p$ in $D_i$ is also path $q$ in $\bar{D}_{i0}$. 
+Now assume that longest path in $\bar{D}_{i0}$ is $r$. As $i_0$ is an optimal configuration,
+\EQ{
+length(r) \leq length(q) = length(p)
+}
+But we know that $q$ is a path in $\bar{D}_{i0}$. Therefore, $length(r) \geq length(q)$. Thus, we see that, $length(r) = length(p)$. This is possible only if $i$ is an optimal configuration. Hence, the proof.
+Next theorem gaurantees asymptotic convergence in probability to a globally minimal configuration.
+Before that we define two sets for an arbitrary configuration $i$,
+\eq{
+&M_i(i_0) = \set{e = (v,w)\in E_i|(w,v) \in \bar{E}_{i_0}}\\
+& \bar M_i(i_0) = \set{e = (v,w)\in \bar E_i|(w,v) \in \bar{E}_{i_0}}
+}
+where $i_0 \in \sR_{opt}$.
+\begin{thm}
+For each configuration $i \notin \sR_{opt}$ it is possible to construct a finite sequence of transitions leading from $i$ to a globally minimal configuration.`
+\end{thm}
+$Proof:$ Choose an arbitrary configuration $i_0 \in \sR_{opt}$ and construct a sequence of configurations $\set{\lambda_0, \lambda_1,\cdots}$ as follows.
+\begin{enumerate}
+\item $\lambda_0 = i$.
+\item $\lambda_{k+1}$ is obtained from $\lambda_k$ by reversing an arc $e \in K_{\lambda_k}(i_0)$ in $E_{\lambda_k}$. We already saw that this can be done without creating a cycle in $D_{\lambda_{k+1}}$.
+\end{enumerate}
+If $|\bar M_{\lambda_k}(i_0)| > 0$, then
+\EQ{
+|\bar M_{\lambda_{k+1}}(i_0)| = |\bar M_{\lambda_k}(i_0)| - 1.
+}
+Then, if $|\bar M_{\lambda_0}(i_0)| = k$, then $|\bar M_{\lambda_k}(i_0)| = 0$. 
+We know that $K_i{i_0} \subset M_i{i_0} \subset \bar M_i{i_0}$. So, if $|\bar M_{\lambda_0}(i_0)| = k$, then  $K_{\lambda_k}(i_0)= \phi$. From lemma 3.2, this implies that $\lambda_k \in \sR_{opt}$.
 \end{document}
