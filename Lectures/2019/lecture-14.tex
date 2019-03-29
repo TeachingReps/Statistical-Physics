@@ -1,0 +1,143 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+\graphicspath{{./Figures/}}
+
+\title{Lecture-14: Total Variation Distance}
+
+\begin{document}
+\maketitle
+
+\section{Comparison of Monte Carlo Methods}
+We have seen that Monte Carlo sampling methods give us the desired stationary distribution starting from a base Markov chain. 
+Assuming one step of the Markov chain takes unit time, 
+we can compare their computational efficiency in terms of number of operations needed per sample,  
+and the number of samples needed to reach \textit{close enough} to the desired stationary distribution. 
+
+\subsection{Total variation distance}
+The closeness of two distributions can be measured by the following distance metric.
+\begin{defn}
+The \textbf{total variation distance} between two probability distributions $\mu$ and $\nu$ on $\cX^N$ is defined by
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \max\set{\abs{\mu(A) - \nu(A)}: A \subseteq \sX^N}.
+}
+\end{defn}
+This definition is probabilistic in the sense that the distance between $\mu$ and $\nu$ is the maximum difference between the probabilities assigned to a single event by the two distributions. 
+\begin{prop}
+\label{prop:equivalenceOfTvDefinitions}
+Let $\mu$ and $\nu$ be two probability distributions on the configuration space $\sX^N$. 
+Let $B = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$, then 
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}\sum_{x \in \sX^N}\abs{\mu(x)-\nu(x)} = \sum_{x \in B}[\mu(x)-\nu(x)].
+}
+\end{prop}
+\begin{proof}
+Let $A \subseteq \sX^N$ be any event. 
+Since $\mu(x)  - \nu(x) < 0$ for any $x \in A\cap B^c$, we have 
+\EQ{
+\mu(A) - \nu(A) \le \mu(A \cap B) - \nu(A \cap B) \le \mu(B) - \nu(B). 
+}
+Similarly, we can show that 
+\EQ{
+\nu(A) - \mu(A) \le \nu(B^c) - \mu(B^c) = \mu(B) - \nu(B).
+}
+It follows that $\abs{\mu(A)-\nu(A)} \le  \mu(B) - \nu(B)$ for all events $A$, 
+and the equality is achieved for $A = B$ and $A = B^c$. 
+Thus, we get that 
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}[\mu(B)-\nu(B) + \nu(B^c)-\mu(B^c)] = \frac{1}{2}\sum_{x \in \sX^N}\abs{\mu(x)-\nu(x)}.
+}
+\end{proof}
+\begin{prop}
+For probability distributions $\mu$ and $\nu$ on configuration space $\sX^N$, $\norm{\mu-\nu}_{\text{TV}}$ is a distance.
+\end{prop}
+\begin{proof}
+Note from Proposition \ref{prop:equivalenceOfTvDefinitions} that $\norm{\mu-\nu}_{\text{TV}} = \sum_{x \in B}[\mu(x) - \nu(x)]$, where $B = \set{x \in \sX^N: \mu(x) \geq \nu(x)}$, hence $\norm{\mu-\nu}_{\text{TV}} \geq 0$. The set $B$ can not be empty as $\mu$ and $\nu$ are probability distributions and one can not dominate the other for all $x \in \sX^N$. Similarly $\mu(x) = \nu(x), \forall x \in B$ iff $B = \sX^N$. Thus, $\norm{\mu-\nu}_{\text{TV}} = 0$ iff $\mu = \nu$. To verify that $\norm{\mu-\nu}_{\text{TV}} = \norm{\nu-\mu}_{\text{TV}}$, note that:
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \sum_{x \in B}[\mu(x) - \nu(x)] = \sum_{x \in B^c}[\nu(x) - \mu(x)] = \norm{\nu-\mu}_{\text{TV}}
+}
+Finally, let $\pi$ be a probability distribution over configuration space $\sX^N$. Then,
+\begin{align*}
+\norm{\mu-\nu}_{\text{TV}} &= \frac{1}{2} \sum_{x \in \sX^N} \abs{\mu(x) - \nu(x)} \\
+&\leq \frac{1}{2} \sum_{x \in \sX^N} \abs{\mu(x) - \pi(x)} + \frac{1}{2} \sum_{x \in \sX^N} \abs{\pi(x) - \nu(x)} \\
+&= \norm{\mu-\pi}_{\text{TV}} + \norm{\pi-\nu}_{\text{TV}}
+\end{align*}
+Since $\norm{\mu-\nu}_{\text{TV}}$ is positive (unless $\mu = \nu$), symmetric and obeys triangle inequality, it is a distance. 
+\end{proof}
+\begin{prop}
+Let $\mu$ and $\nu$ be two probability distributions on the configuration space $\sX^N$ and $F = \set{f:\sX^N \to \R : \max_{x \in \sX^N}\abs{f(x)} \le 1}$ be a set of observables, we have 
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = \frac{1}{2}\sup\set{\sum_{x \in \sX^N}f(x)\mu(x) - \sum_{x \in \sX^N}f(x)\nu(x): f \in F}.
+}
+\end{prop}
+\begin{proof}
+If $\max_x\abs{f(x)} \le 1$, then it follows that 
+\EQ{
+\frac{1}{2}\abs{\sum_xf(x)(\mu(x)-\nu(x)} \le \frac{1}{2}\sum_x\abs{\mu(x)-\nu(x)} = \norm{\mu-\nu}_{\text{TV}}.
+}
+For the reverse inequality, we define $f^{\ast}(x) = \indicator{x \in B}-\indicator{x \notin B}$ in terms of the set $B = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$. 
+It is clear that $\max_x\abs{f(x)} = 1$, and we have 
+\EQ{ 
+\frac{1}{2}\abs{\sum_xf^{\ast}(x)(\mu(x)-\nu(x)} = \frac{1}{2}\sum_x\abs{\mu(x)-\nu(x)} = \norm{\mu-\nu}_{\text{TV}}.
+}
+\end{proof}
+\subsection{Coupling and total variation distance}
+\begin{defn}
+A \textbf{coupling} of two probability distributions $\mu$ and $\nu$ is a pair of random variables $(X, Y)$ 
+defined on a single probability space such that the marginal distribution of $X$ is $\mu$ and the marginal distribution of $Y$ is $\nu$. 
+That is, a coupling $(X, Y)$ satisfies $P\set{X = x} = \mu(x)$ and $P\set{Y = y} = \nu(y)$. 
+\end{defn}
+
+Any two distributions $\mu$ and $\nu$ have an independent coupling. 
+However, when the two distributions are not identical, 
+it will not be possible for the random variables to always have the same value. 
+Total variation distance between $\mu$ and $\nu$ determines how close can a coupling get to having $X$ and $Y$ identical. 
+\begin{defn}
+For two distributions $\mu$ and $\nu$ on the configuration space $\sX^N$, 
+the coupling $(X,Y)$ is \textbf{optimal} if  
+\EQ{
+\norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}.
+}
+\end{defn}
+\begin{prop}
+Let $\mu$ and $\nu$ be two distributions on the configuration space $\sX^N$, then 
+\EQ{
+\norm{\mu-\nu}_{\text{TV}}  = \inf\set{P\set{X\neq Y}: (X,Y) \text{ a coupling of distributions } \mu, \nu}. 
+}
+\end{prop}
+\begin{proof}
+For any coupling $(X,Y)$ of the distributions $\mu, \nu$ and any event $A \subseteq \sX^N$, we have 
+\EQ{
+\mu(A)-\nu(A) = P\set{X \in A} - P\set{Y \in A} \le P\set{X \in A, Y \notin A} \le P\set{X \neq Y}.
+}
+Therefore, it follows that $\norm{\mu-\nu}_{\text{TV}}  \le P\set{X\neq Y}$ for all  couplings $(X,Y)$ of distributions $\mu, \nu$. 
+
+Next we find a coupling $(X,Y)$ for which $ \norm{\mu-\nu}_{\text{TV}} = P\set{X \neq Y}$. 
+In terms of the set $B  = \set{x \in \sX^N: \mu(x) \ge \nu(x)}$, we can write
+\EQ{
+p \triangleq \sum_{x \in \sX}\mu(x)\wedge\nu(x) = \mu(B^c) + \nu(B) = 1 - (\mu(B)-\nu(B)) = 1 - \norm{\mu-\nu}_{\text{TV}}.
+} 
+By the definition of $p$, the function $\frac{\mu\wedge\nu}{p}: \sX^N \to [0,1]$ is a probability distribution on $\sX^N$. 
+Let us call this distribution as $\gamma_3(x) \triangleq \frac{\mu(x)\wedge\nu(x)}{p}$. 
+We also define the following two functions from the configuration space $\sX^N$ to $[0,1]$ as  
+\meq{2}{
+&\gamma_1(x) \triangleq \frac{\mu(x)-\nu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \in B}, &&\gamma_2(x) \triangleq \frac{\nu(x)-\mu(x)}{\norm{\mu-\nu}_{\text{TV}}}\indicator{x \notin B}.
+}
+From the definition of the set $B$, we can easily verify that $\gamma_1(\sX^N) = \gamma_1(B) = \gamma_2(B^c) = \gamma_2(\sX^N) = 1$. 
+%We define independent random variables $W,V$ with distributions $\gamma_1, \gamma_2$ respectively, 
+%a random variable $Z$ with distribution $\gamma_3$, and 
+We define a binary random variable $\xi \in \set{0,1}$ such that $\E \xi = p$, 
+and the conditional distribution of $(X,Y)$ such that 
+\EQ{
+P((X, Y) = (x,y)\given \xi) = \gamma_3(x)\indicator{x=y}\xi + (1-\xi)\gamma_1(x)\gamma_2(y).
+}
+Since $\gamma_1, \gamma_2, \gamma_3$ are distributions, it follows that $P\set{(X,Y) = (x,y)} = p\gamma_3(x)\indicator{x = y} + (1-p)\gamma_1(x)\gamma_2(y)\indicator{x\neq y}$ is a joint distribution function. 
+From the definition of the set $B$, we observe that 
+\eq{
+P\set{X = x} &= p\gamma_3(x) + (1-p)\gamma_1(x) = \mu(x)\wedge\nu(x) + (\mu(x) - \nu(x))\indicator{x \in B} = \mu(x)\\
+P\set{Y = y} &= p\gamma_3(y) + (1-p)\gamma_2(y) = \mu(y)\wedge\nu(y) + (\nu(y) - \mu(y))\indicator{y \notin B} = \nu(y).
+}
+That is, $(X,Y)$ is a coupling of the distributions $\mu, \nu$ and $P\set{X \neq Y} = 1-p = \norm{\mu - \nu}_{\text{TV}}$. 
+\end{proof}
+\end{document}

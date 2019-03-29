@@ -1,0 +1,191 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Simulated Annealing}
+
+\begin{document}
+\maketitle
+
+\section{Jobshop scheduling}
+The jobshop scheduling problem is one of the hardest combinatorial optimization problem and can be described as follows.
+We are given a set of jobs and a set of machines. 
+Each job consists of a chain of operations. 
+Each operation requires to be processed by some machine for a finite time without interruption. 
+Also, the given machines cannot process more than one operation at any given time.
+Therefore, the operations has to be allocated to time intervals on different machines. This is also known as \emph{scheduling}.
+The problem is to find a schedule of minimum length.\\
+
+Now we define the problem formally.
+We have a set of $n$ jobs, denoted by $\sJ = \set{j_1,j_2,\cdots,j_n}$ and a set of $m$ machines, denoted by $\sM = \set{M_1,M_2,\cdots,M_m}$.
+We also assume a set of $p$ operations, denoted by $\sO = \set{1,2,\cdots,p}$.
+For any operation $x \in \sO$, there is a job $j_x$ to which it belongs and a machine $M_x$ on which it is processed. 
+Define a binary relation $\rightarrow$ such that $x \rightarrow y$ then $j_x = j_y$ and there is no $o_z \not\in \set{x,y}$ such that $x \rightarrow z$ and $z \rightarrow y$.
+Also define a start time $s_x$ for each operation $x \in \sO$ and its processing time is denoted by $t_x$.
+Then, the optimization problem maybe stated as follows.
+\EQN{
+\max_{x \in \sO} (s_x + t_x)
+} 
+is minimized subject to 
+\eq{
+&s_v \geq 0 ~\forall~ v \in \sO\\
+& s_w - s_v \geq t_v ,~ v \rightarrow w , ~\forall~v,w \in \sO\\
+& s_w - s_v \geq t_v \wedge  s_v - s_w \geq t_w ~if~ M_v = M_w ,~\forall~v,w \in \sO.
+}
+\subsection{Disjunctive graph model}
+The disjunctive graph (G,A,E) is defined as follows.
+\begin{itemize}
+\item The vertex set , $V = \sO \cup \set{0,N+1}$ where $0$ and$N+1$ are two fictitious operations with zero processing time. The weight of each vertex $o_x$ is $t_x$, the processing time of the operation.
+\item The edges are established between operations run on the same machine.
+That is, $E = \set{(v,w):M_v = M_w}$.
+\item The set $A$ consists of arcs between operatiions of the same job, and from $0$ to the first operation of each job and from last operation of each job to $N+1$. That is, $A = \set{(v,w): v \rightarrow w } \cup \set{(0,v): \nexists~ y ~\ni~ y \rightarrow v} \cup \set{(w,N+1) :\nexists~ y ~\ni~ w \rightarrow o_y}$.
+\end{itemize}
+\begin{figure}[t]
+  \begin{center}
+  \scalebox{0.75}{\input{Figures/JobshopExample}}
+  \end{center}
+  \caption{The disjunctive graph G of a 3-job 3-machine instance. Operations 1,5 and 9 are processed by machine 1. Operations 2, 4 and 8 by machine 2 and operations 3, 6 and 7 by machine 3. 0 and 10 are the fictitious initial and final operations respectively. Thick arrows denote arcs in A, dotted lines edges in E.}
+  \label{figure:Instance}
+\end{figure}
+Thus, now we have a directed graph in which the longest path actually represent the objective function of the above given optimization problem. 
+For any pair of operations $v,w \in \sO$with $v \rightarrow w$ , the second constraint is represented by an arc $(v,w) \in A$.
+Similarly, for any pair of operations $v,w \in \sO$ with $M_v = M_w$, the third constraint is represented by an edge $(v,w) \in E$.
+The two ways of settling the disjuction is given by the two possible orientation of the edge. 
+So, there is a one-to-one correspondence between the feasible solutions with respect to the third constraint and the orientations of the edges such that resulting graph is acyclic. 
+Thus, the order or permutations of the operations to be processed by each machine will get fixed by these choice of orientations.
+Now the problem can be rephrased as finding a set of machine permutations that minimizes the maximum length path in the given digraph.
+
+\section{Simulated Annealing}
+Simulated Annealing can be viewed as a generalization of the well known iterative improvement approach to combinatorial optimization problems. Generally, a combinatorial optimization problem is a tuple $(\c{R},C)$, where $\c{R}$ is the set of configurations or solutions of the problem and $C:  \c{R} \rightarrow \R $ is the cost function. To be able to use iterative improvement we need a neighborhood structure $\c{N}: \c{R} \rightarrow 2^{\c{R}}$; thus, for each configuration $i$, $\c{N}(i)$ is a subset of configurations called the $\textbf{neighborhood}$ of $i$.\\ 
+
+At each iteration, the general iterative improvement algorithm typically starts with an initial configuration $i$ and a configuration $j \in \mathcal{N}(i)$ is generated. If $C(j) < C(i)$, the start configuration in the next iteration is $j$, otherwise it is $i$. However, this causes the algorithm to terminate in a local minimum which may differ considerably in cost from the global minimum.
+On the contrary, simulated annealing attempts to find near optimal local minima by allowing the acceptance of cost increasing transitions. More precisely, if $i$ and $j \in \cN(i)$ then the algorithm continues with configuration $j$ with a probability given by $min\{1, exp(-(C(j) -C(i))/c\}$, where $c$ is the temperature.
+
+\subsection{Markov structure}
+For a fixed value of the temperature parameter $c$, the configurations that are consecutively visited by the SA algorithm can be viewed as a markov chain with transition matrix $P = P(c)$ given by,
+
+\eq{
+P_{ij}(c) =
+\begin{cases}
+G_{ij}A_{ij}(c) \when j \neq i \\
+1 - \sum\limits_{k =1,k \neq i}^{|\c{R}|} G_{ik}A_{ik}(c) \when j = i
+\end{cases} 
+}
+where the generation and acceptance probabilites $G_{ij}$, $A_{ij}$ respectively are given by,
+\eq{
+G_{ij}(c) &=
+\begin{cases}
+|\c{N}(i)|^{-1} \when j \in \c{N} \\
+0 \otherwise
+\end{cases}
+\\
+A_{ij}(c) &= min\{1, exp(-(C(j) -C(i))/c\}
+}
+\\
+The stationary distribution of this Markov chain is given by $q_i(c) = \frac{|\c{N}(i)|A_{i_oi}(c)}{\sum_{j \in \c{R}}|\c{N}(j)|A_{i_oj}(c)}$ for some $i_o \in \c{R}_{opt}$, where $\c{R}_{opt}$ is the set of global minimal configurations provided the neighborhoods are such that for each pair of configurations $(i,j)$ there is a finite sequence of transitions leading from $i$ to $j$.\\
+\\
+Equivalently, the latter condition implies the matrix G being irreducible. It can be shown that 
+\eq{
+\lim_{c \downarrow 0} q_i(c) =
+\begin{cases}
+|\c{R}_{opt}|^{-1} \when i \in \c{R}_{opt}\\
+0 \otherwise
+\end{cases}
+}
+\\
+Unfortunately, the neighborhood structure chosen for job shop scheduling in Section 3 is such that the corresponding matrix $G$ is not irreducible. But, we can still prove asymptotic convergence provided the neighborhoods are such that for each configuration $i$ there is a finite sequence of transitions leading from $i$ to some configuration $i_o \in \c{R}_{opt}$.\\
+\\
+We use the fact that every chain can be decomposed in such a way that the recurrent configurations can be divided uniquely into irreducible ergodic sets $X_1 \ldots X_T$ and a set X of transient configurations from which configurations in the ergodic sets can be reached (but not the other way around). If the neighborhoods satisfy the aforementioned condition, then each $X_t$ contains at least one globally minimal configuration.\\
+\\
+The interpretation for the above is as follows, if the Markov chain starts in any one of the ergodic set $X_t$, we have a case similar to $G$ being irreducible and convergence can be argued as before. Else, starting from a transient configuration the Markov chain will eventually land in some ergodic set $X_t$ though it is not a priori known which one, once again we use the same argument.   
+
+\subsection{Practical Considerations}
+For asymptotic convergence, to attain stationary distribution the infinite length of Markov chains cannot be met in practice. In any finite time implementation we have to make choice with respect to each of the following parameters.
+
+\begin{itemize}
+\item the length of the Markov chains
+\item initial and final values of the temperature parameter $c$
+\item the decrement rule of the temperature parameter $c$
+\end{itemize}
+Such a choice is referred to as \textit{cooling schedule} or \textit{annealing schedule}. We choose the length of each Markov chain to be the size of the largest neighborhood and the following decrement rule for jobshop in Section 3.\\
+\eq{
+L_k &= \underset{{ i \in \c{R}} }{\text{max}} | \c{N}(i)| \quad k = 1, 2, \ldots \\
+c_{k+1} &= \frac{c_k}{1 + [ c_k \cdot ln(1 + \delta) / 3\sigma_k]}
+}
+where $c_k$ is the temperature parameter for the $k$th markov chain and $\sigma_k$ is the standard deviation of the cost values of the configurations obtained by generating the $k$th markov chain.
+
+\section{Simulated annealing for jobshop scheduling}
+In this section we see how simulated annealing is applied to for solving the jobshop scheduling problem. 
+For this we need a precise definition of configurations, a cost function and a neighbourhood structure. 
+We must show that for any arbitrary configuration $i$ there exists at least one globally minimal configuration $i_0 \in \R_{opt}$ such that it can be reached from $i$ in finite number of transitions.
+\subsection{Configurations}
+In the jobshop scheduling problem, we consider the sets of machine permutations as discussed in first section. In order to solve the problem, we must find the longest path in the directed graph for such a set of permutations. This graph results from the edges in the disjunctive graph and orientations are determined by the permutations.
+Define a configuration $i$ of the problem as a set,
+\EQ{
+\Pi_i = \set{\pi_{i1},\pi_{i2},\cdots, \pi_{im}}.
+}
+If for operation $v \in \sO$, is processed on a machine $M_v = k$, then $\pi_{ik}(v)$  denotes the operation following $v$ on machine $k$. Thus, $\pi_{ik}$ denotes the order in which operations on machine $k$ are processed. Say $m_k$ is the number of operations to be processed by machine $k$. Then, the number of configurations is given by $\prod_{k=1}^{m}m_k!$.
+\subsection{Cost function}
+Say $\bar{D}_i$ is the directed grapah obtained from the disjunctive graph using the edges in $E$ and its orientations set according to $\Pi$. That is , 
+\eq{
+&\bar{D}_i = (V,A\cup\bar{E}_i), where\\
+& \bar{E}_i = \set{(v,w)|\set{v,w} \in E~and~ \pi_{ik}^l(v) = w ~for~ \ in \sM , 1 \leq l \leq m_k-1 }
+}
+Construct the digraph $D_i$ from $\bar{D}_i$ by taking the arcs from $\bar{E}_i$ that connect operations on the same machine. Thus, the longest paths in $D_i$ and $\bar{D}_i$ will have equal length. Therefore, the cost of a configuration $i$ is found by determining the length of the longest path from $0$ to $N+1$ in $D_i$. 
+\subsection{Neighbourhood structure}
+To generate a transition, choose vertices $v$ and $w$ such that :
+ \begin{itemize}
+ \item $v$ and $w$ are successive operations on some machine $k$.
+ \item $(v,w) \in E_i$ is a critical arc meaning $(v,w)$ is on a longest path in $D_i$.
+ \end{itemize}
+ and reverse the order in which $v$ and $w$ were processed on machine $k$. 
+Next  result show that reversing a critial arc in  $D_i$ can never lead to a cyclic digraph $D_j$.
+\begin{lem}
+Suppose that $e = (v,w) \in E_i$ is a critical arc of an acyclic digraph $D_i$. Let $D_j$ be the digraph obtained from $D_i$ by reversing the arc $e$ in $E_i$. Then, $D_j$ is also acyclic.  
+\end{lem}
+$Proof:$
+Suppose $D_j$ is cyclic. Then, $(w,v)$ is part of a cycle in $D_j$. Consequently, there is a path $(v,x,y,\cdots,w)$ in $D_j$. But this path is there in $D_i$ and is clearly a longer path from $v$ to $w$ than $(v,w)$. This contradicts the assumption that $(v,w)$ is on a longest path in $D_i$. Hence, $D_j$ is acyclic.
+Also, if reversal of a noncritical arc in $D_i$ leads to an acyclic graph $D_j$, a longest path $q$ in $D_j$ cannot be shortest than a longest path $p$ in $D_i$.
+Thus, the transitions are chosen such that there are no non-costdecreasing transitions and no transition will result in a cyclic graph. So, the neighbourhood structure is such that the algorithm visits only digraphs corresponding to feasible solutions.
+\subsection{Asymptotic convergence}
+\begin{lem}
+Consider an arbitrary configuration $i$ and an arbitrary global minimum $i_0 \notin \sR_{opt}$, then the set 
+$\sK_i(i_0)$ defined by,
+\EQ{
+K_i(i_0) = \set{e = (v,w) \in E_i | i ~is~critical \wedge (w,v) \in \bar{E}_{i_0}}
+}
+is not empty.
+\end{lem} 
+$Proof:$First we show that $E_i$ always contain critical arcs, unless $i \in \sR_{opt}$. 
+Next we show that there are always critical arcs in $E_i$ that do not belong to $\bar{E}_{i0}$ unless  $i \in \sR_{opt}$.
+To prove the first part, suppose that $E_i$ contains no critical arcs. This implies that all critical arcs belong to $A$. This simply means that the length of the longest path equals the processing time of some job. This is the lower bound to the length of a longest path in any digraph $D_j$. Hence, $i \in \sR_{opt}$.
+Now, we prove the second part.\\ 
+Suppose for all critical arcs $e \in E_i$, we have $e \in E_{i0}$. We know that any longest path $p$ in $D_i$ is also path $q$ in $\bar{D}_{i0}$. 
+Now assume that longest path in $\bar{D}_{i0}$ is $r$. As $i_0$ is an optimal configuration,
+\EQ{
+length(r) \leq length(q) = length(p)
+}
+But we know that $q$ is a path in $\bar{D}_{i0}$. Therefore, $length(r) \geq length(q)$. Thus, we see that, $length(r) = length(p)$. This is possible only if $i$ is an optimal configuration. Hence, the proof.
+Next theorem gaurantees asymptotic convergence in probability to a globally minimal configuration.
+Before that we define two sets for an arbitrary configuration $i$,
+\eq{
+&M_i(i_0) = \set{e = (v,w)\in E_i|(w,v) \in \bar{E}_{i_0}}\\
+& \bar M_i(i_0) = \set{e = (v,w)\in \bar E_i|(w,v) \in \bar{E}_{i_0}}
+}
+where $i_0 \in \sR_{opt}$.
+\begin{thm}
+For each configuration $i \notin \sR_{opt}$ it is possible to construct a finite sequence of transitions leading from $i$ to a globally minimal configuration.`
+\end{thm}
+$Proof:$ Choose an arbitrary configuration $i_0 \in \sR_{opt}$ and construct a sequence of configurations $\set{\lambda_0, \lambda_1,\cdots}$ as follows.
+\begin{enumerate}
+\item $\lambda_0 = i$.
+\item $\lambda_{k+1}$ is obtained from $\lambda_k$ by reversing an arc $e \in K_{\lambda_k}(i_0)$ in $E_{\lambda_k}$. We already saw that this can be done without creating a cycle in $D_{\lambda_{k+1}}$.
+\end{enumerate}
+If $|\bar M_{\lambda_k}(i_0)| > 0$, then
+\EQ{
+|\bar M_{\lambda_{k+1}}(i_0)| = |\bar M_{\lambda_k}(i_0)| - 1.
+}
+Then, if $|\bar M_{\lambda_0}(i_0)| = k$, then $|\bar M_{\lambda_k}(i_0)| = 0$. 
+We know that $K_i{i_0} \subset M_i{i_0} \subset \bar M_i{i_0}$. So, if $|\bar M_{\lambda_0}(i_0)| = k$, then  $K_{\lambda_k}(i_0)= \phi$. From lemma 3.2, this implies that $\lambda_k \in \sR_{opt}$.
+\end{document}

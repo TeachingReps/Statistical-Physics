@@ -1,0 +1,136 @@
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
+\input{../../header}
+
+\title{Lecture-17: Random Energy Model}
+
+
+\begin{document}
+\maketitle
+
+
+
+There are a number of real-life systems for which disorder is frozen in, or quenched, as a result of the material preparation. 
+A typical example is an alloy with substitution disorder. 
+Although in that case we would be interested in a single realization of that disorder (a real material), it may still be useful to consider the average over all possible realizations of such disorder. 
+The properties of the different realizations are indeed typically equivalent in the thermodynamic limit. 
+We discuss these concepts below in more details.
+
+\section{Definition}
+The simplest disordered model is the Random Energy Model (REM), which was introduced by Derrida in 1980. 
+The density function of the energy $E_i$ for state $i$ is given by 
+\EQ{
+P(E)=\frac{1}{\sqrt{\pi N}}e^{-E^2/N}.
+}
+The position of its $M = 2^N$ energy levels is quenched, i.e., frozen or fixed. 
+That is, $(E_1, \dots, E_{2^N})$ is a set of $2^N$ energy levels each chosen independent and identically from the distribution $P(E)$, 
+and the occupancy of state $i$ is given by the Boltzmann probability
+\EQ{
+\mu_\beta(j)= \frac{1}{Z_N(\beta)}e^{-\beta E_j}, Z_N(\beta) = \sum_{j=1}^{2^N}e^{- \beta E_j}.
+}
+Studying the REM thus consists of examining a probabilistic object over levels that are themselves probabilistically distributed. 
+The REM is a \textbf{disordered model}: the energy is not a deterministic function, but rather a stochastic process. 
+A particular realization of such a process is usually called a \textbf{sample} (or \textbf{instance}). 
+Each realization of disorder is a sample, but calculating the properties of a specific sample with finite $N$ is typically very difficult--it corresponds to finding an optimal distribution of a particular instance of a problem. We will instead average over these samples, which we denote $\E(\cdot)$, and is typically a much easier calculation to perform. 
+Because a lot of systems have thermodynamic potentials $X$ that self-average, that is, ``concentrate'' as $N$ increases, i.e., for any tolerance $\theta > 0$
+\EQ{
+\lim_{N\to\infty}\Pr\set{\abs{\frac{X_N}{N}-\frac{\E X_N}{N}} \ge \theta} = 0,
+}
+this calculation is also meaningful for large systems. Because the concentration is also often exponential in $N$, 
+\EQ{
+\lim_{N\to\infty}\Pr\set{\abs{\frac{X_N}{N}-\frac{\E X_N}{N}} \ge \theta} \overset{\cdot}{=} e^{-N\delta_X},
+}
+where $\delta_X$ is a positive constant that may depend on the thermodynamic potential. 
+Because this is the case for the REM, $\E X_N$ is often a good estimate, 
+even for systems with finite $N$. 
+
+\section{REM thermodynamics}
+Let us now calculate the partition function of the disorder-averaged REM. 
+
+\subsection{Entropy}
+Consider an energy interval $\cI = [N\epsilon, N (\epsilon + \delta)]$, 
+and the number of energy levels within that interval $\cN (\epsilon, \epsilon + \delta)$. 
+For each state $i$, the probability that $E_i \in \cI$ is independent from other states is given by 
+\EQ{
+P_\cI  = \sqrt{\frac{\pi}{N}}\int_{\epsilon}^{\epsilon+\delta}e^{-Nx^2}dx,
+}
+by changing the variable $x = E/N$, integrated with $dx = dE/N$ for the variable $x \in [\epsilon, \epsilon+\delta]$. 
+Therefore, it follows that $\cN (\epsilon, \epsilon + \delta) = \sum_{i=1}^{2^N}\indicator{E_i \in \cI}$ is binomially distributed, as sum of $2^N$ \emph{i.i.d.} Bernoulli random variables with mean $P_\cI$. 
+It follows that 
+\meq{3}{
+&\E\cN(\epsilon, \epsilon + \delta)  = 2^N P_\cI,&
+&\Var{\cN(\epsilon, \epsilon + \delta)} = 2^NP_\cI(1-P_\cI),&
+&\frac{\Var{\cN (\epsilon, \epsilon + \delta)}}{(\E\cN(\epsilon, \epsilon + \delta))^2} = 2^{-N}\left(\frac{1}{P_\cI}-1\right) \approx \frac{1}{2^NP_\cI}.
+}
+Defining $s_a(x) \triangleq \ln 2 - x^2$, we observe that 
+\meq{2}{
+&\E\cN(\epsilon, \epsilon + \delta)  \stackrel{\cdot}{=} \exp\left[N\max_{x \in [\epsilon, \epsilon+\delta]}s_a(x)\right],&
+&\frac{\Var{\cN (\epsilon, \epsilon + \delta)}}{(\E\cN(\epsilon, \epsilon + \delta))^2} \stackrel{\cdot}{=} \exp\left[-N\max_{x \in [\epsilon, \epsilon+\delta]}s_a(x)\right].
+}
+%by taking the saddle point approximation. 
+Note also that $s_a(x) \ge 0$ iff $x \in [-\epsilon^\ast, \epsilon^\ast]$ where $\epsilon^\ast = \sqrt{\ln2}$.  
+
+When $\epsilon \notin [-\epsilon^{\ast}, \epsilon^\ast]$, the average density of energy levels is exponentially small in $N$: for a typical sample, there is no configuration at energy $E_i \approx N\epsilon$. 
+In contrast, when $\epsilon \in (-\epsilon^{\ast}, \epsilon^\ast)$, 
+there is an exponentially large density of levels, and the fluctuations of this density are very small. 
+This result is illustrated by a small numerical experiment in Fig. 5.1. 
+
+\begin{prop}
+Defining the entropy function 
+\EQ{
+s(\epsilon) = 
+\begin{cases}
+s_a(\epsilon), & \abs{\epsilon} \le \epsilon^\ast,\\
+-\infty, & \abs{\epsilon} > \epsilon^\ast.
+\end{cases}
+}
+then, for any pair $\epsilon$ and $\delta$, with probability one 
+$\lim_{N\to\infty}\cN(\epsilon, \epsilon+\delta) = \sup_{x \in [\epsilon, \epsilon+\delta]}s(x)$.
+\end{prop}
+\begin{proof}
+Assume an interval $[\epsilon, \epsilon+\delta]$ disjoint from $[-\epsilon^\ast, \epsilon^\ast]$, 
+and 
+\EQ{
+\E\cN(\epsilon, \epsilon+\delta) \stackrel{\cdot}{=}e^{-AN},
+}
+where $A = \sup_{x \in [\epsilon, \epsilon+\delta]}s_a(x) > 0$. 
+Since $\cN$ is an integer, we have from Markov inequality 
+\EQ{
+P\set{\cN(\epsilon, \epsilon+\delta)> 0} \le \E\cN(\epsilon, \epsilon+\delta) \le e^{-AN}.
+}
+That is, the probability of having an energy level in a fixed interval outside of $[-\epsilon^\ast, \epsilon^\ast]$ is exponentially small in $N$.
+\end{proof}
+
+\subsection{Phase transitions}
+Looking at the thermodynamic limit $\lim_{N \to \infty}$and then taking $\lim_{\delta \to 0}$, 
+we get to exponential order that
+\EQ{
+Z_N(\beta) \stackrel{\cdot}{=} \int_{-\epsilon^\ast}^{\epsilon^\ast}e^{N(s_a(\epsilon)-\beta\epsilon)}d\epsilon.
+}
+By analogy with our discussion in Chapter 2 about the concentration around the saddle
+point in the thermodynamic limit, (but noting that there is an additional difficulty because the energy levels are now themselves fluctuating), we get
+\EQ{
+\phi(\beta)=\lim_{N\to\infty}\frac{1}{N}\ln Z_N(\beta) = \max_{\epsilon \in [-\epsilon^\ast, \epsilon^\ast]} [s_a(\epsilon) -\beta\epsilon] = 
+\begin{cases}
+\frac{\beta^2}{4}+\ln 2, & \beta \le \beta_c\\
+\beta\sqrt{\ln 2}, & \beta > \beta_c,
+\end{cases}
+}
+for $\beta_c = 2\sqrt{\ln2}$. 
+This follows from the fact that $s_a(x)-\beta x = \ln2-x^2-\beta x = \ln 2 +\frac{\beta^2}{4}-\left(x+\frac{\beta}{2}\right)^2$. 
+The right hand side is maximized for $\beta = -2x \in [0, 2\epsilon^\ast]$, or $\beta \le \beta_c = 2\sqrt{\ln2}$. 
+When $\beta > \beta_c$, we can't make the square term zero, and the right hand side is maximized by minimizing the square term for $x = -\epsilon^\ast = -\sqrt{\ln2}$ which implies $s_a(-\sqrt{\ln2})+\beta\sqrt{\ln2} = \beta\sqrt{\ln2}$. 
+
+This point is a second-order phase transition, which in the language of disordered systems is also often called a `random first-order' transition (we will come back to the meaning of this label later). 
+This geometrical construction can be seen in Fig. 2.
+
+\subsubsection{Properties of two phases}
+\begin{itemize}
+\item In the high-temperature phase, i.e., $\beta \le \beta_c$, the internal energy $u(\beta) = -\pd{\phi(\beta)}{\beta} = -\frac{\beta}{2}$ and the canonical entropy $s(\beta) = \beta u(\beta) +\phi(\beta) = \ln2- \frac{\beta^2}{4}$, 
+hence the Boltzmann measure is dominated by configurations with an energy $E_i \approx -\frac{N\beta}{2}$, 
+and the model tends to random spins as $\beta \to 0$. 
+
+\item In the low-temperature phase, i.e., $\beta > \beta_c$, the internal energy $u(\beta) = -\sqrt{\ln2} = -\epsilon^\ast$ and $s(\beta) = 0$, hence the Boltzmann measure is dominated by a set of levels of constant energy, whose number grows sub-exponentially with $N$. 
+\end{itemize}
+\end{document}

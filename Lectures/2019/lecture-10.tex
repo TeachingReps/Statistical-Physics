@@ -1,22 +1,23 @@
-
-\documentclass[letterpaper,english,12pt]{article}
+% !TEX spellcheck = en_US
+% !TEX spellcheck = LaTeX
+\documentclass[letterpaper,english,10pt]{article}
 \input{../../header}
 \graphicspath{{./Figures/}}
 %\usepackage{witharrows}
 %opening
 \title{Lecture-10: Many Random Variables}
-\author{Vivek VP}
+%\author{Vivek VP}
 
 \begin{document}
 \maketitle
 \section{Qualitative view of Random Variables}
-Physical systems of particles can be modelled by assigning a random variable to state of each particles. Here we assume the particles have no interaction or interaction is minimal. Thus for $N$ particles we have an $N$ length vector $\underbar x = (x_1,x_2,\dots ,x_N)$ with probability 
+Physical systems of particles can be modelled by assigning a random variable to state of each particles. Here we assume the particles have no interaction or interaction is minimal. Thus for $N$ particles we have an $N$ length vector $x = (x_1,x_2,\dots ,x_N)$ with probability 
 \begin{equation}
-  P_N(\underbar x) = P_N(X_1,\dots ,x_N) .
+  P_N(x) = P_N(X_1,\dots ,x_N) .
 \end{equation}
 An instance of this would be Boltzmann distribution for a physical system with $N$ degrees of freedom. Shannon Entropy of this distribution is 
   \begin{equation}
-      H_N = -\E {log P_N(\underbar x) }
+      H_N = -\E {log P_N(x) }
   \end{equation}
   Typically $H_N$ grows linearly with $N$ for large $N$. So entropy per variable $h_n=H_N/N$ has a finite limit;so we define a quantity $h$.
   
@@ -25,9 +26,9 @@ An instance of this would be Boltzmann distribution for a physical system with $
  \end{defn}
   We will be interested in defining the quantity 
   \begin{equation}
-      r(\underbar x) = 1/N log \big[ 1/P_N(\underbar x)\big]
+      r(x) = 1/N log \big[ 1/P_N(x)\big]
   \end{equation}
-  to characterize any particular realization $\underbar{x}$. We would like to know how close is $r(x)$ to $h_N$. In most cases $r(x)$ is peaked around $r=h_N$. Often probability distribution of $r(\underbar x)$ behave exponentially with 
+  to characterize any particular realization $\underbar{x}$. We would like to know how close is $r(x)$ to $h_N$. In most cases $r(x)$ is peaked around $r=h_N$. Often probability distribution of $r(x)$ behave exponentially with 
   \begin{equation}
    P\lbrace r(x) \approx \rho \rbrace=e^{-NI(\rho)}
    \end{equation}
@@ -38,7 +39,7 @@ An instance of this would be Boltzmann distribution for a physical system with $
    \begin{equation}
        P_N(x) = e^{-Nh}
    \end{equation}
-   Total probability of realization $\underbar x$ with $r(x) \approx h$ is 1. This will imply that number of configurations with major contribution to probability is $e^{Nh}. $This in general is a  small number when compared to total number of configurations $\sX^N$. 
+   Total probability of realization $x$ with $r(x) \approx h$ is 1. This will imply that number of configurations with major contribution to probability is $e^{Nh}. $This in general is a  small number when compared to total number of configurations $\sX^N$. 
    \begin{equation}
    	\text{Number of typical configurations}=e^{Nh}<<\sX^N
    \end{equation}
