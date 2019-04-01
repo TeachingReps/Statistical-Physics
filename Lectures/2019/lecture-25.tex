@@ -118,6 +118,7 @@ So in potential game theory all we need to find a Nash equilbria is to maximize 
 
 
 \section{Dynamics} \cite{fairentrop}
+
  Consider a company $A$ with:
 \begin{enumerate}
 	 \item Total salary budget $M$ 
@@ -127,37 +128,49 @@ So in potential game theory all we need to find a Nash equilbria is to maximize 
 \end{enumerate}
 
 For our market we assume a simplified model of all companies have same  slary budget and total number of employees and number of levels of employment. Also assume market is a \textbf{free market}.
-
+If we give equal salary to all employees we will get a distribution as in Figure 1(a). Now employees who contribute a value above average will try to leave company since they are underpaid. This fill shift the curve towards right as in Figure 1(b).But now below average employees are overpaid. They will be more competition for this level and this shifts distribution towards left.
 Let us look at an example.
 \begin{figure}[h!]
-	\includegraphics[width=\linewidth]{dynamics1.png}
-	\caption{Initial distribution}
+	\includegraphics[width=\linewidth]{dbnR.png}
+	\caption{Evolving distribution}
 	\label{fig:1}
 \end{figure}
 
-Consider two companies A and B with 3 different levels of employment with $v1<v2<v3$; call it low skill, medium skill, high skill.
-Both A and B have $\text{total number of employees} ~ N =1000$ and $\text{total salary budget}~ M=\$60~ \text{million dollar}$ with initial distribution as shown in Figure1 \ref{fig:1}.
+Let us look at an example.
+\begin{exmp}
+	
 
-\begin{figure}[h!] \label{fig2}
-	\includegraphics[width=\linewidth]{dynamics2.png}
-	\caption{Evolving}
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{dynamics1.png}
+	\caption{Initial distribution}
 	\label{fig:2}
 \end{figure}
 
- Now highly skilled employees in company A are not satisfied; so they try to jump to $B$. Now $B$ is also trying to make profit out of this situation. So $B$ doesn't want to give the same salary of $180$  to highly skilled employees from $A$. But highly skilled employees from $A$ and $B$ will have a negotiation and say they settle for $120$. Now highly skilled employees of $A$ will be ready to work for $120$. Hence a new level will be formed both in $A$ and $B$ of $120$. Now distribtuion will look as given in Figure2 \ref{fig:2}.
+Consider two companies A and B with 3 different levels of employment with $v1<v2<v3$; call it low skill, medium skill, high skill.
+Both A and B have $\text{total number of employees} ~ N =1000$ and $\text{total salary budget}~ M=\$60~ \text{million dollar}$ with initial distribution as shown in Figure 2 \ref{fig:2}.
+
+\begin{figure}[h!] 
+	\includegraphics[width=\linewidth]{dynamics2.png}
+	\caption{Evolving}
+	\label{fig:3}
+\end{figure}
+
+ Now highly skilled employees in company A are not satisfied; so they try to jump to $B$. Now $B$ is also trying to make profit out of this situation. So $B$ doesn't want to give the same salary of $180$  to highly skilled employees from $A$. But highly skilled employees from $A$ and $B$ will have a negotiation and say they settle for $120$. Now highly skilled employees of $A$ will be ready to work for $120$. Hence a new level will be formed both in $A$ and $B$ of $120$. Now distribtuion will look as given in Figure 3 \ref{fig:3}.
+ 
+ Now there could be a similar adjustment for mid level and low level employees. And final distribution will look like as Figure 4 \ref{fig:4}
 
 
 
 
 
-\begin{figure}[h!] \label{fig3}
+\begin{figure}[h!] 
 	\includegraphics[width=\linewidth]{dynamics3.png}
 	\caption{After evolution}
-	\label{fig:Earthatmo}
+	\label{fig:4}
 \end{figure}
 
 So this is the dynamics we are talking about.
-
+\end{exmp}
 
 \section{Setting the payoff or utility}
 In general an employee feels they could be doing better given their talent and experience. Utility maximizing, fairness-seeking, teleological agents are always restless. Even though utility obtained by an employee is a complex aggregate, we formulate it as obtained from 3 major factors. 
@@ -225,24 +238,37 @@ f(N_i) = - \gamma ln N_i
  h_i(S_i,E_i,N_i) = u(S_i) - v(E_i) + f(N_i)= \alpha ln S_i - \beta (ln S_i)^2 - \gamma ln N_i
  \end{equation}
 \section{Applying potential game theory}
-\begin{equation}
-    h_i(x) \equiv  \frac{\partial\phi(x)}{\partial x_i}
-\end{equation}
+\begin{defn}
+	We apply the definition of payoff in continuous potential game theory; this is different from discrete case but idea remains same that a single function to deal with the payoff function of all players. By definition of payoff
+	\begin{equation}
+	h_i(x) \equiv  \frac{\partial\phi(x)}{\partial x_i} 
+	\end{equation}
+	where $x_i$ is the fraction of people at $i^{th}$ level; giving
+\end{defn}
+
 \begin{equation} \label{potential}
-    \phi(x) = \sum_{i=1}^{n}\int{}{}h_i(x)dx_i
+    \phi(x) = \sum_{i=1}^{k}\int{}{}h_i(x)dx_i
 \end{equation}
 \begin{equation}
     \phi(x) = \phi_u + \phi_v + \phi_f + constant ; where
 \end{equation}
+From \ref{utility} and \ref{potential} we need to find potential corresponding to each term. For salary($u_i$) and effort($v_i$) integration is straight forward.
 \begin{equation}
-    \phi_u = \alpha \sum_{i=1}^{n}x_i lnS_i ;and
+    \phi_u = \alpha \sum_{i=1}^{k}x_i lnS_i ;and
 \end{equation}
+
 \begin{equation}
-    \phi_v = -\beta \sum_{i=1}^{n} x_i(ln S_i)^2 ; and
+    \phi_v = -\beta \sum_{i=1}^{k} x_i(ln S_i)^2 ; and
 \end{equation}
-\begin{equation}
-    \phi_v = \gamma/N ln \frac{N!}{\prod_{j=1}^{n}(Nx_i)!}
-\end{equation}
+
+\begin{align}
+  \phi_f &= \sum_{i=1}^{k}\int{}{}h_i(x)dx_i \\
+         &= - \gamma \sum_{i=1}^{k}\int{}{}ln N_i dx_i \\
+         &= -\gamma \sum_{i=1}^{k}\int{}{} ln (Nx_i) dx_i \\
+         &=-\frac{\gamma}{N} \sum_{i=1}^{k}\int{}{} ln (Nx_i) d(Nx_i); but \int{}{} lnxdx = xlnx -x ~ and ~ln(x!) = xlogx -x ~ \text{which gives}\\
+         &=\frac{\gamma}{N} ln\frac{N!}{\prod_{j=1}^{k}(Nx_i)!}   
+\end{align}
+
 We can show that $\phi(x)$ is strictly concave: 
 \begin{equation}
     \dfrac{\partial^2 \phi(x)}{\partial x_i^2}= \dfrac{-\gamma}{x_i}<0
