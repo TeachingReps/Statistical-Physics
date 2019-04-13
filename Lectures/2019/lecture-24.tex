@@ -59,7 +59,7 @@ Thus, the order or permutations of the operations to be processed by each machin
 Now the problem can be rephrased as finding a set of machine permutations that minimizes the maximum length path in the given digraph.
 
 \section{Simulated Annealing}
-Simulated Annealing can be viewed as a generalization of the well known iterative improvement approach to combinatorial optimization problems. Generally, a combinatorial optimization problem is a tuple $(\c{R},C)$, where $\c{R}$ is the set of configurations or solutions of the problem and $C:  \c{R} \rightarrow \R $ is the cost function. To be able to use iterative improvement we need a neighborhood structure $\c{N}: \c{R} \rightarrow 2^{\c{R}}$; thus, for each configuration $i$, $\c{N}(i)$ is a subset of configurations called the $\textbf{neighborhood}$ of $i$.\\ 
+Simulated Annealing\cite{ref3} can be viewed as a generalization of the well known iterative improvement approach to combinatorial optimization problems. Generally, a combinatorial optimization problem is a tuple $(\c{R},C)$, where $\c{R}$ is the set of configurations or solutions of the problem and $C:  \c{R} \rightarrow \R $ is the cost function. To be able to use iterative improvement we need a neighborhood structure $\c{N}: \c{R} \rightarrow 2^{\c{R}}$; thus, for each configuration $i$, $\c{N}(i)$ is a subset of configurations called the $\textbf{neighborhood}$ of $i$.\\ 
 
 At each iteration, the general iterative improvement algorithm typically starts with an initial configuration $i$ and a configuration $j \in \mathcal{N}(i)$ is generated. If $C(j) < C(i)$, the start configuration in the next iteration is $j$, otherwise it is $i$. However, this causes the algorithm to terminate in a local minimum which may differ considerably in cost from the global minimum.
 On the contrary, simulated annealing attempts to find near optimal local minima by allowing the acceptance of cost increasing transitions. More precisely, if $i$ and $j \in \cN(i)$ then the algorithm continues with configuration $j$ with a probability given by $min\{1, exp(-(C(j) -C(i))/c\}$, where $c$ is the temperature.
@@ -85,7 +85,7 @@ G_{ij}(c) &=
 A_{ij}(c) &= min\{1, exp(-(C(j) -C(i))/c\}
 }
 \\
-The stationary distribution of this Markov chain is given by $q_i(c) = \frac{|\c{N}(i)|A_{i_oi}(c)}{\sum_{j \in \c{R}}|\c{N}(j)|A_{i_oj}(c)}$ for some $i_o \in \c{R}_{opt}$, where $\c{R}_{opt}$ is the set of global minimal configurations provided the neighborhoods are such that for each pair of configurations $(i,j)$ there is a finite sequence of transitions leading from $i$ to $j$.\\
+The stationary distribution of this Markov chain is given\cite{ref2} by $q_i(c) = \frac{|\c{N}(i)|A_{i_oi}(c)}{\sum_{j \in \c{R}}|\c{N}(j)|A_{i_oj}(c)}$ for some $i_o \in \c{R}_{opt}$, where $\c{R}_{opt}$ is the set of global minimal configurations provided the neighborhoods are such that for each pair of configurations $(i,j)$ there is a finite sequence of transitions leading from $i$ to $j$.\\
 \\
 Equivalently, the latter condition implies the matrix G being irreducible. It can be shown that 
 \eq{
@@ -190,4 +190,16 @@ If $|\bar M_{\lambda_k}(i_0)| > 0$, then
 }
 Then, if $|\bar M_{\lambda_0}(i_0)| = k$, then $|\bar M_{\lambda_k}(i_0)| = 0$. 
 We know that $K_i{i_0} \subset M_i{i_0} \subset \bar M_i{i_0}$. So, if $|\bar M_{\lambda_0}(i_0)| = k$, then  $K_{\lambda_k}(i_0)= \phi$. From lemma 3.2, this implies that $\lambda_k \in \sR_{opt}$.
+\begin{thebibliography}{10}
+\bibitem{ref1} 
+Peter J. M. van Laarhoven, Emile H. L. Aarts, and Jan Karel Lenstra. "Job Shop Scheduling by Simulated Annealing". Oper. Res. 40, 1 (February 1992), 113-125. DOI=http://dx.doi.org/10.1287/opre.40.1.113.
+\bibitem{ref2}
+H. L. Aarts, Peter J. M. van Laarhoven,. (1985). 
+"Statistical cooling: A general approach to combinatorial optimization problems."
+. Philips Journal of Research. 40. 
+\bibitem{ref3} 
+Marc Mezard and Andrea Montanari. 
+"Information, Physics, and Computation".
+ Oxford University Press, Inc., New York, NY, USA,2009.  
+\end{thebibliography}
 \end{document}
