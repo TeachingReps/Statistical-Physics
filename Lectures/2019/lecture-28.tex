@@ -1,381 +1,246 @@
-% !TEX spellcheck = en_US
-% !TEX spellcheck = LaTeX
-
-\documentclass[letterpaper,english,10pt]{article}
-
-\input{../../header}
-\graphicspath{{./Figures/}}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-\usepackage[utf8]{inputenc}
-
-
-\title{Lecture-27: Monte Carlo methods}
-
-
-\usepackage{filecontents}
-\begin{filecontents}{\jobname.bib}
-@incollection{SongEtAl:2017:ANiceMCAdversarialTrainingForMCMC,
-    title = {A-NICE-MC: Adversarial Training for MCMC},
-    author = {Song, Jiaming and Zhao, Shengjia and Ermon, Stefano},
-    booktitle = {Advances in Neural Information Processing Systems 30},
-    pages = {5140--5150},
-    year = {2017}
-}
-
-@incollection{GoodfellowEtAl:2014:GenerativeAdversarialNetworks,
-title = {Generative Adversarial Nets},
-author = {Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
-booktitle = {Advances in Neural Information Processing Systems 27},
-pages = {2672--2680},
-year = {2014}
-}
-
-@ARTICLE{2017arXiv170102434B,
-       author = {{Betancourt}, Michael},
-        title = {A Conceptual Introduction to Hamiltonian Monte Carlo},
-      journal = {arXiv e-prints},
-     keywords = {Statistics - Methodology},
-         year = "2017",
-        month = "Jan",
-          eid = {arXiv:1701.02434},
-archivePrefix = {arXiv},
-       eprint = {1701.02434},
- primaryClass = {stat.ME},
-}
-
-
-@MISC{Rosenthal10optimalproposal,
-    author = {Jeffrey S. Rosenthal},
-    title = {Optimal Proposal Distributions and Adaptive MCMC },
-    year = {2010}
-}
-
-
-@inproceedings{levy2018generalizing,
-title={Generalizing Hamiltonian Monte Carlo with Neural Networks},
-author={Daniel Levy and Matt D. Hoffman and Jascha Sohl-Dickstein},
-booktitle={International Conference on Learning Representations},
-year={2018},
-url={https://openreview.net/forum?id=B1n8LexRZ},
-}
-
-
-\end{filecontents}
-
-\usepackage{natbib}
-
+\documentclass[letterpaper,english,11pt]{article}
+\input{header}
+\usepackage{algorithm2e}
+\usepackage{bm}
+%opening
+\title{Lecture-27: Random K-SAT and Combinatorial Optimization}
+\author{Author: V. Arvind Rameshwar}
 
 \begin{document}
-
 \maketitle
+\section{The Satisfiability (SAT) Problem}
 
-\section{Generative models}
+The SAT problem (sometimes called the Boolean SAT problem) is a classical question that seeks to check if a given Boolean formula indeed has a satisfying assignment to its variables. SAT has quite some historical significance attached to it, owing to the fact that it was the first problem to be proved \textit{NP-complete}, in the seminal work of Cook in 1971 (and independently, by Leonid Levin in 1973), leading to a variety of other problems being proved as NP-complete, by way of polynomial-time-reductions to SAT. In what follows, we shall clearly define the SAT decision problem, and the K-SAT problem, in particular, followed by a discussion on the factor-graph representation of K-SAT.\\
 
-\subsection{Motivation}
-Designing efficient proposal distributions for Markov Chain Monte Carlo (MCMC) methods is a challenging problem that usually demands the attention of a domain expert. An alternative is to consider generic proposal distributions, for example, random walk kernel where the proposal $y_t$ is sampled as $y_t \sim \mathcal{N}(x_t, \sigma^2)$, but such methods are very slow in practice. Simple adaptive approaches that try to adapt some parameter of a generic proposal distribution (like $\sigma$ for the random walk kernel) have been proposed in the literature and although they offer improvements, for complex target distributions this problem still persists. It is thus useful to have machine learning methods that can automate the discovery of efficient proposal distributions. In recent years, some approaches that exploit the expressive power of neural networks to parameterize proposal distributions have been proposed. Here we will describe one such approach that is based on the idea of adversarial training \cite{SongEtAl:2017:ANiceMCAdversarialTrainingForMCMC}.
+Let $x_1,x_2,\ldots,x_N\in \{0,1\}$ be $N$ Boolean variables. Further, let $S_1,S_2,\ldots,S_M\subset [N]$ be $M$ arbitrary subsets of the set of integers from $1$ to $N$. 
+\begin{defn}(Literal)
+A literal is either a variable or its negation; in particular, the $j^{\text{th}}$ literal, $w_j$, is either $x_j$ or $\overline{x_j}$, for $j\in [N]$.
+\end{defn}
+\begin{defn}(Clause)
+A clause with neighbourhood $S$ is a disjunction (OR) of literals in $S$; in particular, the $m^{\text{th}}$ clause, $C_m$, for $m\in [1:M]$, is given by:
+\begin{equation*}
+    C_m = \bigvee_{j\in S_m} w_j,
+\end{equation*}
+for given literals $\{w_1,\ldots,w_N\}$ and $S_m$ as defined previously. 
+\end{defn}
+\begin{defn}(CNF Formula)
+ Given $N$ Boolean variables $x_1,\ldots,x_N$, and subsets $S_1,\ldots,S_M$, a Boolean function $F$ is said to be in \textit{Conjunctive Normal Form} (or $F$ is a CNF formula) if it has the following structure:
+\begin{equation*}
+    F=C_1\wedge C_2\wedge \ldots \wedge C_M,
+\end{equation*}
+for clauses $C_1,\ldots,C_M$ with neighbourhoods $S_1,\ldots,S_M$ respectively.
+\end{defn}
+\begin{rem}
+A CNF formula is a conjunction of clauses, where each clause is a disjunction of literals.
+\end{rem}
+With these definitions in place, we can now formally introduce the SAT problem:
+\begin{defn}(SAT)
+Given a Boolean function F over $N$ variables and $M$ clauses, in CNF form, the SAT decision problem is to determine if there exists a \textit{satisfying assignment}, i.e., an assignment vector, ${\mathbf{A}}$, of values to $\{x_1,\ldots,x_N\}$ such that $F({\mathbf{A}}) = 1$.
 
+If such an assignment exists, the formula $F$ is said to be SAT. Otherwise, it is said to be UNSAT.
+\end{defn}
+Several special cases of the SAT formulation can be constructed---of interest to us, however, is the K-SAT problem, defined as follows:
 
-\subsection{Notation and Preliminaries}
-Throughout this and the next section, we will use capital letters like $X$ and $Y$ for random variables/vectors, small-boldface letters like $\mathbf{x}$ and $\mathbf{y}$ for (deterministic) vectors and small letters for scalars. Let $X$ be a $n$ dimensional random vector and $p_d(\mathbf{x})$ be its probability density function. It will be assumed that the analytical form of $p_d(\mathbf{x})$ is unknown but some samples $\mathbf{x}_1, \dots, \mathbf{x}_m \sim p_d(\mathbf{x})$ are given to us. The goal is to draw more samples from $p_d(\mathbf{x})$. The subscript $d$ in $p_d(\mathbf{x})$ stands for \textit{data}. In the terminology that is commonly used in MCMC literature, $p_d(\mathbf{x})$ is the target distribution.
+\begin{defn}(K-SAT)
+The K-SAT decision problem is the SAT decision problem, where the CNF formula, $F$, is such that $|S_1|=|S_2|=\ldots=|S_M|=K$.
+\end{defn}
 
-Such a setting is useful in many ways in practice. For instance, $p_d(\mathbf{x})$ can refer to an unknown distribution over all possible images in the real world and $\mathbf{x}_1, \dots, \mathbf{x}_m$ would then be real world images. The goal then would be to generate more images that look realistic. We will use $q_\theta(.|x_t)$ to denote the proposal distribution that is used to generate $y_t$ which can then be used by an algorithm such as Metropolis-Hastings algorithm. Here $\theta \in \mathbb{R}^k$ represents the parameters of the proposal distribution. In the context of this article, it will refer to the parameters of a neural network that parameterizes $q_\theta(. | x_t)$. Since Generative Adversarial Networks or GANs \cite{GoodfellowEtAl:2014:GenerativeAdversarialNetworks} will play a major role in the subsequent discussion, for the sake of completeness, we provide a brief review here.
+\begin{shaded*}
+\begin{exmp}
+As an example, we consider the 3-SAT problem:
+\begin{equation*}
+    F = (x_1\vee x_2\vee x_3)\wedge(\overline{x_1}\vee \overline{x_2}\vee x_3)\wedge(\overline{x_1}\vee x_2\vee \overline{x_3}).
+\end{equation*}
+It is easy to verify that the 3-SAT instance, $F$ above, is SAT, with $\mathbf{A} = \{1,1,1\}$.
+\end{exmp}
+\end{shaded*}
+\begin{rem}
+We shall henceforth use the indices $a,b,c,\ldots$ to denote clauses, and $i,j,k,\ldots$ to denote the indices of literals. Also, we shall use the notation $\partial a$ to denote the set of literals contained in clause $a$, and $\partial i$ to denote the set of clauses that literal $w_i$ is present in.
+\end{rem}
+\subsection{Factor Graph Representation}
+Associated with a K-SAT formula, $F$, is a natural bipartite factor graph, $\mathscr{G}_{F} = ((V,\mathscr{F}),\mathscr{E})$, where $V=[N]$ and $\mathscr{F}=\{C_1,\ldots,C_M\}$. An edge $(i,a)\in \mathscr{E}$ if $w_i\in \partial a$. For an edge $e=(i,a)$, its weight $J_{ia}$ is given by:
+\begin{equation*}
+    J_{ia} = 
+    \begin{cases}
+    +1,\quad \text{if } x_i\in \partial a,\\
+    -1,\quad \text{if } \overline{x_i}\in \partial a,\\
+    \end{cases}
+\end{equation*}
 
+For $x_i\in \{0,1\}$, we define $s_i=(-1)^{x_i}\in \{-1,+1\}$.\\
 
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.6]{./Figures/gan.png}
-    \caption{High level architecture of Generative Adversarial Network. Both generator and discriminator are neural networks. Generator is supposed to generate samples $\hat{\mathbf{x}}$ that appear as if they are drawn from $p_d(\mathbf{x})$ and discriminator has to classify samples as real or fake depending on whether they come from $p_d(\mathbf{x})$ or generator.}
-    \label{fig:gan}
+Given such a factor graph, it is easy to define a product form function,
+\begin{equation*}
+    \beta_{F}(\mathbf{s}) = \prod_{a=1}^{M}\left(1-\frac{1}{2^K}\left(\prod_{i\colon x_i\in \partial a}\left(1-J_{ia}s_i\right)\right)\right).
+\end{equation*}
+It is easy to see that for any vector $\mathbf{s}\in \{-1,+1\}^{N}$, $\beta_{F}(\mathbf{s}) \in \{0,1\}$, and is equal to $1$ if and only if $\mathbf{s}$ is a satisfying assignment for $F$.\\
+
+Further, the marginal of $\beta_{F}(\mathbf{s})$ onto $s_i=+1$, for $i\in [N]$, gives us the number of SAT assignments with $x_i = 0$. Hence, applying standard Belief-Propagation algorithms when $\mathscr{G}_{F}$ is a tree, will give us the number of such SAT assignments with one variable fixed. It is to be noted, however, that this is not a procedure to \textit{solve} the K-SAT instance.
+
+\section{Algorithms for K-SAT}
+\subsection{K=1}
+For this restricted setting, it is simple to devise a linear-time algorithm, to check if a Boolean formula, $F$, is SAT: $F$ is SAT if and only if $F$ does not contain both $x_i$ and $\overline{x_i}$, for some $i\in [N]$.
+
+\begin{shaded*}
+\begin{exmp}
+$F = x_1\wedge x_2\wedge x_3\wedge \overline{x_1}$ is UNSAT.
+\end{exmp}
+\end{shaded*}
+\subsection{K=2}
+
+\begin{shaded*}
+\begin{exmp}
+Before we describe an algorithm for 2-SAT, we shall look at an example: $F=(x_1\vee \overline{x_2})\wedge(x_2\vee \overline{x_3})\wedge(x_3\vee \overline{x_1})$. We first pick $x_1=0$. This forces $x_2$ to be $0$, which in turn, forces $x_3$ to be $0$. Thus, $\mathbf{A} = \{0,0,0\}$ is a satisfying assignment, for $F$.
+\end{exmp}
+\end{shaded*}
+
+We shall now extend the procedure detailed out in the example above, to an algorithm called \textbf{UCP} (for Unit Clause Propagation). The algorithm proceeds by fixing $x_1$ to be $0$, and then iteratively reduces $F$ to $F_1$, by removing clauses containing $\overline{x_1}$, and force-satisfying clauses containing $x_1$. If $F_1$ contains $x_j\wedge \overline{x_j}$, for some $j\in [N]$, then the value of $x_1$ is changed to $1$. Otherwise, \textbf{UCP} repeats the procedure on $F=F_1$, by now fixing the variable with smallest index, remaining, to be $0$.
+
+The only way \textbf{UCP} can fail to produce a satisfying assignment, is when $x_j$, for some $j\in [N]$, can not be $0$ or $1$, in which case, \textbf{UCP} declares that $F$ is UNSAT.
+
+It is easy to check that the complexity of \textbf{UCP} is $O(N)$, since each variable, $x_i$, $i\in [N]$, is considered at most twice.
+
+\subsection{K=3}
+Since 3-SAT is NP-hard, we can only resort to probabilistic algorithms for this case. The most popular algorithm is probably the one by Sch\"oning, given below.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.4]{./Figures/Schoning1.JPG}
+\includegraphics[scale=1.3]{./Figures/Schoning2.JPG}
+\caption{The algorithm, Walk($F$), by Sch\"oning (Source: M\'ezard and Montanari).}
 \end{figure}
 
-\subsection{Generative Adversarial Networks}
-A generative adversarial network consists of two modules which are called \textit{generator} (G) and \textit{discriminator} (D). The generator takes a noise vector $\mathbf{z}$ as input and produces an output $\hat{\mathbf{x}}$ that is supposed to behave as a sample from the target distribution. The discriminator is trained to perform a binary classification task - that of classifying each sample as a real sample or a sample generated by the generator. This setup is depicted in Fig.~\ref{fig:gan}.
+\begin{prop}
+Let $p_S(F)$ be the probability that Walk($F$) returns $1$, when $F$ is SAT. Then,
+\begin{equation*}
+    p_S(F)\geq \frac{2}{3}\left(\frac{K}{2(K-1)}\right)^{N}.
+\end{equation*}
+\end{prop}
+\begin{proof}
+Let $\mathbf{A}^{*}$ be a SAT assignment for $F$. Let $\mathbf{A}^{t}$ be the assignment produced by Walk($F$), after $t$ iterations.
 
-The generator and discriminators are trained alternatively. The objective of generator is to be able to fool the discriminator. Since the discriminator gets better over time, it forces the generator to become more clever which in turns challenges the abilities of discriminator and encourages it to get better. Note that in Fig.~\ref{fig:gan}, $\hat{\mathbf{x}} = G(\mathbf{z})$ where $\mathbf{z} \sim p(\mathbf{z})$. Usually $p(\mathbf{z})$ is a factored uniform noise distribution. In the same figure, $\mathbf{x}$ being fed to the discriminator is a randomly sampled training example. One can view this as a two player min-max game where the objective is as follows:
-$$\min_G \max_D \mathbb{E}_{\mathbf{x} \sim p_d}[D(\mathbf{x})] - \mathbb{E}_{\mathbf{z} \sim p(\mathbf{z})}[D(G(\mathbf{z}))].$$
+Denote by $d^{t}:= d_H(\mathbf{A}^{*},\mathbf{A}^{t})$, the Hamming distance between $\mathbf{A}^{*}$ and $\mathbf{A}^{t}$. Clearly,
+\begin{equation*}
+    \mathbb{P}(d^0=d)={N\choose d}\frac{1}{2^N}.
+\end{equation*}
+For any unsatisfied clause, Step 5. reduces $d^{t}$ by 1, with probability at least $1/K$. This is because, the probability that the algorithm picks a variable to flip, that disagrees in its value with $\mathbf{A}^{*}$, is at least $1/K$.
 
-Although a GAN can be trained for generating samples from $p_d(\mathbf{x})$ directly, in what follows, the same idea will be used in a slightly different manner. The generator will be used to parameterize a proposal distribution so that MCMC framework can be used. This allows the method to inherit the nice properties of MCMC methods while still retaining expressive power of a neural network to learn an efficient proposal distribution.
+Consider exactly one such ``candidate" variable per clause, and introduce an auxiliary variable, $\hat{d^{t}}$, that reduces by one each time such a candidate is chosen, and increases by one, otherwise.
 
-\section{Markov Generative Adversarial Network (MGAN)}
-Recall that we need to model the proposal distribution $q_\theta(. | x_t)$. Let $\pi_\theta^t$ denote the marginal distribution at time $t$, then two conditions must approximately hold:
-\begin{enumerate}
-    \item Suppose $\mathbf{x}_0 \sim \pi^0$ and let $\mathbf{x}_t \sim \pi_\theta^t$ after running a Markov chain with transition kernel given by $q_\theta(.|\mathbf{x}_t)$ for $t$ steps, then $\mathbf{x}_t$ must be close to samples obtained from $p_d$ for sufficiently large $t$.
-    \item If $\mathbf{x}_0 \sim p_d$ and $\mathbf{x}_t$ is obtained as in the first point above, then $\mathbf{x}_t$ must be close to samples obtained from $p_d$ for sufficiently large $t$.
-\end{enumerate}
+We observe that:
 
-Intuitively, the first condition suggests that $p_d$ should be the stationary distribution for Markov chain with transition kernel given by $q_\theta$. The second condition enforces that $p_d$ must be a fixed point for $q_\theta$. Markov GAN combines the two conditions together into a single objective function which is given by:
-$$\min_G \max_D \mathbb{E}_{\mathbf{x} \sim p_d}[D(\mathbf{x})] - \lambda\mathbb{E}_{\bar{\mathbf{x}} \sim \pi_\theta^b}[D(\bar{\mathbf{x}})]  - (1 - \lambda) \mathbb{E}_{\mathbf{x}_d \sim p_d, \bar{\mathbf{x}} \sim T_\theta^m(\bar{\mathbf{x}} | \mathbf{x}_d)}[D(\bar{\mathbf{x}})].$$
+\begin{equation*}
+    \hat{d^{t}}\geq d^{t} \quad \text{and}\quad \mathbb{P}(\hat{d^{t}}=0)\leq \mathbb{P}({d^{t}}=0). 
+\end{equation*}
 
-Here $T_\theta^m(. | \mathbf{x})$ denotes the distribution over states of Markov chain after $m$ steps have been executed given that the Markov chain started in state $\mathbf{x}$ and $\lambda \in (0, 1)$ is a hyperparameter. The only issue now is to generate $\bar{\mathbf{x}}$ in a differentiable way so that standard gradient descent can be used. To achieve this, reparameterization trick is used. A sample $\mathbf{x}_{t + 1}$ from the distribution $q_\theta(. | \mathbf{x}_t)$ is modeled as:
-
-$$\mathbf{x}_{t + 1} = f_\theta(\mathbf{x}_t, \mathbf{z}), \mathbf{z} \sim p(\mathbf{z}).$$
-
-Here $f_\theta$ is a deterministic function that takes some random noise as input in the form of $\mathbf{z}$. Now the setup becomes end-to-end differentiable and it can be trained in the way a normal GAN is trained. The authors in \cite{SongEtAl:2017:ANiceMCAdversarialTrainingForMCMC} propose to sample $b \in [B]$ and $m \in [M]$ uniformly at random at each optimization step where $B$ and $M$ are hyperparameters to be set by the user and $[N] = \{1, 2, \dots, N\}$.
-
-
-\section{Metropolis-Hasting based methods}
-
-In the previous section, we considered sampling from a distribution whose analytical expression is unknown, but from which samples are available. Now, we consider the general problem of sampling from a continuous probability distribution $\pi(X), X \in \R^d$, whose analytical expression is known upto a multiplicative constant. These samples are then used for applications such as estimating $\E_{X \sim \pi} [f(X)]$ for some function $f$, etc. We wish to generate samples of $X$ as a Markov chain as $\{ X_t \}$. \\
-
-Given a sample $X_t$ at step $t$, the next sample $X_{t+1}$ is generated by sampling a random variable $Y_{t+1}$ from a proposal distribution $q(.|X_t)$ and accepting $X_{t+1} = Y_{t+1}$ with acceptance probability
-
-\EQ{
-A(Y_{t+1} | X_t) = \min \lbrace 1, \frac{\pi(Y_{t+1})}{\pi(X_t)} \frac{q(X_t | Y_{t+1})}{q(Y_{t+1} | X_t)} \rbrace.
-}
-
-Rejecting $Y_{t+1}$ leads to setting $X_{t+1} = X_t$.\\
-
-In the symmetric random walk setting, given sample $X_t$ at step $t$, we use the following transformation to obtain a proposed sample $Y_{t+1}$ for the next step.
-\EQ{
-Y_{t+1} = X_t + Z_t,
-}
-where $Z_t$ is a normal random variable, with mean $0$ and variance $\sigma^2 I_d$.
-
-\subsection{Choice of $\sigma$}
-The optimal choice of $\sigma$ is known only for very restrictive conditions on the distribution $\pi$. For example, if $\pi(x_1, x_2, .., x_d) = f(x_1).f(x_2) \dots f(x_d)$ or of the form $\pi(x_1, x_2, \dots, x_d) = \prod C_i f(C_i x_i)$, then the optimal value of $\sigma$ may be found analytically using $f$ and $C_i's$\cite{Rosenthal10optimalproposal}. As a special case, if $\pi$ is a normal distribution $\cN(0,\Sigma)$, and the proposal distribution is $\cN(0,\Sigma_p)$, then the optimal choice of $\Sigma_p$ is known to be $[ (2.38)^2 / D ] \Sigma$ to achieve an optimal acceptance rate of $2.38$. This optimal acceptance rate of $2.38$ also holds for slightly more general conditions in which the components of $\pi$ are independent, but each individual component is dominated by the sum of the components.
-
-\subsection{Adaptive algorithms}
-It is clear that since the above results hold under very special conditions, they are not guaranteed to work in most practical situations. However, they can be used as a heuristic to improve the performance of algorithms even in other situations. This can be done by hand using trial and error. For example, various values of variance of the proposal distribution or even various forms of the covariance matrix can be tried out and modified in such a way that the acceptance ratio is close to $0.238$.\\
-
-However, this method is time consuming and also does not show much promise in improving the algorithm since choosing entries of a covariance matrix is a high dimensional problem and it would be unlikely that the we hit upon an optimal choice by trial and error.\\
-
-To overcome this problem, algorithms have been proposed which automate the update of the parameters of the proposal distribution as the Markov chain progresses in time. Such algorithms are called adaptive algorithms \cite{Rosenthal10optimalproposal}.\\
-
-For example, since it is known that if $\pi$ is a normal distribution $\cN(0,\Sigma)$, the optimal proposal distribution is the normal distribution with covariance matrix given by $(2.38)^2 / d$ times the target covariance matrix, the technique can be extended and used as a heuristic to obtain the following proposal distribution:
-
-\EQ{
-Y_{t+1} \sim \cN(X_t, [(2.38)^2/d] \Sigma_n),
-}
-where $\Sigma_n$ is the empirical covariance matrix of the first $t$ samples, which is used an estimate of the covariance matrix of the target distribution. This algorithm is called the Adaptive Metropolis algorithm.\\
-
-Another approach is to use a mixture of two Gaussian distributions, one which is the same as above using the empirical covariance matrix and the other is a fixed Gaussian distribution for all time steps, i.e,
-
-\EQ{
-Y_{t+1} \sim (1 - \beta) \cN(X_t, [(2.38)^2/d] \Sigma_n) + \beta \cN(X_n, \Sigma_0)
-}
-
-\subsection{Metropolis adjusted Langevin algorithm}
-The above approaches to designing the proposal distribution have not made use of information available in the form of $\pi$. In the above algorithms, the proposal random walk is the same irrespective of the current sample. One way to improve the algorithm to consider a proposal walk in the direction of increase of the probability density. One approach to this is the Metropolis adjusted Langevin algorithm which uses the following proposed increment distribution,
-
-\EQ{
-Z_{t+1} = \cN( \frac{\sigma^2}{2} \nabla \log \pi(X_t),\; \sigma^2 I_d ),
-}
-where $\nabla \log \pi(X_t)$ is the direction of steepest increase in $\log \pi(X_t)$. The value of $\sigma$ is chosen such that the acceptance rate is $0.574$, which has been proved to be optimal for the case of the components of the target distribution being independent and identically distributed.
-
-\section{Hamiltonian Monte Carlo}
-A drawback with the Metropolis adjusted Langevin algorithm is that at every point in the space, the proposed step is only towards the mode of the target distribution. But, especially in high dimensions, most of the probability mass of the distribution is located in a "typical set" which is far away from the mode and it is from this typical set from which we wish to sample most from \cite{2017arXiv170102434B}. \\
-
-To use an analogy from physics, consider a system of a planet and a satellite. The planet produces a gravitational field and hence a potential energy analogous to $- \log \pi(X_t)$. A stationary satellite will collapse into the planet directly, which is what happens when using Langevin updates. But in the physical system, a suitable velocity given to the satellite will prevent its collapse and lets it stay in orbit around the planet, which is the typical set in our analogy. \\
-
-For this purpose, along with the position $x$, we introduce an auxiliary random variable $v$, analogous to momentum/velocity. We wish to incorporate $v$ into the system such that the joint distribution of $(x,v)$ is given by
-
-\EQ{
-\pi_3(x,v) = \pi_2(v|x)\pi(x).
-}
-
-If the above holds, then sampling from the joint distribution of $(x,v)$ and ignoring the $v$ coordinate is equivalent to sampling $x$ from $\pi$.\\
-
-Writing $\pi_3(x,v) = e^{-H(x,v)}$ so that $H(x,v)$ plays the role of energy of the system, we obtain
-
-\EQ{
-\begin{split}
-H(x,v) &= - \log \pi_3(x,v) \\
-	&= - \log \pi_2(v|x) - \log \pi(x) \\
-	&= K(v,x) + U(x)  \text{  (say)}.
-\end{split}
-}
-
-The function $U(x)$ plays the role of potential energy for the target distribution since $\pi(x) = e^{-U(x)}$ and $K(v,x)$ is analogous to kinetic energy of the particle.\\
-
-Once we have the position and velocity of the particle, the next proposed state of the particle can be obtained using Hamilton's equations,
-
-\EQ{
-\begin{split}
-\frac{dx}{dt} &= \frac{\partial H}{\partial v} = \frac{\partial K}{\partial v} \\
-\frac{dv}{dt} &= - \frac{\partial H}{\partial x} = \frac{\partial K}{\partial x} - \frac{\partial U}{\partial x}.
-\end{split}
-}
-
-where $\frac{dx}{dt}$ and $\frac{dv}{dt}$ are the rates of change of $x$ and $v$ respectively with respect to time $t$. The intuition for these equations is that a particle in a potential energy field moves in such a way that its total energy is conserved. This can be verified by seeing that $H(v,x)$ doesn't change with time.
-
+Note that the sequence of random variables, $\{\hat{d^{t}}\}_{t\geq 0}$, forms a Markov Chain on the set of integers $[0:N]$. The probability of transition from state $i$ to $i+1$ is $1-1/K$, and the transition probability from $i$ to $i-1$ is $1/K$, for all states $i\in[1:N-1]$. Now, for some $t$,
 \begin{align*}
-\frac{dH(v,x)}{dt} &= \frac{\partial H}{\partial x} \frac{dx}{dt} + \frac{\partial H}{\partial v} \frac{dv}{dt} \\
-	&= \frac{\partial H}{\partial x} \left( \frac{\partial H}{\partial v} \right) + \frac{\partial H}{\partial v} \left( - \frac{\partial H}{\partial x} \right) \\
-	&= 0.
+    \mathbb{P}(\hat{d^{0}}=d,\hat{d^{t}}=0) &= \frac{1}{2^N}{N\choose d}{t\choose \frac{t-d}{2}}\left(1-\frac{1}{K}\right)^{\frac{t-d}{2}}\left(\frac{1}{K}\right)^{\frac{t+d}{2}}\\
+    &\stackrel{.}{=}_{\small{N}} 2^{-N\left(1-\mathcal{H}\left(\frac{d}{N}\right)-\frac{t}{N}\mathcal{H}\left(\frac{t-d}{2t}\right)+\frac{t}{N}logK-\left(\frac{t-d}{2N}\right)log(K-1)\right)}\\
+    &=: 2^{-N\psi(\theta,\delta)},
 \end{align*}
+where $\theta=\frac{t}{N}$ and $\delta = \frac{d}{N}$, and $\mathcal{H}(.)$ is the binary entropy function. The first equality follows from the fact that the $d$ variables that differ in value with $\mathbf{A}^{*}$, at $t=0$, are chosen uniformly at random from the $N$ possible choices.
 
-So, given a state $(x,v)$, following the evolution of the state using the Hamilton's equations for some time gives the next proposed state. For that, we need to choose a form for the kinetic energy function. The most straightforward choice is $K(v,x) = \frac{1}{2} ||v||^2$, which leads to the distribution of $v$ to be 
+We observe that for $\theta \in [0,3]=:I_{\theta}$ and $\delta \in [0,1]=:I_{\delta}$,
+\begin{equation*}
+    \min_{I_{\theta}, I_{\delta}}\psi(\theta,\delta) = \log \left(\frac{2(K-1)}{K}\right),
+\end{equation*}
+which completes the proof.
+\end{proof}
+\begin{rem}
+One way to think about the result above, is that the \text{expected} number of runs of Walk($F$) that need to be performed, before reaching a satisfying assignment, is of the order of $(1.33)^{N}$, for $K=3$.
+\end{rem}
+\section{Random K-SAT Ensembles}
 
-\EQ{
-\pi_2(v|x) = \frac{1}{(2\pi)^{\frac{d}{2}}} e^{-||v||^2/2}.
-}
+In the previous sub-section, we had a look at a probabilistic algorithm, Walk($F$), that could identify a satisfying assignment for $F$ (provided that it is indeed SAT), by doing better than brute-force-search. We are now interested in characterizing ``easy instances" of K-SAT problems, that are satisfiable with probability $1$, as $N\rightarrow \infty$.
 
-The normalizing constant for $\pi_2$ results in a constant being added to $K(v,x) = - \log \pi_2(v)$, which can be ignored since the evolution of the state with time depends only on the derivatives of the energy functions. \\
+To do so, we need to consider ensembles of SAT instances.
 
-One way to move along the trajectory specified by the differential equations is called the leap frog integrator. In this method, for each time step, the value of $v$ is updated for half a time step, $x$ is updated for one time step and then $v$ is updated again for half a time step. These operations are repeated for $M$ time steps, for one  Hamiltonian Monte Carlo (HMC) transition.
+\begin{defn}(K-SAT ensemble)
+The ensemble $\text{SAT}_N(K,M)$ is obtained by selecting $M$ clauses, $C_1,C_2,\ldots,C_M$, with $|S_1|=|S_2|=\ldots=|S_M|=K$, uniformly at random from the ${N\choose K}2^{K}$ possible clauses.
+\end{defn}
 
-\EQ{
-\begin{split}
-v^{\frac{1}{2}} &= v + \frac{\epsilon}{2} \frac{dv}{dt} = v - \frac{\epsilon}{2} \frac{\partial U}{\partial x} \\
-x' &= x + \epsilon \frac{dx}{dt} = x + \epsilon v^{\frac{1}{2}} \\
-v' &= v^{\frac{1}{2}} + \frac{\epsilon}{2} \frac{dv}{dt} = v^{\frac{1}{2}} - \frac{\epsilon}{2} \frac{\partial U}{\partial x}
-\end{split}
-}
+Let $\alpha:=\frac{M}{N}$ and let $P_{N}(K,\alpha)$ denote the probability that a K-SAT instance drawn from $\text{SAT}_N(K,M)$ is satisfiable.
 
-It can be seen from the above set of equations that after applying them for one step, if the velocity variable is reversed and the transformations are applied for one time step, then we end up at the initial position and the negative of the initial velocity.
+\subsection{Random 2-SAT}
 
+With the definitions above in place, we introduce the following theorem by Chv\'atal and Reed (`92):
+
+\begin{thm} (CR)\label{CR}
+Consider the $\text{SAT}_N(K=2,M)$ ensemble. Then,
+\begin{equation*}
+    \lim_{N\rightarrow \infty} P_{N}(K=2,\alpha) = \begin{cases}
+    1,\quad \text{if }\alpha<1,\\
+    0,\quad \text{if }\alpha>1\\
+    \end{cases}.
+\end{equation*}
+
+In other words, the ensemble exhibits a phase transition at $\alpha_c=1$.
+\end{thm}
+
+Before we proceed to prove this theorem, we require some additional machinery. Given a (random) $2$-SAT instance $F$, with $N$ variables and $M$ clauses, we associate with it, a directed graph, $D_{F}(\tilde{V},\tilde{\mathscr{E}})$, with
+\begin{equation*}
+    \tilde{V}=\{x_1,x_2,\ldots,x_N,\overline{x_1},\overline{x_2},\ldots,\overline{x_N}\},\quad\text{and}
+\end{equation*}
+\begin{equation*}
+    \text{for }C_l=(w_{i_{1,l}},w_{i_{2,l}}),\quad (\overline{w_{i_{1,l}}},w_{i_{2,l}})\text{ and }(\overline{w_{i_{2,l}}},w_{i_{1,l}})\in \tilde{\mathscr{E}},
+\end{equation*}
+where $1\leq l\leq M$ and $1\leq i_{1,l},i_{2,l}\leq N$.\\
+
+As an example, for $F=(x_1\vee \overline{x_2})\wedge(x_2\vee \overline{x_3})\wedge(x_3\vee \overline{x_1})$, $D_F$ looks like the graph in Figure \ref{fig:graph}. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{./Figures/Directed_graph.JPG}
+\caption{The directed graph, $D_F$, for the given formula $F$.}
+\label{fig:graph}
+\end{figure}
+We now claim that the following lemma holds, for a given directed graph, $D_F$.
+\begin{lem}
+$F$ is UNSAT iff there exists $i\in [N]$ such that $D_F$ has a directed cycle containing both $x_i$ and $\overline{x_i}$.
+\end{lem}
+\begin{proof}
+(``If" part):\\
+Since there exists a path from $x_i$ to $\overline{x_i}$, setting $x_i$ to $1$ leads to a contradiction.\\
+Similarly, since there exists a path from $\overline{x_i}$ to ${x_i}$, setting $x_i$ to $0$ leads to a contradiction.\\
+
+(``Only if" part):\\
+Since \textbf{UCP} yields correct results for $2$-SAT, we get that $F$ is UNSAT iff \textbf{UCP} fails. This happens only when there exists a variable, $x_j$, that cannot take the values $0$ or $1$. Retracing the arguments in the ``if" part backwards, we arrive at the result. 
+\end{proof}
+
+With the above lemma at hand, we can proceed with a proof of Theorem \ref{CR}.
+\begin{proof}
+(Of Theorem \ref{CR}):\\
+We endeavour to prove only the first part, i.e., that $\lim_{N\rightarrow \infty}P_N(K=2,\alpha)=1$, if $\alpha<1$.
+Given a $2$-SAT instance $F$, consider the corresponding $D_F$. We define a \textit{bicycle} of length $s$, to be a path $(u,w_1,w_2,\ldots,w_s,v)$, where $w_i,\text{ }i\in [N]$, are literals on $s$ \textit{distinct} variables. Further, $u,v\in\{w_1,\ldots,w_s,\overline{w_1},\ldots,\overline{w_s}\}$. Now, we make the following observation:
+\begin{equation*}
+    \{D_F\text{ has a directed cycle containing }x_i,\overline{x_i}\text{ for some }i\}\subset \{D_F\text{ has a bicycle}\},
+\end{equation*}
+and hence,
 \begin{align*}
-v'^{\frac{1}{2}} &= -v' - \frac{\epsilon}{2} \frac{\partial U}{\partial x} = - \left( v^{\frac{1}{2}} - \frac{\epsilon}{2} \frac{\partial U}{\partial x} \right) - \frac{\epsilon}{2} \frac{\partial U}{\partial x} \\
-	&= - v^{\frac{1}{2}} \\
-x'' &= x' + \epsilon v'^{\frac{1}{2}} = x' - \epsilon v^{\frac{1}{2}} \\
-	&= x \\
-v'' &= v'^{\frac{1}{2}} - \frac{\epsilon}{2} \frac{\partial U}{\partial x} = - v^{\frac{1}{2}} - \frac{\epsilon}{2} \frac{\partial U}{\partial x} \\
-	&= - v.
+\mathbb{P}(F\text{ is UNSAT})&\leq \mathbb{P}(D_F\text{ has a bicycle})\\
+&=\sum_{s=2}^{N}{N\choose s}2^{s}(2s)^{2}{M\choose s+1}\left(\frac{1}{4{N\choose 2}}\right)^{s+1}\\
+&\leq \sum_{s=2}^{N}N^{s}2^{s}(2s)^{2}M^{s+1}\left(\frac{1}{4{N\choose 2}}\right)^{s+1}\\
+&=\frac{M}{{N\choose 2}}\sum_{s=2}^{N}\left(\frac{M}{N-1}\right)^{s},
 \end{align*}
+which in the limit as $N$ goes to infinity, goes to $0$, so long as $\frac{M}{N-1}<1$, or $\alpha<1$.
+\end{proof}
+\begin{rem}
+Note that the above proof only provides a \textit{lower bound} on $\alpha_c$. In order to arrive at the matching upper bound, we need some further techniques, which we shall not develop in this lecture.
+\end{rem}
+\section{Summary}
+In this lecture, we have considered the K-SAT formulation in detail, first in the setting where the formula, $F$, is given, and later, when $F$ is drawn from the ensemble, $\text{SAT}_N(K,M)$. In the former case, we analyzed deterministic poly-time algorithms for $K=1,2$ and also provided a probabilistic algorithm, Walk($F$), for $K=3$. In the latter case, we identified the existence of a phase transition for $K=2$, with the threshold being $\alpha_c=(M/N)_c=1$.
 
-In other words, if we consider the transformation for obtaining the proposed next state as the composition of $M$ leap frog steps and a flip of the velocity vector, then the proposal distribution becomes symmetric. Let $f$ denote the transformation. Then, the Metropolis acceptance rate $A(\xi' | \xi)$ for a transition from state $\xi = (x,v)$ to $\xi' = (x',v')$ is given by
+\begin{thebibliography}{7}
+\nocite{*}
+\bibitem{r1}
+V. Chvatal and B. Reed. 1992. ``Mick gets some (the odds are on his side) (satisfiability)". In Proceedings of the 33rd Annual Symposium on Foundations of Computer Science (SFCS '92). IEEE Computer Society, Washington, DC, USA, 620-627. DOI: https://doi.org/10.1109/SFCS.1992.267789
 
-\EQ{
-A(\xi' | \xi) = \min \{ 1, \frac{\pi(\xi')}{\pi(\xi)} \left| \frac{\partial f(\xi)}{\partial \xi} \right| \},
-}
+\bibitem{r2}
+Uwe Schöning. 1999. ``A Probabilistic Algorithm for k-SAT and Constraint Satisfaction Problems". In Proceedings of the 40th Annual Symposium on Foundations of Computer Science (FOCS '99). IEEE Computer Society, Washington, DC, USA, 410-.
 
-where $\left| \frac{\partial f(\xi)}{\partial \xi} \right|$ is the Jacobian of the transformation. In this case, the Jacobian turns out to be $1$, since the change of the set of variables which are being updated in each step of the transformation here depends only on the other variables which are unchanged in that step.
-
-\section{Generalization of HMC}
-The HMC algorithm has some obvious drawbacks. For example, if the distribution is multi modal, the algorithm may struggle to jump from one mode to another. This is due to the fact that the region between the modes may be of very low probability density and the velocity given to the particle may not be enough to jump over these regions which correspond to high potential energy. \\
-
-One way to overcome this problem is to incorporate, in the transformation at each step, state dependent terms corresponding to scaling and translation\cite{levy2018generalizing}. These terms may be parameterized functions of the state and can be learnt by a gradient based algorithm. \\
-
-Another further generalization has been proposed by Levy et al.\cite{levy2018generalizing}, along with the above idea. The update step of $x$ is further divided into two update steps. In the first step, half of the coordinates of $x$ are randomly chosen and updated and in the next step, the other half of the coordinates are updated. \\
-
-However, in the process of generalization, care has to be taken so that the Jacobian of the transformation is tractable and can be easily calculable. A sufficient condition for this is to make sure when a set of variables are being affected in a step, their change depends only on other variables and not on any variable which is being updated. The transformation should also be invertible like the original HMC transformation. A proposed generalization satisfying these conditions is described below. \\
-
-Consider the state space $\R^n$ on which the target distribution $\pi$ is defined. Let $x \in \R^n$ be a state. It is augmented by two additional random variables, $v \in \R^n$ representing velocity, which is sampled from a standard multivariate normal distribution and $d \in \{-1, 1\}$ which represents direction and is uniformly assigned one of its two possible values. Let the augmented state be denoted by $\xi \triangleq (x,v,d)$.
-
-\subsection{Modified Leapfrog}
-The modified leap frog operation consists of $M$ steps. At each step $t \in \{1, \dots, M \}$, a random mask $m^t \in \{ 0, 1 \}^n$ is sampled, which determines which coordinates of $x$ are transformed in the second step of the transformation and which are affected in the third. $m^t$ is drawn uniformly from the set of n-length binary vectors satisfying $ \sum_{i=1}^{n} m_i^t = \lfloor \frac{n}{2} \rfloor $. The coordinates of $x$ corresponding to ones in $m^t$ are updated first and the others next. Let $\bar{m}^t = \mathbb{1} - m^t$, where $\mathbb{1}$ is the n-dimensional vector of ones and let $x_{m^t} = x \odot m^t$, where $\odot$ represents element-wise multiplication. The following procedure is used to obtain the next state if $d=1$.\\
-
-At each step of the transformation, an update to a set of variables depends only on the other variables. So, for the first step, in which $v$ is updated, let $\zeta_1 = (x, \partial_x U(x), t)$ be the tuple of the other variables, where $\partial_x U(x) = \frac{\partial U(x)}{\partial x}$. Then, the update of $v$ is given by
-
-\EQ{
-v' = v \odot \exp \left( \frac{\epsilon}{2} S_v(\zeta_1) \right) - \frac{\epsilon}{2} \left[ \partial_x U(x) \odot \exp \left( \epsilon Q_v(\zeta_1) \right) + T_v(\zeta_1) \right].
-}
-
-This is the same as the original leapfrog update, except that both $v$ and the gradient are scaled and a translation is applied to the scaled gradient. The functions $S_v, Q_v$ and $T_v$ used for the scaling and translation are parameterized by some parameter $\theta$ and are implemented by neural networks. If they are all identically zero, then we recover the standard leapfrog update. From the form of the transformation, it is clear that its Jacobian is $\exp(\mathbb{1}.S_v(\zeta_1))$. \\
-
-Now, a modification similar to the one above is also made to the second update of the leapfrog operator after splitting it into two separate updates. Let $\zeta_2 \triangleq (x_{\bar{m}^t}, v, t)$ and $\zeta_3  \triangleq (x'_{m^t}, v, t)$.
-
-\EQ{
-\begin{split}
-x' &= x_{\bar{m}^t} + m^t \odot \left[ x \odot \exp (\epsilon S_x(\zeta_2)) + \epsilon \left( v' \odot \exp(\epsilon Q_x(\zeta_2)) + T_x(\zeta_2) \right) \right], \\
-x'' &= x'_{m^t} + \bar{m}^t \odot \left[ x' \odot \exp (\epsilon S_x(\zeta_3)) + \epsilon \left( v' \odot \exp(\epsilon Q_x(\zeta_3)) + T_x(\zeta_3) \right) \right].
-\end{split}
-}
-
-The first equation affects only those coordinates of $x$ corresponding to ones in $m^t$ and hence the coordinates corresponding to $\bar{m}^t$ are fed to the scaling and translation functions and it is the other way around for the second equation. It is to be noted that these functions $S_x, Q_x$ and $T_x$ are different to those used in the update to $v$. The Jacobians for these transformations are $\exp(\epsilon m^t.S_x(\zeta_2))$ and $\exp(\epsilon \bar{m}^t.S_x(\zeta_3))$. \\
-
-Now that $x$ is updated for one time step, finally, $v$ is updated for another half time step just as before. Let $\zeta_4 \triangleq (x'', \partial_x U(x''), t)$. Then,
-
-\EQ{
-v'' = v' \odot \exp \left( \frac{\epsilon}{2} S_v(\zeta_4) \right) - \frac{\epsilon}{2} \left[ \partial_x U(x'') \odot \exp(\epsilon Q_v(\zeta_4)) + T_v(\zeta_4) \right].
-}
-
-The Jacobian for this step is $\exp(\frac{\epsilon}{2} \mathbb{1}.S_v(\zeta_4))$. Let $L_\theta$ denote the composition of all these transformations applied one after the other for $M$ time steps. Let $F$ be the transformation of flipping the sign of $d$. Then, we obtain the Jacobian of the transformation as
-
-\EQ{
-\log \left| \frac{\partial [FL_\theta \xi]}{\partial \xi^T} \right| = d \sum_{t=1}^M \left[ \frac{\epsilon}{2} \mathbb{1}.S_v(\zeta_1^t) + \epsilon m^t.S_x(\zeta_2^t) + \epsilon \bar{m}^t.S_x(\zeta_3^t) + \frac{\epsilon}{2} \mathbb{1}.S_v(\zeta_4^t) \right]
-}
-
-Now, the above transformations are for the case $d=1$. For the case $d=-1$, we consider the opposite direction. So, we need to invert each of the above equations to obtain the required equations. Let $\zeta_1 \triangleq (x, \partial_x U(x), t)$. Then,
-
-\EQ{
-v' = \left[ v + \frac{\epsilon}{2} \left( \partial_x U(x) \odot \exp(\epsilon Q_v(\zeta_1)) + T_v(\zeta_1) \right) \right] \odot \exp(-S_v(\zeta_1)).
-}
-
-Let $\zeta_2 \triangleq (x_{m^t}, v, t)$. The second update can be written as
-
-\EQ{
-x' = x_{m^t} + \bar{m}^t \left[ x - \epsilon \left( v' \odot \exp(\epsilon Q_x(\zeta_2)) + T_x(\zeta_2) \right) \right] \odot \exp (- \epsilon S_v(\zeta_2)).
-}
-
-Letting $\zeta_3 \triangleq (x'_{\bar{m}^t}, v, t)$, the other coordinates of the position are updated as
-
-\EQ{
-x'' = x_{\bar{m}^t} + m^t \left[ x' - \epsilon \left( v' \odot \exp(\epsilon Q_x(\zeta_3)) + T_x(\zeta_3) \right) \right] \odot \exp (- \epsilon S_v(\zeta_3)).
-}
-
-Finally, letting $\zeta_4 \triangleq (x'', \partial_x U(x''), t)$, the velocity is updated as
-
-\EQ{
-v' = \left[ v + \frac{\epsilon}{2} \left( \partial_x U(x) \odot \exp(\epsilon Q_v(\zeta_4)) + T_v(\zeta_4) \right) \right] \odot \exp(-S_v(\zeta_4)).
-}
-
-The above transformations are applied consecutively for $M$ time steps for $t=M,M-1, \dots, 1$ to obtain a transformation denoted by $L_\theta$ and then a flip transformation $F$ is applied which flips the direction/sign of $d$. The Jacobian can similarly be obtained as before. \\
-
-From the way the transformations are defined, it is easy to see that with $L_\theta \xi = L\theta(x,v,d) = (x''^{\times M}, v''^{\times M}, d)$ and $F \xi = (x, v, -d)$, $FLFL(x,v,d) = (x,v,d)$. Since the distribution of $v$ is symmetric and the transformation is invertible with its inverse being itself, the transition kernel is symmetric. So, the metropolis acceptance probability becomes
-
-\EQ{
-A(FL \xi | \xi) = \min \left( 1, \frac{p(FL \xi)}{p(\xi)} \left| \frac{\partial [FL \xi]}{\partial \xi^T} \right| \right),
-}
-
-where $p(\xi) = \pi(x) \pi_v(v) \pi_d(d)$, $\pi(x)$ is the target distribution, $\pi_v$ is the standard multivariate normal distribution and $p_d$ is a uniform distribution over $\{-1, 1\}$. \\
-
-For notational simplicity, consider the step of resampling momentum and direction at each step as the operator $R$, i.e, $R(x,v,d) = (x, v', d')$, where $v' \sim \cN(0, I_n)$ and $d \sim \mathcal{U}(\{ -1, 1 \})$. \\
-
-Using this notation, the Markov chain can be described as a repeated loop of the following steps:
-
-\begin{enumerate}
-\item $\xi' = FL_\theta \xi$ with probability $A(FL_\theta \xi | \xi)$, otherwise $\xi' = \xi$.
-\item $\xi = R \xi'$.
-\end{enumerate}
-
-Each $Q,S$ and $T$ is a neural network with two hidden layers of $100$ units each and ReLU non-linearities and the output layer has a tanh activation. The time step $t$ is given as input to the networks as $\tau(t) = ( \cos(\frac{2 \pi T}{M}), \sin(\frac{2 \pi T}{M}) )$. \\
-
-\subsection{Loss}
-To find the optimal parameters for the functions described above, we need a suitable objective function with respect to which they can be optimized. One option is to minimize lag one correlation, which is equivalent to maximizing the expected square jump distance. Let $\delta (\xi', \xi) = \delta ( (x', v', d'), (x, v, d) ) = ||x' - x||^2$ be the squared distance. Then, we wish to maximize the expected square distance $\E_{\xi \sim p(\xi)} [\delta(FL_\theta \xi, \xi) A(FL_\theta \xi | \xi)]$. But, this is an average over the entire space. This means that even if this is optimized, there may be regions in the space where this may be too low. To avoid this situation, we define the following loss function to be minimized:
-
-\EQ{
-l_\lambda(\xi, \xi', A(\xi' | \xi)) = \frac{\lambda^2}{\delta(\xi, \xi') A(\xi' | \xi)} - \frac{\delta(\xi, \xi') A(\xi' | \xi)}{\lambda^2}.
-}
-
-The second term encourages typical moves to be large on average and the first term highly penalizes any situation in which the jump distance or the acceptance probability is very low. We wish to minimize this loss averaged over the target distribution to encourage mixing of the Markov chain when it is close to the target distribution. Other than that, we also wish to make the chain burn in fast, i.e, it should explore the space efficiently even when it is close to the initial distribution. So, considering the initial distribution to be $q(\xi) = \pi_0(x) \pi_v(v) \pi_d(d)$, the objective is to minimize the loss
-
-\EQ{
-\sL(\theta) \triangleq \E_{p(\xi)}[l_\lambda(\xi, FL_\theta \xi, A(FL_\theta \xi | \xi))] + \lambda_b \E_{q(\xi)}[l_\lambda(\xi, FL_\theta \xi, A(FL_\theta \xi | \xi))].
-}
-
-The first term encourages mixing and the second term encourages fast burn-in and $\lambda_b$ determines how much importance we wish to give to burn-in.
-
-\subsection{Optimization}
-Now that we have an objective function, we can tune the parameters to optimize it. The expectation in the loss is estimated by sampling from the corresponding distributions. $q(\xi)$ is chosen such that it can easily be sampled from. The expectation over $p(\xi)$ is estimated using samples from the Markov chain itself and the loss is calculated for each sample. \\
-A batch of $N$ samples is used for calculating the total loss. From that, we may calculate gradient of the loss with respect to the parameters of the neural networks, which is used for updating the parameters in a gradient based algorithm, with some time dependent learning rate $\alpha_t$. The algorithm can be written as follows:
-
-\begin{algorithm}
-\caption{Training the Markov chain}\label{Training}
-\begin{algorithmic}[0]
-
-
-\State Initialize $\theta$
-\State Initialize $\{ \xi_p^{(i)} \}_{1 \leq i \leq N}$ from $q(\xi)$
-\For{$t$ from $0$ to $n_{iters} - 1$}
-	\State Sample a mini batch $\{ \xi_q^{(i)} \}_{1 \leq i \leq n}$ from $q(\xi)$
-	\State $L \leftarrow 0$
-	\For{$i$ from $1$ to $N$}
-		\State $\xi_p^{(i)} \leftarrow R \xi_p^{(i)}$
-		\State $L \leftarrow L + l_\lambda(\xi_p^{(i)}, FL_\theta \xi_p^{(i)}, A(FL_\theta \xi_p^{(i)} | \xi_p^{(i)})) + \lambda_b l_\lambda(\xi_q^{(i)}, FL_\theta \xi_q^{(i)}, A(FL_\theta \xi_q^{(i)} | \xi_q^{(i)}))$
-		\State $\xi_p^{(i)} \leftarrow FL_\theta \xi_p^{(i)}$ with probability $A(FL_\theta \xi_p^{(i)} | \xi_p^{(i)})$
-	\EndFor
-	\State $\theta \leftarrow \theta - \alpha_t \nabla_\theta L$
-\EndFor
-
-\end{algorithmic}
-\end{algorithm}
-
-\clearpage
-
-\bibliographystyle{unsrt}
-\bibliography{\jobname}
-
-
+\bibitem{r3}
+Marc Mezard and Andrea Montanari. 
+``Information, Physics, and Computation".
+Oxford University Press, Inc., New York, NY, USA,2009. 
+\end{thebibliography}
 \end{document}
